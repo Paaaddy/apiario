@@ -229,7 +229,7 @@
       "Use Apivar strips (amitraz) in an active colony, or oxalic acid if the colony is broodless.",
       "After treatment, assess whether the colony is strong enough to recover — combine with another if very weak."
     ],
-    "callExpert": false
+    "callExpert": true
   },
   "robbing": {
     "type": "outcome",
