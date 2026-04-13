@@ -3,8 +3,8 @@ import { useProfile } from './hooks/useProfile'
 import BottomNav from './components/BottomNav'
 import Onboarding from './screens/Onboarding'
 import SeasonScreen from './screens/SeasonScreen'
+import DiagnoseScreen from './screens/DiagnoseScreen'
 
-function DiagnoseScreen() { return <div className="p-4 font-serif text-brown">Diagnose screen</div> }
 function MyHiveScreen() { return <div className="p-4 font-serif text-brown">My Hive screen</div> }
 
 export default function App() {
