@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import BottomNav from './components/BottomNav'
@@ -23,13 +23,17 @@ export default function App() {
     stopListening()
   }, [stopSpeaking, stopListening])
 
+  const handleVoiceStopRef = useRef(handleVoiceStop)
+  useEffect(() => { handleVoiceStopRef.current = handleVoiceStop }, [handleVoiceStop])
+
   const handleVoiceActivate = useCallback(() => {
+    if (voiceActive) return
     setVoiceActive(true)
     speak('Hands-free mode active. Say next, read again, diagnose, or stop.')
     startListening((command) => {
       setLastCommand(command)
       if (command.includes('stop')) {
-        handleVoiceStop()
+        handleVoiceStopRef.current()
       } else if (command.includes('diagnose')) {
         setActiveTab('diagnose')
         speak('Opening diagnose.')
@@ -38,8 +42,10 @@ export default function App() {
       } else if (command.includes('read') || command.includes('repeat')) {
         speak('Repeating.')
       }
+    }, () => {
+      handleVoiceStopRef.current()
     })
-  }, [speak, startListening, handleVoiceStop])
+  }, [voiceActive, speak, startListening, handleVoiceStop])
 
   if (!profile.onboardingDone) {
     return (

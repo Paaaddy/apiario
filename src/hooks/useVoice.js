@@ -1,8 +1,16 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 
 export function useVoice() {
   const recognitionRef = useRef(null)
   const isSupported = typeof speechSynthesis !== 'undefined'
+
+  useEffect(() => {
+    return () => {
+      if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel()
+      recognitionRef.current?.stop()
+      recognitionRef.current = null
+    }
+  }, [])
 
   const speak = useCallback((text) => {
     if (!isSupported) return
@@ -17,7 +25,7 @@ export function useVoice() {
     if (isSupported) speechSynthesis.cancel()
   }, [isSupported])
 
-  const startListening = useCallback((onCommand) => {
+  const startListening = useCallback((onCommand, onError) => {
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!Recognition) return
     const recognition = new Recognition()
@@ -27,7 +35,11 @@ export function useVoice() {
       const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
       onCommand(transcript)
     }
-    recognition.onerror = () => {}
+    recognition.onerror = (event) => {
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+        if (onError) onError(event.error)
+      }
+    }
     recognition.start()
     recognitionRef.current = recognition
   }, [])
