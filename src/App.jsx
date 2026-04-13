@@ -45,7 +45,7 @@ export default function App() {
     }, () => {
       handleVoiceStopRef.current()
     })
-  }, [voiceActive, speak, startListening, handleVoiceStop])
+  }, [voiceActive, speak, startListening])
 
   if (!profile.onboardingDone) {
     return (
