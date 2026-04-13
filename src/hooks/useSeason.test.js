@@ -20,7 +20,7 @@ describe('useSeason', () => {
     const { result } = renderHook(() =>
       useSeason({ hiveCount: 1, climateZone: 'central', experience: 0 })
     )
-    expect(result.current.label).toBe('Spring')
+    expect(result.current.label).toEqual({ de: 'Frühling', en: 'Spring' })
     expect(result.current.icon).toBe('🌸')
   })
 

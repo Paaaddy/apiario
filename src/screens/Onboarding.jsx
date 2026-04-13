@@ -1,40 +1,44 @@
 import { useState } from 'react'
-
-const STEPS = [
-  {
-    key: 'hiveCount',
-    question: 'How many hives do you keep?',
-    options: [
-      { label: '1 hive', value: 1 },
-      { label: '2–3 hives', value: 2 },
-      { label: '4–9 hives', value: 5 },
-      { label: '10 or more', value: 10 },
-    ],
-  },
-  {
-    key: 'climateZone',
-    question: 'Where are you located?',
-    options: [
-      { label: 'Northern Europe', value: 'northern' },
-      { label: 'Central Europe', value: 'central' },
-      { label: 'Mediterranean', value: 'mediterranean' },
-      { label: 'Other', value: 'other' },
-    ],
-  },
-  {
-    key: 'experience',
-    question: 'How long have you been keeping bees?',
-    options: [
-      { label: 'First year', value: 0 },
-      { label: '1–3 seasons', value: 1 },
-      { label: 'Experienced (4+ years)', value: 2 },
-    ],
-  },
-]
+import { useLanguage } from '../hooks/useLanguage'
+import { strings as s } from '../i18n/strings'
+import LanguageToggle from '../components/LanguageToggle'
 
 export default function Onboarding({ onComplete }) {
+  const { t } = useLanguage()
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState({})
+
+  const STEPS = [
+    {
+      key: 'hiveCount',
+      question: s.onboarding_q_hives,
+      options: [
+        { label: s.hive_1, value: 1 },
+        { label: s.hive_2, value: 2 },
+        { label: s.hive_5, value: 5 },
+        { label: s.hive_10, value: 10 },
+      ],
+    },
+    {
+      key: 'climateZone',
+      question: s.onboarding_q_zone,
+      options: [
+        { label: s.zone_northern,      value: 'northern'      },
+        { label: s.zone_central,       value: 'central'       },
+        { label: s.zone_mediterranean, value: 'mediterranean' },
+        { label: s.zone_other,         value: 'other'         },
+      ],
+    },
+    {
+      key: 'experience',
+      question: s.onboarding_q_exp,
+      options: [
+        { label: s.exp_0, value: 0 },
+        { label: s.exp_1, value: 1 },
+        { label: s.exp_2, value: 2 },
+      ],
+    },
+  ]
 
   function handleSelect(value) {
     const nextAnswers = { ...answers, [STEPS[step].key]: value }
@@ -51,9 +55,14 @@ export default function Onboarding({ onComplete }) {
   return (
     <div className="min-h-full bg-cream flex flex-col">
       <div className="bg-honey px-6 pt-12 pb-8">
-        <div className="text-5xl mb-3">🍯</div>
-        <h1 className="font-serif text-3xl font-bold text-brown">Apiario</h1>
-        <p className="text-brown-light mt-1 text-sm">Your beekeeping companion</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-5xl mb-3">🍯</div>
+            <h1 className="font-serif text-3xl font-bold text-brown">{t(s.onboarding_title)}</h1>
+            <p className="text-brown-light mt-1 text-sm">{t(s.onboarding_subtitle)}</p>
+          </div>
+          <LanguageToggle />
+        </div>
       </div>
 
       <div className="flex gap-2 px-6 pt-6">
@@ -69,18 +78,18 @@ export default function Onboarding({ onComplete }) {
 
       <div className="px-6 pt-6 pb-4">
         <h2 className="font-serif text-xl text-brown font-semibold">
-          {currentStep.question}
+          {t(currentStep.question)}
         </h2>
       </div>
 
       <div className="px-6 flex flex-col gap-3">
         {currentStep.options.map(({ label, value }) => (
           <button
-            key={label}
+            key={String(value)}
             onClick={() => handleSelect(value)}
             className="w-full text-left bg-white rounded-xl px-5 py-4 border border-amber-100 text-brown font-medium shadow-sm active:bg-amber-50 transition-colors"
           >
-            {label}
+            {t(label)}
           </button>
         ))}
       </div>

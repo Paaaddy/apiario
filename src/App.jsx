@@ -1,6 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { LanguageProvider } from './context/LanguageContext'
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
+import { useTaskLog } from './hooks/useTaskLog'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
@@ -9,8 +11,9 @@ import SeasonScreen from './screens/SeasonScreen'
 import DiagnoseScreen from './screens/DiagnoseScreen'
 import MyHiveScreen from './screens/MyHiveScreen'
 
-export default function App() {
+function AppContent() {
   const { profile, updateProfile } = useProfile()
+  const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry } = useTaskLog()
   const [activeTab, setActiveTab] = useState('season')
   const [voiceActive, setVoiceActive] = useState(false)
   const [lastCommand, setLastCommand] = useState('')
@@ -60,13 +63,36 @@ export default function App() {
   return (
     <div className="flex flex-col h-full bg-cream">
       <main className="flex-1 overflow-y-auto">
-        {activeTab === 'season' && <SeasonScreen profile={profile} />}
+        {activeTab === 'season' && (
+          <SeasonScreen
+            profile={profile}
+            log={log}
+            completedTaskIds={completedTaskIds}
+            onToggleTask={toggleTask}
+          />
+        )}
         {activeTab === 'diagnose' && <DiagnoseScreen />}
-        {activeTab === 'myhive' && <MyHiveScreen profile={profile} onUpdate={updateProfile} />}
+        {activeTab === 'myhive' && (
+          <MyHiveScreen
+            profile={profile}
+            onUpdate={updateProfile}
+            log={log}
+            onAddEntry={addCustomEntry}
+            onDeleteEntry={deleteEntry}
+          />
+        )}
       </main>
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       <BeeFab onActivate={handleVoiceActivate} isActive={voiceActive} />
       {voiceActive && <VoiceOverlay onStop={handleVoiceStop} lastCommand={lastCommand} />}
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   )
 }

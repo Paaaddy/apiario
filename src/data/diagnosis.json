@@ -1,244 +1,244 @@
 {
   "root": {
     "type": "question",
-    "question": "What are you seeing in or around the hive?",
+    "question": { "de": "Was siehst du am oder im Bienenstock?", "en": "What are you seeing in or around the hive?" },
     "options": [
-      { "label": "Very few bees — colony seems much smaller", "next": "few-bees" },
-      { "label": "Many dead bees in front of the hive", "next": "dead-bees" },
-      { "label": "No eggs or young larvae visible inside", "next": "no-brood" },
-      { "label": "Brood looks wrong — discoloured or sunken", "next": "sick-brood" },
-      { "label": "Bees clustering on outside of hive (bearding)", "next": "bearding" },
-      { "label": "Bees are unusually aggressive", "next": "aggressive" }
+      { "label": { "de": "Sehr wenige Bienen — Volk scheint viel kleiner", "en": "Very few bees — colony seems much smaller" }, "next": "few-bees" },
+      { "label": { "de": "Viele tote Bienen vor dem Stock", "en": "Many dead bees in front of the hive" }, "next": "dead-bees" },
+      { "label": { "de": "Keine Eier oder junge Larven sichtbar", "en": "No eggs or young larvae visible inside" }, "next": "no-brood" },
+      { "label": { "de": "Brut sieht falsch aus — verfärbt oder eingesunken", "en": "Brood looks wrong — discoloured or sunken" }, "next": "sick-brood" },
+      { "label": { "de": "Bienen hängen außen am Stock (Bartbildung)", "en": "Bees clustering on outside of hive (bearding)" }, "next": "bearding" },
+      { "label": { "de": "Bienen sind ungewöhnlich aggressiv", "en": "Bees are unusually aggressive" }, "next": "aggressive" }
     ]
   },
   "few-bees": {
     "type": "question",
-    "question": "When did you last inspect this hive?",
+    "question": { "de": "Wann hast du diesen Stock zuletzt kontrolliert?", "en": "When did you last inspect this hive?" },
     "options": [
-      { "label": "Less than 2 weeks ago — it was fine then", "next": "few-bees-recent" },
-      { "label": "More than a month ago", "next": "few-bees-overdue" }
+      { "label": { "de": "Vor weniger als 2 Wochen — damals war alles in Ordnung", "en": "Less than 2 weeks ago — it was fine then" }, "next": "few-bees-recent" },
+      { "label": { "de": "Vor mehr als einem Monat", "en": "More than a month ago" }, "next": "few-bees-overdue" }
     ]
   },
   "few-bees-recent": {
     "type": "question",
-    "question": "Can you see the queen or fresh eggs (tiny white grains standing upright in cells)?",
+    "question": { "de": "Siehst du die Königin oder frische Eier (kleine weiße Körner aufrecht in den Zellen)?", "en": "Can you see the queen or fresh eggs (tiny white grains standing upright in cells)?" },
     "options": [
-      { "label": "Yes, eggs are visible", "next": "varroa-suspect" },
-      { "label": "No eggs, no sign of the queen", "next": "queenless" }
+      { "label": { "de": "Ja, Eier sind sichtbar", "en": "Yes, eggs are visible" }, "next": "varroa-suspect" },
+      { "label": { "de": "Keine Eier, kein Zeichen der Königin", "en": "No eggs, no sign of the queen" }, "next": "queenless" }
     ]
   },
   "few-bees-overdue": {
     "type": "outcome",
-    "diagnosis": "Unknown — inspection overdue",
+    "diagnosis": { "de": "Unbekannt — Kontrolle überfällig", "en": "Unknown — inspection overdue" },
     "actions": [
-      "Open the hive on a warm calm day (above 12°C).",
-      "Check for the queen, eggs, and brood.",
-      "Look for varroa mites on adult bees and in cells.",
-      "If colony is very weak, consider merging with a stronger hive."
+      { "de": "Den Stock an einem warmen, ruhigen Tag öffnen (über 12°C).", "en": "Open the hive on a warm calm day (above 12°C)." },
+      { "de": "Königin, Eier und Brut überprüfen.", "en": "Check for the queen, eggs, and brood." },
+      { "de": "Nach Varroamilben auf erwachsenen Bienen und in Zellen suchen.", "en": "Look for varroa mites on adult bees and in cells." },
+      { "de": "Bei sehr schwachem Volk Zusammenlegung mit einem stärkeren Volk erwägen.", "en": "If colony is very weak, consider merging with a stronger hive." }
     ],
     "callExpert": false
   },
   "dead-bees": {
     "type": "question",
-    "question": "What do the dead bees look like?",
+    "question": { "de": "Wie sehen die toten Bienen aus?", "en": "What do the dead bees look like?" },
     "options": [
-      { "label": "Normal looking — just dead, in a pile", "next": "dead-bees-normal" },
-      { "label": "Deformed wings, stunted bodies", "next": "varroa-confirmed" },
-      { "label": "Bees with stingers out, fighting posture", "next": "robbing" }
+      { "label": { "de": "Normal aussehend — einfach tot, in einem Haufen", "en": "Normal looking — just dead, in a pile" }, "next": "dead-bees-normal" },
+      { "label": { "de": "Deformierte Flügel, verkrüppelte Körper", "en": "Deformed wings, stunted bodies" }, "next": "varroa-confirmed" },
+      { "label": { "de": "Bienen mit ausgestochenen Stacheln, Kampfhaltung", "en": "Bees with stingers out, fighting posture" }, "next": "robbing" }
     ]
   },
   "dead-bees-normal": {
     "type": "question",
-    "question": "What time of year is it and how many dead bees?",
+    "question": { "de": "Welche Jahreszeit ist es und wie viele tote Bienen?", "en": "What time of year is it and how many dead bees?" },
     "options": [
-      { "label": "Winter or early spring — a few hundred", "next": "normal-winter-death" },
-      { "label": "Summer — hundreds or thousands", "next": "pesticide-suspect" }
+      { "label": { "de": "Winter oder Frühfrühling — einige Hundert", "en": "Winter or early spring — a few hundred" }, "next": "normal-winter-death" },
+      { "label": { "de": "Sommer — Hunderte oder Tausende", "en": "Summer — hundreds or thousands" }, "next": "pesticide-suspect" }
     ]
   },
   "normal-winter-death": {
     "type": "outcome",
-    "diagnosis": "Normal winter cluster die-off",
+    "diagnosis": { "de": "Normales Wintersterben der Traube", "en": "Normal winter cluster die-off" },
     "actions": [
-      "Some dead bees in winter is normal — the cluster shrinks as bees age.",
-      "Clear the entrance so living bees can take cleansing flights on warm days.",
-      "Heft the hive to check food stores are still adequate.",
-      "Do not open the hive unless temperature is above 12°C."
+      { "de": "Einige tote Bienen im Winter sind normal — die Traube schrumpft, wenn Bienen altern.", "en": "Some dead bees in winter is normal — the cluster shrinks as bees age." },
+      { "de": "Flugloch freilegen, damit lebende Bienen an warmen Tagen Reinigungsflüge machen können.", "en": "Clear the entrance so living bees can take cleansing flights on warm days." },
+      { "de": "Gewicht prüfen, um sicherzustellen, dass die Futtervorräte noch ausreichen.", "en": "Heft the hive to check food stores are still adequate." },
+      { "de": "Den Stock nicht öffnen, solange die Temperatur nicht über 12°C liegt.", "en": "Do not open the hive unless temperature is above 12°C." }
     ],
     "callExpert": false
   },
   "pesticide-suspect": {
     "type": "outcome",
-    "diagnosis": "Possible pesticide poisoning",
+    "diagnosis": { "de": "Mögliche Pestizidvergiftung", "en": "Possible pesticide poisoning" },
     "actions": [
-      "Note the date and number of dead bees — document this carefully.",
-      "Check if nearby fields or gardens were recently sprayed.",
-      "Contact your local beekeeping association to report the incident.",
-      "Assess the surviving colony — check for eggs and brood to judge colony strength."
+      { "de": "Datum und Anzahl der toten Bienen notieren — sorgfältig dokumentieren.", "en": "Note the date and number of dead bees — document this carefully." },
+      { "de": "Prüfen, ob nahe Felder oder Gärten kürzlich gespritzt wurden.", "en": "Check if nearby fields or gardens were recently sprayed." },
+      { "de": "Lokalen Imkerverein kontaktieren, um den Vorfall zu melden.", "en": "Contact your local beekeeping association to report the incident." },
+      { "de": "Überlebendes Volk beurteilen — auf Eier und Brut prüfen, um die Volksstärke zu beurteilen.", "en": "Assess the surviving colony — check for eggs and brood to judge colony strength." }
     ],
     "callExpert": true
   },
   "no-brood": {
     "type": "question",
-    "question": "How long since you last saw eggs or brood?",
+    "question": { "de": "Wie lange hast du keine Eier oder Brut mehr gesehen?", "en": "How long since you last saw eggs or brood?" },
     "options": [
-      { "label": "Just noticed today — haven't checked recently", "next": "no-brood-check" },
-      { "label": "More than 3 weeks with no brood visible", "next": "queenless" }
+      { "label": { "de": "Heute erst bemerkt — kürzlich nicht kontrolliert", "en": "Just noticed today — haven't checked recently" }, "next": "no-brood-check" },
+      { "label": { "de": "Mehr als 3 Wochen keine Brut sichtbar", "en": "More than 3 weeks with no brood visible" }, "next": "queenless" }
     ]
   },
   "no-brood-check": {
     "type": "outcome",
-    "diagnosis": "Possible queen issue — thorough inspection needed",
+    "diagnosis": { "de": "Mögliches Königinnenproblem — gründliche Kontrolle nötig", "en": "Possible queen issue — thorough inspection needed" },
     "actions": [
-      "Inspect all frames methodically in good light.",
-      "Look for eggs (tiny grains standing upright in cells — you may need reading glasses).",
-      "Eggs are 1–3 days old. If you see them, the queen was active recently.",
-      "If no eggs found after a thorough search, assume the queen is lost."
+      { "de": "Alle Rähmchen methodisch bei guter Beleuchtung kontrollieren.", "en": "Inspect all frames methodically in good light." },
+      { "de": "Nach Eiern suchen (kleine Körnchen aufrecht in den Zellen — Lesebrille kann helfen).", "en": "Look for eggs (tiny grains standing upright in cells — you may need reading glasses)." },
+      { "de": "Eier sind 1–3 Tage alt. Wenn du sie siehst, war die Königin kürzlich aktiv.", "en": "Eggs are 1–3 days old. If you see them, the queen was active recently." },
+      { "de": "Wenn nach gründlicher Suche keine Eier gefunden werden, ist die Königin wahrscheinlich verloren.", "en": "If no eggs found after a thorough search, assume the queen is lost." }
     ],
     "callExpert": false
   },
   "queenless": {
     "type": "outcome",
-    "diagnosis": "Colony is queenless",
+    "diagnosis": { "de": "Volk ist weisellos", "en": "Colony is queenless" },
     "actions": [
-      "Check for emergency queen cells — bees may already be raising a new queen.",
-      "If no queen cells found, you need to introduce a new queen or a frame of fresh eggs from another hive.",
-      "Do not wait more than 3–4 weeks or laying workers may develop, making recovery very difficult.",
-      "Contact your local beekeeping association for a queen source."
+      { "de": "Nach Notweiselzellen suchen — Bienen züchten möglicherweise bereits eine neue Königin.", "en": "Check for emergency queen cells — bees may already be raising a new queen." },
+      { "de": "Wenn keine Weiselzellen gefunden werden, muss eine neue Königin oder ein Rähmchen mit frischen Eiern aus einem anderen Volk eingeführt werden.", "en": "If no queen cells found, you need to introduce a new queen or a frame of fresh eggs from another hive." },
+      { "de": "Nicht länger als 3–4 Wochen warten, sonst können sich Drohnenbrüter entwickeln, was die Erholung sehr schwierig macht.", "en": "Do not wait more than 3–4 weeks or laying workers may develop, making recovery very difficult." },
+      { "de": "Lokalen Imkerverein für eine Königinnenquelle kontaktieren.", "en": "Contact your local beekeeping association for a queen source." }
     ],
     "callExpert": true
   },
   "sick-brood": {
     "type": "question",
-    "question": "What does the sick brood look like?",
+    "question": { "de": "Wie sieht die kranke Brut aus?", "en": "What does the sick brood look like?" },
     "options": [
-      { "label": "Sunken, perforated cappings — bees seem to be chewing them open", "next": "afb-suspect" },
-      { "label": "Dead larvae, greasy or yellow/brown in colour", "next": "efb-suspect" },
-      { "label": "Chalk-like white or grey mummies in or around cells", "next": "chalkbrood" }
+      { "label": { "de": "Eingesunkene, durchlöcherte Deckel — Bienen scheinen sie aufzunagen", "en": "Sunken, perforated cappings — bees seem to be chewing them open" }, "next": "afb-suspect" },
+      { "label": { "de": "Tote Larven, fettig oder gelb/braun gefärbt", "en": "Dead larvae, greasy or yellow/brown in colour" }, "next": "efb-suspect" },
+      { "label": { "de": "Kreideähnliche weiße oder graue Mumien in oder um Zellen", "en": "Chalk-like white or grey mummies in or around cells" }, "next": "chalkbrood" }
     ]
   },
   "afb-suspect": {
     "type": "outcome",
-    "diagnosis": "Possible American Foulbrood (AFB) — act immediately",
+    "diagnosis": { "de": "Mögliche Amerikanische Faulbrut (AFB) — sofort handeln", "en": "Possible American Foulbrood (AFB) — act immediately" },
     "actions": [
-      "Do NOT transfer any equipment to other hives — AFB spreads easily.",
-      "Perform the 'ropiness test': insert a twig into a dead cell and pull slowly — AFB stretches 2–3 cm like caramel.",
-      "If positive for AFB, this is a notifiable disease in most countries.",
-      "Contact your local beekeeping inspector immediately — do not delay."
+      { "de": "Kein Material in andere Völker übertragen — AFB verbreitet sich leicht.", "en": "Do NOT transfer any equipment to other hives — AFB spreads easily." },
+      { "de": "Streichholztest durchführen: Streichholz in eine tote Zelle einführen und langsam herausziehen — AFB zieht wie Karamell 2–3 cm.", "en": "Perform the 'ropiness test': insert a twig into a dead cell and pull slowly — AFB stretches 2–3 cm like caramel." },
+      { "de": "Bei positivem AFB-Befund ist dies eine meldepflichtige Krankheit in den meisten Ländern.", "en": "If positive for AFB, this is a notifiable disease in most countries." },
+      { "de": "Sofort den lokalen Bienengesundheitsdienst kontaktieren — nicht zögern.", "en": "Contact your local beekeeping inspector immediately — do not delay." }
     ],
     "callExpert": true
   },
   "efb-suspect": {
     "type": "outcome",
-    "diagnosis": "Possible European Foulbrood (EFB)",
+    "diagnosis": { "de": "Mögliche Europäische Faulbrut (EFB)", "en": "Possible European Foulbrood (EFB)" },
     "actions": [
-      "EFB often clears up when the nectar flow improves and the colony strengthens.",
-      "Ensure the queen is young and productive — requeen if the queen is old.",
-      "In severe cases, antibiotic treatment may be available — check local regulations.",
-      "Report to your local beekeeping inspector."
+      { "de": "EFB klärt sich oft auf, wenn der Nektarflug besser wird und das Volk erstarkt.", "en": "EFB often clears up when the nectar flow improves and the colony strengthens." },
+      { "de": "Sicherstellen, dass die Königin jung und produktiv ist — Umweiselung wenn alt.", "en": "Ensure the queen is young and productive — requeen if the queen is old." },
+      { "de": "In schweren Fällen kann eine Behandlung mit Antibiotika möglich sein — lokale Vorschriften prüfen.", "en": "In severe cases, antibiotic treatment may be available — check local regulations." },
+      { "de": "Dem lokalen Bienengesundheitsdienst melden.", "en": "Report to your local beekeeping inspector." }
     ],
     "callExpert": true
   },
   "chalkbrood": {
     "type": "outcome",
-    "diagnosis": "Chalkbrood (fungal infection)",
+    "diagnosis": { "de": "Kalkbrut (Pilzinfektion)", "en": "Chalkbrood (fungal infection)" },
     "actions": [
-      "Improve hive ventilation — chalkbrood thrives in cold, damp conditions.",
-      "Ensure the colony is large enough to cover all brood and keep it warm.",
-      "Replace old dark comb — fungal spores persist in wax.",
-      "Strong colonies with a young queen usually clear chalkbrood on their own."
+      { "de": "Stockbelüftung verbessern — Kalkbrut gedeiht bei kalten, feuchten Bedingungen.", "en": "Improve hive ventilation — chalkbrood thrives in cold, damp conditions." },
+      { "de": "Sicherstellen, dass das Volk groß genug ist, die gesamte Brut zu bedecken und warm zu halten.", "en": "Ensure the colony is large enough to cover all brood and keep it warm." },
+      { "de": "Alte dunkle Wabe ersetzen — Pilzsporen überleben im Wachs.", "en": "Replace old dark comb — fungal spores persist in wax." },
+      { "de": "Starke Völker mit einer jungen Königin überwinden Kalkbrut normalerweise selbst.", "en": "Strong colonies with a young queen usually clear chalkbrood on their own." }
     ],
     "callExpert": false
   },
   "bearding": {
     "type": "question",
-    "question": "What is the weather like right now?",
+    "question": { "de": "Wie ist das Wetter gerade?", "en": "What is the weather like right now?" },
     "options": [
-      { "label": "Hot and humid — above 30°C", "next": "bearding-heat" },
-      { "label": "Mild weather, not particularly hot", "next": "swarm-prep" }
+      { "label": { "de": "Heiß und schwül — über 30°C", "en": "Hot and humid — above 30°C" }, "next": "bearding-heat" },
+      { "label": { "de": "Mildes Wetter, nicht besonders heiß", "en": "Mild weather, not particularly hot" }, "next": "swarm-prep" }
     ]
   },
   "bearding-heat": {
     "type": "outcome",
-    "diagnosis": "Normal heat bearding",
+    "diagnosis": { "de": "Normale Bartbildung bei Hitze", "en": "Normal heat bearding" },
     "actions": [
-      "This is normal behaviour in hot weather — bees hang outside to cool the hive.",
-      "Ensure there is a nearby water source within 200 metres.",
-      "Provide extra ventilation by propping the roof slightly or adding a mesh floor.",
-      "The bees will return inside when temperatures drop in the evening."
+      { "de": "Dies ist normales Verhalten bei Hitze — Bienen hängen außen, um den Stock zu kühlen.", "en": "This is normal behaviour in hot weather — bees hang outside to cool the hive." },
+      { "de": "Nahe Wasserquelle innerhalb von 200 Metern sicherstellen.", "en": "Ensure there is a nearby water source within 200 metres." },
+      { "de": "Zusätzliche Belüftung durch leichtes Anheben des Deckels oder Einbau eines Gitterbodens.", "en": "Provide extra ventilation by propping the roof slightly or adding a mesh floor." },
+      { "de": "Die Bienen kehren zurück, wenn die Temperaturen am Abend fallen.", "en": "The bees will return inside when temperatures drop in the evening." }
     ],
     "callExpert": false
   },
   "swarm-prep": {
     "type": "outcome",
-    "diagnosis": "Possible pre-swarm clustering",
+    "diagnosis": { "de": "Mögliches Schwarmanzeichen", "en": "Possible pre-swarm clustering" },
     "actions": [
-      "Inspect the hive for queen cells immediately.",
-      "If queen cells are present, the colony is preparing to swarm.",
-      "Perform an artificial swarm or remove/destroy queen cells to prevent swarming.",
-      "Add more space (a super or brood box) if the hive is congested."
+      { "de": "Den Stock sofort auf Weiselzellen kontrollieren.", "en": "Inspect the hive for queen cells immediately." },
+      { "de": "Wenn Weiselzellen vorhanden sind, bereitet sich das Volk auf das Schwärmen vor.", "en": "If queen cells are present, the colony is preparing to swarm." },
+      { "de": "Kunstschwarm bilden oder Weiselzellen entfernen/vernichten, um das Schwärmen zu verhindern.", "en": "Perform an artificial swarm or remove/destroy queen cells to prevent swarming." },
+      { "de": "Mehr Raum geben (Honig- oder Brutraum) wenn der Stock überfüllt ist.", "en": "Add more space (a super or brood box) if the hive is congested." }
     ],
     "callExpert": false
   },
   "aggressive": {
     "type": "question",
-    "question": "Has the aggression changed recently?",
+    "question": { "de": "Hat sich die Aggressivität kürzlich verändert?", "en": "Has the aggression changed recently?" },
     "options": [
-      { "label": "Yes — was calm before, suddenly very aggressive", "next": "aggressive-sudden" },
-      { "label": "Always been a bit defensive", "next": "aggressive-breed" }
+      { "label": { "de": "Ja — war vorher ruhig, plötzlich sehr aggressiv", "en": "Yes — was calm before, suddenly very aggressive" }, "next": "aggressive-sudden" },
+      { "label": { "de": "War immer etwas defensiv", "en": "Always been a bit defensive" }, "next": "aggressive-breed" }
     ]
   },
   "aggressive-sudden": {
     "type": "outcome",
-    "diagnosis": "Sudden aggression — possible queenlessness or robbing",
+    "diagnosis": { "de": "Plötzliche Aggressivität — mögliche Weisellosigkeit oder Räuberei", "en": "Sudden aggression — possible queenlessness or robbing" },
     "actions": [
-      "Check the hive for the queen and fresh brood — queenless colonies often become aggressive.",
-      "Look for signs of robbing: bees fighting at the entrance, suspicious activity from other hives.",
-      "If being robbed, reduce the entrance to a single bee width immediately.",
-      "Avoid opening the hive during a robbing frenzy — it will make things worse."
+      { "de": "Den Stock auf Königin und frische Brut prüfen — weisellose Völker werden oft aggressiv.", "en": "Check the hive for the queen and fresh brood — queenless colonies often become aggressive." },
+      { "de": "Nach Räubereizeichen suchen: kämpfende Bienen am Flugloch, verdächtige Aktivität anderer Völker.", "en": "Look for signs of robbing: bees fighting at the entrance, suspicious activity from other hives." },
+      { "de": "Bei Räuberei das Flugloch sofort auf Bienenbreite verengern.", "en": "If being robbed, reduce the entrance to a single bee width immediately." },
+      { "de": "Den Stock während einer Räuberei nicht öffnen — es verschlimmert die Situation.", "en": "Avoid opening the hive during a robbing frenzy — it will make things worse." }
     ],
     "callExpert": false
   },
   "aggressive-breed": {
     "type": "outcome",
-    "diagnosis": "Defensive genetics",
+    "diagnosis": { "de": "Defensivgenetik", "en": "Defensive genetics" },
     "actions": [
-      "Some colonies are naturally more defensive — genetics play a big role.",
-      "Consider requeening with a locally-bred, calm queen next spring.",
-      "Always use full protection (suit, gloves) and work bees on warm, sunny, windless days.",
-      "Use generous smoke before and during inspections."
+      { "de": "Manche Völker sind von Natur aus verteidigungsbereiter — Genetik spielt eine große Rolle.", "en": "Some colonies are naturally more defensive — genetics play a big role." },
+      { "de": "Umweiselung mit einer lokal gezüchteten, ruhigen Königin im nächsten Frühling erwägen.", "en": "Consider requeening with a locally-bred, calm queen next spring." },
+      { "de": "Immer volle Schutzausrüstung (Anzug, Handschuhe) tragen und Bienen an warmen, sonnigen, windstillen Tagen bearbeiten.", "en": "Always use full protection (suit, gloves) and work bees on warm, sunny, windless days." },
+      { "de": "Vor und während der Kontrolle großzügig räuchern.", "en": "Use generous smoke before and during inspections." }
     ],
     "callExpert": false
   },
   "varroa-suspect": {
     "type": "outcome",
-    "diagnosis": "Possible varroa mite infestation",
+    "diagnosis": { "de": "Möglicher Varroabefall", "en": "Possible varroa mite infestation" },
     "actions": [
-      "Do a sugar roll or alcohol wash: count mites from a sample of ~300 bees.",
-      "More than 3 mites per 100 bees requires treatment.",
-      "Choose a treatment suitable for the season (Apivar strips in active season, oxalic acid in broodless period).",
-      "Recount mites 4–6 weeks after treatment to confirm it worked."
+      { "de": "Puderzucker-Roll oder Alkohol-Wasch durchführen: Milben aus einer Probe von ca. 300 Bienen zählen.", "en": "Do a sugar roll or alcohol wash: count mites from a sample of ~300 bees." },
+      { "de": "Mehr als 3 Milben pro 100 Bienen erfordert Behandlung.", "en": "More than 3 mites per 100 bees requires treatment." },
+      { "de": "Eine für die Jahreszeit geeignete Behandlung wählen (Apivar-Streifen in der aktiven Saison, Oxalsäure in der brutfreien Zeit).", "en": "Choose a treatment suitable for the season (Apivar strips in active season, oxalic acid in broodless period)." },
+      { "de": "Milben 4–6 Wochen nach der Behandlung erneut zählen, um den Erfolg zu bestätigen.", "en": "Recount mites 4–6 weeks after treatment to confirm it worked." }
     ],
     "callExpert": false
   },
   "varroa-confirmed": {
     "type": "outcome",
-    "diagnosis": "Varroa mite infestation — deformed wing virus symptoms",
+    "diagnosis": { "de": "Varroabefall — Symptome des Flügeldeformationsvirus", "en": "Varroa mite infestation — deformed wing virus symptoms" },
     "actions": [
-      "Deformed wings and stunted bees are caused by Deformed Wing Virus spread by varroa mites.",
-      "Treat immediately — colony collapse is possible without urgent treatment.",
-      "Use Apivar strips (amitraz) in an active colony, or oxalic acid if the colony is broodless.",
-      "After treatment, assess whether the colony is strong enough to recover — combine with another if very weak."
+      { "de": "Deformierte Flügel und verkrüppelte Bienen werden durch das Flügeldeformationsvirus verursacht, das durch Varroamilben verbreitet wird.", "en": "Deformed wings and stunted bees are caused by Deformed Wing Virus spread by varroa mites." },
+      { "de": "Sofort behandeln — Volkszusammenbruch ist ohne dringende Behandlung möglich.", "en": "Treat immediately — colony collapse is possible without urgent treatment." },
+      { "de": "Apivar-Streifen (Amitraz) bei einem aktiven Volk verwenden, oder Oxalsäure bei brutlosem Volk.", "en": "Use Apivar strips (amitraz) in an active colony, or oxalic acid if the colony is broodless." },
+      { "de": "Nach der Behandlung prüfen, ob das Volk stark genug zur Erholung ist — bei sehr schwachem Volk mit einem anderen zusammenlegen.", "en": "After treatment, assess whether the colony is strong enough to recover — combine with another if very weak." }
     ],
     "callExpert": true
   },
   "robbing": {
     "type": "outcome",
-    "diagnosis": "Robbing behaviour",
+    "diagnosis": { "de": "Räubereiverhalten", "en": "Robbing behaviour" },
     "actions": [
-      "Reduce the entrance to a single bee width right now.",
-      "Stop all open feeding near the hive immediately.",
-      "Do not inspect the hive during a robbing event — it makes it significantly worse.",
-      "Once robbing stops, assess the colony's remaining stores and strength."
+      { "de": "Das Flugloch sofort auf Bienenbreite verengern.", "en": "Reduce the entrance to a single bee width right now." },
+      { "de": "Alle offene Fütterung in der Nähe des Stocks sofort einstellen.", "en": "Stop all open feeding near the hive immediately." },
+      { "de": "Den Stock während einer Räuberei nicht öffnen — es verschlimmert die Situation erheblich.", "en": "Do not inspect the hive during a robbing event — it makes it significantly worse." },
+      { "de": "Wenn die Räuberei aufhört, die verbleibenden Vorräte und Stärke des Volkes beurteilen.", "en": "Once robbing stops, assess the colony's remaining stores and strength." }
     ],
     "callExpert": false
   }

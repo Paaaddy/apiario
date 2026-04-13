@@ -1,11 +1,16 @@
-const COMMANDS = [
-  { label: '"next"', desc: 'next task or question' },
-  { label: '"read again"', desc: 'repeat current content' },
-  { label: '"diagnose"', desc: 'go to diagnose tab' },
-  { label: '"stop"', desc: 'exit hands-free mode' },
-]
+import { useLanguage } from '../hooks/useLanguage'
+import { strings as s } from '../i18n/strings'
 
 export default function VoiceOverlay({ onStop, lastCommand }) {
+  const { t } = useLanguage()
+
+  const COMMANDS = [
+    { label: t(s.voice_cmd_next),     desc: t(s.voice_cmd_next_desc) },
+    { label: t(s.voice_cmd_read),     desc: t(s.voice_cmd_read_desc) },
+    { label: t(s.voice_cmd_diagnose), desc: t(s.voice_cmd_diagnose_desc) },
+    { label: t(s.voice_cmd_stop),     desc: t(s.voice_cmd_stop_desc) },
+  ]
+
   return (
     <div className="fixed inset-0 z-40 flex flex-col items-center justify-center">
       <div className="absolute inset-0 bg-brown/70" onClick={onStop} />
@@ -17,9 +22,9 @@ export default function VoiceOverlay({ onStop, lastCommand }) {
 
         <div className="bg-cream rounded-2xl p-5 w-full shadow-xl">
           <p className="font-serif text-sm font-bold text-brown text-center mb-1">
-            Hands-free mode active
+            {t(s.voice_title)}
           </p>
-          <p className="text-brown-mid text-xs text-center mb-4">Listening for commands...</p>
+          <p className="text-brown-mid text-xs text-center mb-4">{t(s.voice_listening)}</p>
 
           <div className="flex flex-col gap-2">
             {COMMANDS.map(({ label, desc }) => (
@@ -34,13 +39,13 @@ export default function VoiceOverlay({ onStop, lastCommand }) {
 
           {lastCommand && (
             <p className="mt-4 text-center text-xs text-brown-mid italic">
-              Heard: "{lastCommand}"
+              {t(s.voice_heard)} "{lastCommand}"
             </p>
           )}
         </div>
 
         <button onClick={onStop} className="text-cream/80 text-sm underline underline-offset-2">
-          Tap anywhere to stop
+          {t(s.voice_tap_stop)}
         </button>
       </div>
     </div>

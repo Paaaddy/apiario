@@ -1,10 +1,15 @@
-const TABS = [
-  { key: 'season', label: 'Season', icon: '📅' },
-  { key: 'diagnose', label: 'Diagnose', icon: '🔎' },
-  { key: 'myhive', label: 'My Hive', icon: '🐝' },
-]
+import { useLanguage } from '../hooks/useLanguage'
+import { strings as s } from '../i18n/strings'
 
 export default function BottomNav({ activeTab, onTabChange }) {
+  const { t } = useLanguage()
+
+  const TABS = [
+    { key: 'season',   label: t(s.nav_season),   icon: '📅' },
+    { key: 'diagnose', label: t(s.nav_diagnose),  icon: '🔎' },
+    { key: 'myhive',   label: t(s.nav_myhive),    icon: '🐝' },
+  ]
+
   return (
     <nav className="bg-white border-t border-amber-100 flex">
       {TABS.map(({ key, label, icon }) => (

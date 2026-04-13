@@ -1,8 +1,12 @@
 import { useState } from 'react'
+import { useLanguage } from '../hooks/useLanguage'
+import { strings as s } from '../i18n/strings'
 import diagnosisData from '../data/diagnosis.json'
 import DiagnosisResult from '../components/DiagnosisResult'
+import LanguageToggle from '../components/LanguageToggle'
 
 export default function DiagnoseScreen() {
+  const { t } = useLanguage()
   const [currentNodeId, setCurrentNodeId] = useState('root')
   const [history, setHistory] = useState([])
 
@@ -23,8 +27,11 @@ export default function DiagnoseScreen() {
   if (node.type === 'outcome') {
     return (
       <div className="flex flex-col min-h-full">
-        <div className="bg-honey px-6 pt-10 pb-6">
-          <h1 className="font-serif text-2xl font-bold text-brown">🔎 Diagnosis</h1>
+        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20">
+          <div className="flex items-start justify-between">
+            <h1 className="font-serif text-2xl font-bold text-brown">🔎 {t(s.diagnose_title)}</h1>
+            <LanguageToggle />
+          </div>
         </div>
         <DiagnosisResult node={node} onReset={handleReset} />
       </div>
@@ -35,9 +42,14 @@ export default function DiagnoseScreen() {
 
   return (
     <div className="flex flex-col min-h-full">
-      <div className="bg-honey px-6 pt-10 pb-6">
-        <h1 className="font-serif text-2xl font-bold text-brown">🔎 Diagnose</h1>
-        <p className="text-brown-light text-sm mt-1">Step {stepNumber}</p>
+      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="font-serif text-2xl font-bold text-brown">🔎 {t(s.diagnose_title)}</h1>
+            <p className="text-brown-light text-sm mt-1">{t(s.diagnose_step)} {stepNumber}</p>
+          </div>
+          <LanguageToggle />
+        </div>
       </div>
 
       <div className="h-1 bg-amber-100">
@@ -48,7 +60,7 @@ export default function DiagnoseScreen() {
       </div>
 
       <div className="px-4 pt-6 pb-3">
-        <h2 className="font-serif text-lg font-semibold text-brown">{node.question}</h2>
+        <h2 className="font-serif text-lg font-semibold text-brown">{t(node.question)}</h2>
       </div>
 
       <div className="px-4 flex flex-col gap-3">
@@ -58,14 +70,14 @@ export default function DiagnoseScreen() {
             onClick={() => handleSelect(option.next)}
             className="w-full text-left bg-white rounded-xl px-5 py-4 border border-amber-100 text-brown text-sm font-medium shadow-sm active:bg-amber-50 transition-colors leading-snug"
           >
-            {option.label}
+            {t(option.label)}
           </button>
         ))}
       </div>
 
       <div className="px-4 mt-4">
         <button onClick={handleReset} className="text-sm text-brown-mid underline underline-offset-2">
-          Start over
+          {t(s.diagnose_restart)}
         </button>
       </div>
     </div>

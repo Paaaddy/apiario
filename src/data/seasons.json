@@ -1,160 +1,160 @@
 {
   "spring": {
-    "label": "Spring",
+    "label": { "de": "Frühling", "en": "Spring" },
     "icon": "🌸",
     "months": [3, 4, 5],
     "tasks": [
       {
         "id": "sp-01",
-        "name": "First hive inspection",
-        "why": "Confirm the colony survived winter and the queen is laying.",
+        "name": { "de": "Erste Frühjahrskontrolle", "en": "First hive inspection" },
+        "why": { "de": "Bestätigen, dass das Volk den Winter überlebt hat und die Königin legt.", "en": "Confirm the colony survived winter and the queen is laying." },
         "urgency": "important",
         "minExperience": 0
       },
       {
         "id": "sp-02",
-        "name": "Check honey stores",
-        "why": "Colonies can starve in early spring before flowers bloom.",
+        "name": { "de": "Honigvorräte prüfen", "en": "Check honey stores" },
+        "why": { "de": "Völker können im Frühfrühling verhungern, bevor Blumen blühen.", "en": "Colonies can starve in early spring before flowers bloom." },
         "urgency": "important",
         "minExperience": 0
       },
       {
         "id": "sp-03",
-        "name": "Clear the hive entrance",
-        "why": "Remove dead bees and debris so foragers can fly freely.",
+        "name": { "de": "Flugloch freimachen", "en": "Clear the hive entrance" },
+        "why": { "de": "Tote Bienen und Schmutz entfernen, damit Sammlerinnen frei fliegen können.", "en": "Remove dead bees and debris so foragers can fly freely." },
         "urgency": "routine",
         "minExperience": 0
       },
       {
         "id": "sp-04",
-        "name": "Check for swarm cells",
-        "why": "Spring is prime swarm season — catch queen cells early.",
+        "name": { "de": "Schwarmzellen kontrollieren", "en": "Check for swarm cells" },
+        "why": { "de": "Frühling ist die Hauptschwarmzeit — Königinnenzellen früh erkennen.", "en": "Spring is prime swarm season — catch queen cells early." },
         "urgency": "important",
         "minExperience": 1
       },
       {
         "id": "sp-05",
-        "name": "Add a super if colony is growing",
-        "why": "Give bees space before they decide to swarm.",
+        "name": { "de": "Honigraum aufsetzen wenn das Volk wächst", "en": "Add a super if colony is growing" },
+        "why": { "de": "Bienen Platz geben, bevor sie schwärmen wollen.", "en": "Give bees space before they decide to swarm." },
         "urgency": "routine",
         "minExperience": 0
       }
     ]
   },
   "summer": {
-    "label": "Summer",
+    "label": { "de": "Sommer", "en": "Summer" },
     "icon": "☀️",
     "months": [6, 7, 8],
     "tasks": [
       {
         "id": "su-01",
-        "name": "Weekly swarm checks",
-        "why": "Swarming peaks in early summer — inspect every 7 days.",
+        "name": { "de": "Wöchentliche Schwarmkontrollen", "en": "Weekly swarm checks" },
+        "why": { "de": "Schwarmzeit im Frühsommer — alle 7 Tage kontrollieren.", "en": "Swarming peaks in early summer — inspect every 7 days." },
         "urgency": "important",
         "minExperience": 0
       },
       {
         "id": "su-02",
-        "name": "Add honey supers as needed",
-        "why": "Bees fill supers fast in a good nectar flow. Give them room.",
+        "name": { "de": "Honigräume aufsetzen nach Bedarf", "en": "Add honey supers as needed" },
+        "why": { "de": "Bienen füllen Räume schnell bei gutem Nektarflug. Platz geben.", "en": "Bees fill supers fast in a good nectar flow. Give them room." },
         "urgency": "routine",
         "minExperience": 0
       },
       {
         "id": "su-03",
-        "name": "Monitor for varroa mites",
-        "why": "Mite populations grow fastest in summer. Count now to act in time.",
+        "name": { "de": "Varroamilben überwachen", "en": "Monitor for varroa mites" },
+        "why": { "de": "Milbenpopulationen wachsen im Sommer am schnellsten. Jetzt zählen, um rechtzeitig zu handeln.", "en": "Mite populations grow fastest in summer. Count now to act in time." },
         "urgency": "important",
         "minExperience": 0
       },
       {
         "id": "su-04",
-        "name": "Harvest honey (when supers are fully capped)",
-        "why": "Capped honey has low enough moisture — uncapped can ferment.",
+        "name": { "de": "Honig ernten (wenn Räume vollständig verdeckelt)", "en": "Harvest honey (when supers are fully capped)" },
+        "why": { "de": "Verdeckelter Honig hat wenig Feuchtigkeit — unverdeckelter kann gären.", "en": "Capped honey has low enough moisture — uncapped can ferment." },
         "urgency": "routine",
         "minExperience": 1
       },
       {
         "id": "su-05",
-        "name": "Ensure a water source nearby",
-        "why": "Bees need water to cool the hive in hot weather.",
+        "name": { "de": "Wasserquelle in der Nähe sicherstellen", "en": "Ensure a water source nearby" },
+        "why": { "de": "Bienen brauchen Wasser zur Kühlung des Stocks bei Hitze.", "en": "Bees need water to cool the hive in hot weather." },
         "urgency": "routine",
         "minExperience": 0
       }
     ]
   },
   "autumn": {
-    "label": "Autumn",
+    "label": { "de": "Herbst", "en": "Autumn" },
     "icon": "🍂",
     "months": [9, 10, 11],
     "tasks": [
       {
         "id": "au-01",
-        "name": "Treat for varroa mites",
-        "why": "Autumn treatment protects the winter bees that must survive until spring.",
+        "name": { "de": "Varroa behandeln", "en": "Treat for varroa mites" },
+        "why": { "de": "Herbstbehandlung schützt die Winterbienen, die bis zum Frühling überleben müssen.", "en": "Autumn treatment protects the winter bees that must survive until spring." },
         "urgency": "urgent",
         "minExperience": 0
       },
       {
         "id": "au-02",
-        "name": "Feed sugar syrup",
-        "why": "Colonies need 15–20 kg of stores to survive winter. Feed if short.",
+        "name": { "de": "Zuckerwasser füttern", "en": "Feed sugar syrup" },
+        "why": { "de": "Völker brauchen 15–20 kg Vorräte für den Winter. Bei Mangel füttern.", "en": "Colonies need 15–20 kg of stores to survive winter. Feed if short." },
         "urgency": "important",
         "minExperience": 0
       },
       {
         "id": "au-03",
-        "name": "Assess colony strength",
-        "why": "Weak colonies rarely survive winter. Consider merging with a stronger hive.",
+        "name": { "de": "Volksstärke beurteilen", "en": "Assess colony strength" },
+        "why": { "de": "Schwache Völker überleben den Winter selten. Zusammenlegung mit einem stärkeren Volk erwägen.", "en": "Weak colonies rarely survive winter. Consider merging with a stronger hive." },
         "urgency": "important",
         "minExperience": 1
       },
       {
         "id": "au-04",
-        "name": "Reduce the entrance",
-        "why": "Smaller entrance deters robbing bees and mice as the colony shrinks.",
+        "name": { "de": "Flugloch verengern", "en": "Reduce the entrance" },
+        "why": { "de": "Engeres Flugloch schützt vor Räuberbienen und Mäusen wenn das Volk kleiner wird.", "en": "Smaller entrance deters robbing bees and mice as the colony shrinks." },
         "urgency": "routine",
         "minExperience": 0
       },
       {
         "id": "au-05",
-        "name": "Remove queen excluder",
-        "why": "Queen must be able to move with the cluster in winter.",
+        "name": { "de": "Absperrgitter entfernen", "en": "Remove queen excluder" },
+        "why": { "de": "Die Königin muss sich im Winter mit der Traube bewegen können.", "en": "Queen must be able to move with the cluster in winter." },
         "urgency": "important",
         "minExperience": 0
       }
     ]
   },
   "winter": {
-    "label": "Winter",
+    "label": { "de": "Winter", "en": "Winter" },
     "icon": "❄️",
     "months": [12, 1, 2],
     "tasks": [
       {
         "id": "wi-01",
-        "name": "Heft the hive weekly",
-        "why": "Lift the back edge to feel weight — light means low stores. Feed fondant if needed.",
+        "name": { "de": "Wöchentlich das Gewicht prüfen", "en": "Heft the hive weekly" },
+        "why": { "de": "Hinteren Rand anheben, um das Gewicht zu spüren — leicht bedeutet wenig Vorräte. Bei Bedarf Futterteig geben.", "en": "Lift the back edge to feel weight — light means low stores. Feed fondant if needed." },
         "urgency": "important",
         "minExperience": 0
       },
       {
         "id": "wi-02",
-        "name": "Keep the entrance clear",
-        "why": "Dead bees block airflow and cleansing flights. Clear gently without opening.",
+        "name": { "de": "Flugloch freihalten", "en": "Keep the entrance clear" },
+        "why": { "de": "Tote Bienen blockieren Luftstrom und Reinigungsflüge. Vorsichtig freilegen ohne zu öffnen.", "en": "Dead bees block airflow and cleansing flights. Clear gently without opening." },
         "urgency": "routine",
         "minExperience": 0
       },
       {
         "id": "wi-03",
-        "name": "Avoid opening the hive",
-        "why": "Cold breaks the cluster. Only open above 12°C on a calm, sunny day.",
+        "name": { "de": "Stock nicht öffnen", "en": "Avoid opening the hive" },
+        "why": { "de": "Kälte bricht die Traube auf. Nur über 12°C an einem ruhigen, sonnigen Tag öffnen.", "en": "Cold breaks the cluster. Only open above 12°C on a calm, sunny day." },
         "urgency": "important",
         "minExperience": 0
       },
       {
         "id": "wi-04",
-        "name": "Apply oxalic acid treatment",
-        "why": "With no capped brood, oxalic acid knocks back varroa mites very effectively.",
+        "name": { "de": "Oxalsäurebehandlung durchführen", "en": "Apply oxalic acid treatment" },
+        "why": { "de": "Ohne verdeckelte Brut bekämpft Oxalsäure Varroamilben sehr effektiv.", "en": "With no capped brood, oxalic acid knocks back varroa mites very effectively." },
         "urgency": "urgent",
         "minExperience": 0
       }

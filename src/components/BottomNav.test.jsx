@@ -1,11 +1,19 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { LanguageProvider } from '../context/LanguageContext'
 import BottomNav from './BottomNav'
+
+beforeEach(() => { localStorage.setItem('apiario-locale', 'en') })
+afterEach(() => { localStorage.clear() })
+
+function wrap(ui) {
+  return render(<LanguageProvider>{ui}</LanguageProvider>)
+}
 
 describe('BottomNav', () => {
   it('renders all three tabs', () => {
-    render(<BottomNav activeTab="season" onTabChange={() => {}} />)
+    wrap(<BottomNav activeTab="season" onTabChange={() => {}} />)
     expect(screen.getByText('Season')).toBeInTheDocument()
     expect(screen.getByText('Diagnose')).toBeInTheDocument()
     expect(screen.getByText('My Hive')).toBeInTheDocument()
@@ -14,13 +22,13 @@ describe('BottomNav', () => {
   it('calls onTabChange with correct key when a tab is clicked', async () => {
     const user = userEvent.setup()
     const onTabChange = vi.fn()
-    render(<BottomNav activeTab="season" onTabChange={onTabChange} />)
+    wrap(<BottomNav activeTab="season" onTabChange={onTabChange} />)
     await user.click(screen.getByText('Diagnose'))
     expect(onTabChange).toHaveBeenCalledWith('diagnose')
   })
 
   it('marks the active tab with honey colour class', () => {
-    render(<BottomNav activeTab="diagnose" onTabChange={() => {}} />)
+    wrap(<BottomNav activeTab="diagnose" onTabChange={() => {}} />)
     const diagnoseBtn = screen.getByText('Diagnose').closest('button')
     expect(diagnoseBtn).toHaveClass('text-honey')
   })
