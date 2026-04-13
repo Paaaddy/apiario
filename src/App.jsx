@@ -1,21 +1,11 @@
 import { useState } from 'react'
 import { useProfile } from './hooks/useProfile'
 import BottomNav from './components/BottomNav'
+import Onboarding from './screens/Onboarding'
 
-// Screen stubs — replaced in later tasks
 function SeasonScreen() { return <div className="p-4 font-serif text-brown">Season screen</div> }
 function DiagnoseScreen() { return <div className="p-4 font-serif text-brown">Diagnose screen</div> }
 function MyHiveScreen() { return <div className="p-4 font-serif text-brown">My Hive screen</div> }
-function Onboarding({ onComplete }) {
-  return (
-    <div className="p-6">
-      <h1 className="font-serif text-2xl text-brown">Welcome to Apiario</h1>
-      <button onClick={onComplete} className="mt-4 bg-honey text-brown px-6 py-2 rounded-full font-medium">
-        Skip onboarding
-      </button>
-    </div>
-  )
-}
 
 export default function App() {
   const { profile, updateProfile } = useProfile()
@@ -24,7 +14,9 @@ export default function App() {
   if (!profile.onboardingDone) {
     return (
       <div className="flex flex-col h-full bg-cream">
-        <Onboarding onComplete={() => updateProfile({ onboardingDone: true })} />
+        <Onboarding
+          onComplete={(answers) => updateProfile({ ...answers, onboardingDone: true })}
+        />
       </div>
     )
   }
