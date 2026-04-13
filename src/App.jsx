@@ -4,8 +4,7 @@ import BottomNav from './components/BottomNav'
 import Onboarding from './screens/Onboarding'
 import SeasonScreen from './screens/SeasonScreen'
 import DiagnoseScreen from './screens/DiagnoseScreen'
-
-function MyHiveScreen() { return <div className="p-4 font-serif text-brown">My Hive screen</div> }
+import MyHiveScreen from './screens/MyHiveScreen'
 
 export default function App() {
   const { profile, updateProfile } = useProfile()
@@ -26,7 +25,7 @@ export default function App() {
       <main className="flex-1 overflow-y-auto">
         {activeTab === 'season' && <SeasonScreen profile={profile} />}
         {activeTab === 'diagnose' && <DiagnoseScreen />}
-        {activeTab === 'myhive' && <MyHiveScreen />}
+        {activeTab === 'myhive' && <MyHiveScreen profile={profile} onUpdate={updateProfile} />}
       </main>
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
