@@ -7,7 +7,6 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['bee-192.png', 'bee-512.png'],
       manifest: {
         name: 'Apiario',
         short_name: 'Apiario',
@@ -17,13 +16,22 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'portrait',
         icons: [
-          { src: 'bee-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'bee-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+          { src: 'bee-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'bee-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
-        runtimeCaching: [],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
+        ],
       },
     }),
   ],

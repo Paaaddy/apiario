@@ -63,13 +63,11 @@ export default function DiagnoseScreen() {
         ))}
       </div>
 
-      {history.length > 0 && (
-        <div className="px-4 mt-4">
-          <button onClick={handleReset} className="text-sm text-brown-mid underline underline-offset-2">
-            Start over
-          </button>
-        </div>
-      )}
+      <div className="px-4 mt-4">
+        <button onClick={handleReset} className="text-sm text-brown-mid underline underline-offset-2">
+          Start over
+        </button>
+      </div>
     </div>
   )
 }
