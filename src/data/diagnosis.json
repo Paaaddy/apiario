@@ -1,0 +1,245 @@
+{
+  "root": {
+    "type": "question",
+    "question": "What are you seeing in or around the hive?",
+    "options": [
+      { "label": "Very few bees — colony seems much smaller", "next": "few-bees" },
+      { "label": "Many dead bees in front of the hive", "next": "dead-bees" },
+      { "label": "No eggs or young larvae visible inside", "next": "no-brood" },
+      { "label": "Brood looks wrong — discoloured or sunken", "next": "sick-brood" },
+      { "label": "Bees clustering on outside of hive (bearding)", "next": "bearding" },
+      { "label": "Bees are unusually aggressive", "next": "aggressive" }
+    ]
+  },
+  "few-bees": {
+    "type": "question",
+    "question": "When did you last inspect this hive?",
+    "options": [
+      { "label": "Less than 2 weeks ago — it was fine then", "next": "few-bees-recent" },
+      { "label": "More than a month ago", "next": "few-bees-overdue" }
+    ]
+  },
+  "few-bees-recent": {
+    "type": "question",
+    "question": "Can you see the queen or fresh eggs (tiny white grains standing upright in cells)?",
+    "options": [
+      { "label": "Yes, eggs are visible", "next": "varroa-suspect" },
+      { "label": "No eggs, no sign of the queen", "next": "queenless" }
+    ]
+  },
+  "few-bees-overdue": {
+    "type": "outcome",
+    "diagnosis": "Unknown — inspection overdue",
+    "actions": [
+      "Open the hive on a warm calm day (above 12°C).",
+      "Check for the queen, eggs, and brood.",
+      "Look for varroa mites on adult bees and in cells.",
+      "If colony is very weak, consider merging with a stronger hive."
+    ],
+    "callExpert": false
+  },
+  "dead-bees": {
+    "type": "question",
+    "question": "What do the dead bees look like?",
+    "options": [
+      { "label": "Normal looking — just dead, in a pile", "next": "dead-bees-normal" },
+      { "label": "Deformed wings, stunted bodies", "next": "varroa-confirmed" },
+      { "label": "Bees with stingers out, fighting posture", "next": "robbing" }
+    ]
+  },
+  "dead-bees-normal": {
+    "type": "question",
+    "question": "What time of year is it and how many dead bees?",
+    "options": [
+      { "label": "Winter or early spring — a few hundred", "next": "normal-winter-death" },
+      { "label": "Summer — hundreds or thousands", "next": "pesticide-suspect" }
+    ]
+  },
+  "normal-winter-death": {
+    "type": "outcome",
+    "diagnosis": "Normal winter cluster die-off",
+    "actions": [
+      "Some dead bees in winter is normal — the cluster shrinks as bees age.",
+      "Clear the entrance so living bees can take cleansing flights on warm days.",
+      "Heft the hive to check food stores are still adequate.",
+      "Do not open the hive unless temperature is above 12°C."
+    ],
+    "callExpert": false
+  },
+  "pesticide-suspect": {
+    "type": "outcome",
+    "diagnosis": "Possible pesticide poisoning",
+    "actions": [
+      "Note the date and number of dead bees — document this carefully.",
+      "Check if nearby fields or gardens were recently sprayed.",
+      "Contact your local beekeeping association to report the incident.",
+      "Assess the surviving colony — check for eggs and brood to judge colony strength."
+    ],
+    "callExpert": true
+  },
+  "no-brood": {
+    "type": "question",
+    "question": "How long since you last saw eggs or brood?",
+    "options": [
+      { "label": "Just noticed today — haven't checked recently", "next": "no-brood-check" },
+      { "label": "More than 3 weeks with no brood visible", "next": "queenless" }
+    ]
+  },
+  "no-brood-check": {
+    "type": "outcome",
+    "diagnosis": "Possible queen issue — thorough inspection needed",
+    "actions": [
+      "Inspect all frames methodically in good light.",
+      "Look for eggs (tiny grains standing upright in cells — you may need reading glasses).",
+      "Eggs are 1–3 days old. If you see them, the queen was active recently.",
+      "If no eggs found after a thorough search, assume the queen is lost."
+    ],
+    "callExpert": false
+  },
+  "queenless": {
+    "type": "outcome",
+    "diagnosis": "Colony is queenless",
+    "actions": [
+      "Check for emergency queen cells — bees may already be raising a new queen.",
+      "If no queen cells found, you need to introduce a new queen or a frame of fresh eggs from another hive.",
+      "Do not wait more than 3–4 weeks or laying workers may develop, making recovery very difficult.",
+      "Contact your local beekeeping association for a queen source."
+    ],
+    "callExpert": true
+  },
+  "sick-brood": {
+    "type": "question",
+    "question": "What does the sick brood look like?",
+    "options": [
+      { "label": "Sunken, perforated cappings — bees seem to be chewing them open", "next": "afb-suspect" },
+      { "label": "Dead larvae, greasy or yellow/brown in colour", "next": "efb-suspect" },
+      { "label": "Chalk-like white or grey mummies in or around cells", "next": "chalkbrood" }
+    ]
+  },
+  "afb-suspect": {
+    "type": "outcome",
+    "diagnosis": "Possible American Foulbrood (AFB) — act immediately",
+    "actions": [
+      "Do NOT transfer any equipment to other hives — AFB spreads easily.",
+      "Perform the 'ropiness test': insert a twig into a dead cell and pull slowly — AFB stretches 2–3 cm like caramel.",
+      "If positive for AFB, this is a notifiable disease in most countries.",
+      "Contact your local beekeeping inspector immediately — do not delay."
+    ],
+    "callExpert": true
+  },
+  "efb-suspect": {
+    "type": "outcome",
+    "diagnosis": "Possible European Foulbrood (EFB)",
+    "actions": [
+      "EFB often clears up when the nectar flow improves and the colony strengthens.",
+      "Ensure the queen is young and productive — requeen if the queen is old.",
+      "In severe cases, antibiotic treatment may be available — check local regulations.",
+      "Report to your local beekeeping inspector."
+    ],
+    "callExpert": true
+  },
+  "chalkbrood": {
+    "type": "outcome",
+    "diagnosis": "Chalkbrood (fungal infection)",
+    "actions": [
+      "Improve hive ventilation — chalkbrood thrives in cold, damp conditions.",
+      "Ensure the colony is large enough to cover all brood and keep it warm.",
+      "Replace old dark comb — fungal spores persist in wax.",
+      "Strong colonies with a young queen usually clear chalkbrood on their own."
+    ],
+    "callExpert": false
+  },
+  "bearding": {
+    "type": "question",
+    "question": "What is the weather like right now?",
+    "options": [
+      { "label": "Hot and humid — above 30°C", "next": "bearding-heat" },
+      { "label": "Mild weather, not particularly hot", "next": "swarm-prep" }
+    ]
+  },
+  "bearding-heat": {
+    "type": "outcome",
+    "diagnosis": "Normal heat bearding",
+    "actions": [
+      "This is normal behaviour in hot weather — bees hang outside to cool the hive.",
+      "Ensure there is a nearby water source within 200 metres.",
+      "Provide extra ventilation by propping the roof slightly or adding a mesh floor.",
+      "The bees will return inside when temperatures drop in the evening."
+    ],
+    "callExpert": false
+  },
+  "swarm-prep": {
+    "type": "outcome",
+    "diagnosis": "Possible pre-swarm clustering",
+    "actions": [
+      "Inspect the hive for queen cells immediately.",
+      "If queen cells are present, the colony is preparing to swarm.",
+      "Perform an artificial swarm or remove/destroy queen cells to prevent swarming.",
+      "Add more space (a super or brood box) if the hive is congested."
+    ],
+    "callExpert": false
+  },
+  "aggressive": {
+    "type": "question",
+    "question": "Has the aggression changed recently?",
+    "options": [
+      { "label": "Yes — was calm before, suddenly very aggressive", "next": "aggressive-sudden" },
+      { "label": "Always been a bit defensive", "next": "aggressive-breed" }
+    ]
+  },
+  "aggressive-sudden": {
+    "type": "outcome",
+    "diagnosis": "Sudden aggression — possible queenlessness or robbing",
+    "actions": [
+      "Check the hive for the queen and fresh brood — queenless colonies often become aggressive.",
+      "Look for signs of robbing: bees fighting at the entrance, suspicious activity from other hives.",
+      "If being robbed, reduce the entrance to a single bee width immediately.",
+      "Avoid opening the hive during a robbing frenzy — it will make things worse."
+    ],
+    "callExpert": false
+  },
+  "aggressive-breed": {
+    "type": "outcome",
+    "diagnosis": "Defensive genetics",
+    "actions": [
+      "Some colonies are naturally more defensive — genetics play a big role.",
+      "Consider requeening with a locally-bred, calm queen next spring.",
+      "Always use full protection (suit, gloves) and work bees on warm, sunny, windless days.",
+      "Use generous smoke before and during inspections."
+    ],
+    "callExpert": false
+  },
+  "varroa-suspect": {
+    "type": "outcome",
+    "diagnosis": "Possible varroa mite infestation",
+    "actions": [
+      "Do a sugar roll or alcohol wash: count mites from a sample of ~300 bees.",
+      "More than 3 mites per 100 bees requires treatment.",
+      "Choose a treatment suitable for the season (Apivar strips in active season, oxalic acid in broodless period).",
+      "Recount mites 4–6 weeks after treatment to confirm it worked."
+    ],
+    "callExpert": false
+  },
+  "varroa-confirmed": {
+    "type": "outcome",
+    "diagnosis": "Varroa mite infestation — deformed wing virus symptoms",
+    "actions": [
+      "Deformed wings and stunted bees are caused by Deformed Wing Virus spread by varroa mites.",
+      "Treat immediately — colony collapse is possible without urgent treatment.",
+      "Use Apivar strips (amitraz) in an active colony, or oxalic acid if the colony is broodless.",
+      "After treatment, assess whether the colony is strong enough to recover — combine with another if very weak."
+    ],
+    "callExpert": false
+  },
+  "robbing": {
+    "type": "outcome",
+    "diagnosis": "Robbing behaviour",
+    "actions": [
+      "Reduce the entrance to a single bee width right now.",
+      "Stop all open feeding near the hive immediately.",
+      "Do not inspect the hive during a robbing event — it makes it significantly worse.",
+      "Once robbing stops, assess the colony's remaining stores and strength."
+    ],
+    "callExpert": false
+  }
+}
