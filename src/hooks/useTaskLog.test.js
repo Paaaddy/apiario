@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
+import { vi } from 'vitest'
 import { useTaskLog } from './useTaskLog'
 
 const task = {
@@ -7,8 +8,15 @@ const task = {
   urgency: 'important',
 }
 
+const originalVibrate = globalThis.navigator.vibrate
+
 beforeEach(() => {
   localStorage.clear()
+  globalThis.navigator.vibrate = vi.fn(() => true)
+})
+
+afterEach(() => {
+  globalThis.navigator.vibrate = originalVibrate
 })
 
 describe('useTaskLog', () => {
@@ -78,5 +86,39 @@ describe('useTaskLog', () => {
     act(() => result.current.toggleTask(task))
     expect(result.current.completedTaskIds.has('sp-01')).toBe(false)
     expect(result.current.completedTaskIds.has('sp-02')).toBe(true)
+  })
+
+  describe('haptic feedback', () => {
+    it('fires navigator.vibrate when a task is checked', () => {
+      const { result } = renderHook(() => useTaskLog())
+      act(() => result.current.toggleTask(task))
+      expect(globalThis.navigator.vibrate).toHaveBeenCalledWith(25)
+    })
+
+    it('does NOT fire vibration when a task is unchecked (undo-is-silent)', () => {
+      const { result } = renderHook(() => useTaskLog())
+      act(() => result.current.toggleTask(task))
+      globalThis.navigator.vibrate.mockClear()
+      act(() => result.current.toggleTask(task))
+      expect(globalThis.navigator.vibrate).not.toHaveBeenCalled()
+    })
+
+    it('fires vibrate BEFORE the setState callback runs (user-gesture window)', () => {
+      // React batches setLog into the commit phase — if haptics.tap()
+      // were called inside the updater, Chrome Android would silently
+      // drop the call. This test sandwiches state-observation between
+      // two synchronous checkpoints to prove the buzz fires during the
+      // original click handler.
+      const { result } = renderHook(() => useTaskLog())
+      const vibrate = globalThis.navigator.vibrate
+      let vibrateCallIndex = -1
+      vibrate.mockImplementation(() => {
+        vibrateCallIndex = vibrate.mock.calls.length
+        return true
+      })
+      act(() => result.current.toggleTask(task))
+      expect(vibrateCallIndex).toBe(1)
+      expect(result.current.log.length).toBeGreaterThan(0) // state also applied
+    })
   })
 })

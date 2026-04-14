@@ -12,19 +12,21 @@ afterEach(() => {
 })
 
 describe('haptics', () => {
-  it('tap() calls navigator.vibrate with a short duration', () => {
+  it('tap() calls navigator.vibrate with a perceptible short duration', () => {
     haptics.tap()
-    expect(globalThis.navigator.vibrate).toHaveBeenCalledWith(15)
+    // Must be >= 20ms; most Android vibration motors silently drop pulses
+    // shorter than that because the motor can't ramp up in time.
+    expect(globalThis.navigator.vibrate).toHaveBeenCalledWith(25)
   })
 
   it('success() calls vibrate with a pattern', () => {
     haptics.success()
-    expect(globalThis.navigator.vibrate).toHaveBeenCalledWith([20, 40, 20])
+    expect(globalThis.navigator.vibrate).toHaveBeenCalledWith([30, 50, 30])
   })
 
   it('warn() uses a double-buzz pattern', () => {
     haptics.warn()
-    expect(globalThis.navigator.vibrate).toHaveBeenCalledWith([10, 30, 10, 30, 10])
+    expect(globalThis.navigator.vibrate).toHaveBeenCalledWith([20, 40, 20, 40, 20])
   })
 
   it('stop() cancels any ongoing vibration', () => {
