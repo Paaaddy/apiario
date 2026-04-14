@@ -19,7 +19,7 @@ import MyHiveScreen from './screens/MyHiveScreen'
 import PwaInstallHint from './components/PwaInstallHint'
 
 function AppContent() {
-  const { profile, updateProfile } = useProfile()
+  const { profile, updateProfile, addColony, updateColony, removeColony } = useProfile()
   const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry } = useTaskLog()
   const [activeTab, setActiveTab] = useState('season')
   const [voiceActive, setVoiceActive] = useState(false)
@@ -100,6 +100,9 @@ function AppContent() {
             log={log}
             onAddEntry={addCustomEntry}
             onDeleteEntry={deleteEntry}
+            onAddColony={addColony}
+            onUpdateColony={updateColony}
+            onRemoveColony={removeColony}
             pwaInstall={pwaInstall}
           />
         )}

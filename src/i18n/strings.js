@@ -29,6 +29,19 @@ export const strings = {
   // My Hive
   myhive_title:     { de: 'Mein Stock',                       en: 'My Hive'                       },
   myhive_subtitle:  { de: 'Dein Profil formt deine Empfehlungen', en: 'Your profile shapes your guidance' },
+
+  // Colonies section (inside My Hive)
+  colonies_title:              { de: 'Deine Völker',                              en: 'Your colonies'                         },
+  colonies_empty:              { de: 'Noch keine Völker hinzugefügt.',            en: 'No colonies added yet.'                },
+  colonies_add_button:         { de: '+ Neues Volk',                              en: '+ Add a colony'                        },
+  colonies_name_placeholder:   { de: 'Name des Volks (z. B. Apfelbaum)',          en: 'Colony name (e.g. Apple tree)'         },
+  colonies_notes_placeholder:  { de: 'Notizen (optional)',                        en: 'Notes (optional)'                      },
+  colonies_save:               { de: 'Speichern',                                 en: 'Save'                                  },
+  colonies_cancel:             { de: 'Abbrechen',                                 en: 'Cancel'                                },
+  colonies_edit:               { de: 'Bearbeiten',                                en: 'Edit'                                  },
+  colonies_delete:             { de: 'Entfernen',                                 en: 'Remove'                                },
+  colonies_delete_confirm:     { de: 'Dieses Volk wirklich entfernen?',           en: 'Really remove this colony?'            },
+  colonies_created_on:         { de: 'Angelegt am',                               en: 'Added on'                              },
   profile_title:    { de: 'Profil',                           en: 'Profile'                       },
   hive_count_title: { de: 'Anzahl Völker',                    en: 'Number of hives'               },
   climate_title:    { de: 'Klimazone',                        en: 'Climate zone'                  },
