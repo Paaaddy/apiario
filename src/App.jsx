@@ -18,6 +18,7 @@ import { useAppBadge } from './hooks/useAppBadge'
 import { useSeason } from './hooks/useSeason'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
+import { requestPersistentStorage } from './utils/persistStorage'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
@@ -55,6 +56,18 @@ function AppContent() {
     ).length
   }, [seasonForBadge.tasks, completedTaskIds])
   useAppBadge(pendingUrgentCount)
+
+  // Once the user has completed onboarding they have data worth
+  // protecting (profile, colonies, log). Ask the browser to upgrade
+  // this origin to persistent storage so Chrome / Firefox stop
+  // considering the localStorage + IndexedDB eligible for eviction
+  // under pressure. Silently no-ops on unsupported browsers.
+  useEffect(() => {
+    if (profile?.onboardingDone) {
+      requestPersistentStorage().catch(() => {})
+    }
+  }, [profile?.onboardingDone])
+
   const [voiceActive, setVoiceActive] = useState(false)
   const [lastCommand, setLastCommand] = useState('')
   const [voicePermissionBlocked, setVoicePermissionBlocked] = useState(false)
