@@ -8,21 +8,26 @@ export default function PwaInstallHint({
   onInstall,
   compact = false,
   dismissible = false,
+  floating = false,
 }) {
   const { t } = useLanguage()
   const [dismissed, setDismissed] = useState(false)
 
   if (isInstalled || dismissed) return null
 
+  const cardClass = floating
+    ? 'fixed bottom-24 left-4 right-4 z-30 max-w-md mx-auto bg-white/95 backdrop-blur border border-amber-200 rounded-2xl shadow-lg p-3'
+    : `bg-white border border-amber-200 rounded-2xl shadow-sm ${compact ? 'p-4' : 'p-5'}`
+
   return (
-    <section className={`bg-white border border-amber-200 rounded-2xl shadow-sm ${compact ? 'p-4' : 'p-5'}`}>
+    <section className={cardClass}>
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-wide text-brown-mid/70 font-semibold">{t(s.pwa_badge)}</p>
           <h3 className={`${compact ? 'text-base' : 'text-lg'} font-semibold text-brown mt-1`}>
             {t(s.pwa_title)}
           </h3>
-          <p className="text-sm text-brown-mid mt-1 leading-relaxed">{t(s.pwa_body)}</p>
+          {!floating && <p className="text-sm text-brown-mid mt-1 leading-relaxed">{t(s.pwa_body)}</p>}
           {!installSupported && (
             <p className="text-xs text-brown-mid/80 mt-2 leading-relaxed">
               {t(s.pwa_manual_hint)}
@@ -40,7 +45,7 @@ export default function PwaInstallHint({
         )}
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className={`${floating ? 'mt-2' : 'mt-4'} flex flex-wrap gap-2`}>
         {installSupported && (
           <button
             onClick={onInstall}
@@ -49,7 +54,7 @@ export default function PwaInstallHint({
             {t(s.pwa_install_cta)}
           </button>
         )}
-        <span className="text-xs text-brown-mid/80 self-center">{t(s.pwa_later_hint)}</span>
+        {!floating && <span className="text-xs text-brown-mid/80 self-center">{t(s.pwa_later_hint)}</span>}
       </div>
     </section>
   )

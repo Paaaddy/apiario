@@ -71,15 +71,6 @@ function AppContent() {
   return (
     <div className="flex flex-col h-full bg-cream">
       <main className="flex-1 overflow-y-auto">
-        <div className="px-4 pt-4">
-          <PwaInstallHint
-            isInstalled={pwaInstall.isInstalled}
-            installSupported={pwaInstall.installSupported}
-            onInstall={pwaInstall.promptInstall}
-            compact
-            dismissible
-          />
-        </div>
         {activeTab === 'season' && (
           <SeasonScreen
             profile={profile}
@@ -102,6 +93,14 @@ function AppContent() {
       </main>
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       <BeeFab onActivate={handleVoiceActivate} isActive={voiceActive} />
+      <PwaInstallHint
+        isInstalled={pwaInstall.isInstalled}
+        installSupported={pwaInstall.installSupported}
+        onInstall={pwaInstall.promptInstall}
+        compact
+        dismissible
+        floating
+      />
       {voiceActive && <VoiceOverlay onStop={handleVoiceStop} lastCommand={lastCommand} />}
     </div>
   )
