@@ -11,6 +11,7 @@ import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
+import VoicePermissionModal from './components/VoicePermissionModal'
 import Onboarding from './screens/Onboarding'
 import SeasonScreen from './screens/SeasonScreen'
 import DiagnoseScreen from './screens/DiagnoseScreen'
@@ -23,6 +24,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState('season')
   const [voiceActive, setVoiceActive] = useState(false)
   const [lastCommand, setLastCommand] = useState('')
+  const [voicePermissionBlocked, setVoicePermissionBlocked] = useState(false)
   const { speak, stopSpeaking, startListening, stopListening } = useVoice()
   const pwaInstall = usePwaInstallPrompt()
 
@@ -52,10 +54,21 @@ function AppContent() {
       } else if (command.includes('read') || command.includes('repeat')) {
         speak('Repeating.')
       }
-    }, () => {
+    }, (error) => {
       handleVoiceStopRef.current()
+      if (error === 'not-allowed' || error === 'service-not-allowed') {
+        setVoicePermissionBlocked(true)
+      }
     })
   }, [voiceActive, speak, startListening])
+
+  const handleVoicePermissionRetry = useCallback(() => {
+    setVoicePermissionBlocked(false)
+    // Defer to the next tick so the modal unmounts before we re-request.
+    // Some browsers ignore a fresh permission request if the previous one
+    // is still considered "in-flight".
+    setTimeout(() => handleVoiceActivate(), 0)
+  }, [handleVoiceActivate])
 
   if (!profile.onboardingDone) {
     return (
@@ -102,6 +115,12 @@ function AppContent() {
         floating
       />
       {voiceActive && <VoiceOverlay onStop={handleVoiceStop} lastCommand={lastCommand} />}
+      {voicePermissionBlocked && (
+        <VoicePermissionModal
+          onRetry={handleVoicePermissionRetry}
+          onDismiss={() => setVoicePermissionBlocked(false)}
+        />
+      )}
     </div>
   )
 }

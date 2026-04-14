@@ -84,6 +84,13 @@ export const strings = {
   voice_heard:             { de: 'Gehört:',                  en: 'Heard:'                   },
   voice_tap_stop:          { de: 'Tippen zum Stoppen',       en: 'Tap anywhere to stop'     },
 
+  // Voice permission modal (shown when microphone access was declined)
+  voice_perm_title:   { de: 'Mikrofon blockiert',                                                                                                                                                  en: 'Microphone blocked'                                                                                                                                      },
+  voice_perm_body:    { de: 'Der Freisprechmodus benötigt Zugriff auf dein Mikrofon. Es sieht so aus, als hättest du die Berechtigung versehentlich abgelehnt.',                                   en: 'Hands-free mode needs access to your microphone. It looks like the permission request was declined.'                                                     },
+  voice_perm_howto:   { de: 'So gibst du den Zugriff wieder frei: Tippe auf das Schloss- oder Mikrofonsymbol in der Adressleiste deines Browsers und erlaube den Mikrofonzugriff für diese Seite.', en: 'To re-enable it, tap the lock or microphone icon in your browser\u2019s address bar and allow microphone access for this site.' },
+  voice_perm_retry:   { de: 'Erneut versuchen',                                                                                                                                                    en: 'Try again'                                                                                                                                                },
+  voice_perm_dismiss: { de: 'Schließen',                                                                                                                                                           en: 'Close'                                                                                                                                                    },
+
   // BeeFab
   fab_label: { de: 'Bienen-Freisprechmodus', en: 'Bee hands-free mode' },
 }
