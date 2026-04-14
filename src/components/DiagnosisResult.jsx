@@ -1,5 +1,6 @@
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
+import RiskNote from './RiskNote'
 
 export default function DiagnosisResult({ node, onReset }) {
   const { t } = useLanguage()
@@ -18,6 +19,8 @@ export default function DiagnosisResult({ node, onReset }) {
           </div>
         )}
       </div>
+
+      {node.risk && <RiskNote risk={node.risk} />}
 
       <div>
         <h3 className="font-serif text-base font-semibold text-brown mb-3">

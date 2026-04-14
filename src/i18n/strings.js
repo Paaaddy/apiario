@@ -84,6 +84,11 @@ export const strings = {
   voice_heard:             { de: 'Gehört:',                  en: 'Heard:'                   },
   voice_tap_stop:          { de: 'Tippen zum Stoppen',       en: 'Tap anywhere to stop'     },
 
+  // Risk annotations (shown on tasks and diagnosis outcomes)
+  risk_caution_label: { de: 'Hinweis zum Schutz der Bienen', en: 'Note for bee welfare' },
+  risk_warning_label: { de: 'Risiko für die Bienen',         en: 'Risk to the bees'      },
+  risk_mitigation:    { de: 'So vermeidest du Schaden',      en: 'How to avoid harm'     },
+
   // Voice permission modal (shown when microphone access was declined)
   voice_perm_title:   { de: 'Mikrofon blockiert',                                                                                                                                                  en: 'Microphone blocked'                                                                                                                                      },
   voice_perm_body:    { de: 'Der Freisprechmodus benötigt Zugriff auf dein Mikrofon. Es sieht so aus, als hättest du die Berechtigung versehentlich abgelehnt.',                                   en: 'Hands-free mode needs access to your microphone. It looks like the permission request was declined.'                                                     },

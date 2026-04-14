@@ -105,6 +105,17 @@
       { "de": "Nicht länger als 3–4 Wochen warten, sonst können sich Drohnenbrüter entwickeln, was die Erholung sehr schwierig macht.", "en": "Do not wait more than 3–4 weeks or laying workers may develop, making recovery very difficult." },
       { "de": "Lokalen Imkerverein für eine Königinnenquelle kontaktieren.", "en": "Contact your local beekeeping association for a queen source." }
     ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Eine neue Königin direkt zuzusetzen kann scheitern — das Volk tötet fremde Königinnen, die es nicht kennt.",
+        "en": "Introducing a new queen directly can fail — colonies often kill a queen they don't recognise."
+      },
+      "mitigation": {
+        "de": "Zusetzkäfig mit Futterstopfen („slow-release\") verwenden, damit sich die Bienen über 3–5 Tage an den Duft der neuen Königin gewöhnen. Erst nach Sichtkontrolle freilassen.",
+        "en": "Use a slow-release introduction cage with a candy plug so bees get used to the queen's scent over 3–5 days. Only free her after checking she is being fed, not attacked."
+      }
+    },
     "callExpert": true
   },
   "sick-brood": {
@@ -177,6 +188,17 @@
       { "de": "Kunstschwarm bilden oder Weiselzellen entfernen/vernichten, um das Schwärmen zu verhindern.", "en": "Perform an artificial swarm or remove/destroy queen cells to prevent swarming." },
       { "de": "Mehr Raum geben (Honig- oder Brutraum) wenn der Stock überfüllt ist.", "en": "Add more space (a super or brood box) if the hive is congested." }
     ],
+    "risk": {
+      "level": "warning",
+      "note": {
+        "de": "Alle Weiselzellen zu vernichten, ohne die Königin zuerst zu bestätigen, macht das Volk weisellos.",
+        "en": "Destroying every queen cell without first confirming the queen is alive leaves the colony queenless."
+      },
+      "mitigation": {
+        "de": "Die Königin eindeutig auf einer Wabe identifizieren oder zumindest eine offene Weiselzelle mit Stiftbereich stehen lassen. Bei Unsicherheit besser einen Kunstschwarm bilden.",
+        "en": "Positively identify the queen on a frame, or at minimum preserve one open queen cell with a visible young larva. When unsure, perform an artificial swarm instead."
+      }
+    },
     "callExpert": false
   },
   "aggressive": {
@@ -218,6 +240,17 @@
       { "de": "Eine für die Jahreszeit geeignete Behandlung wählen (Apivar-Streifen in der aktiven Saison, Oxalsäure in der brutfreien Zeit).", "en": "Choose a treatment suitable for the season (Apivar strips in active season, oxalic acid in broodless period)." },
       { "de": "Milben 4–6 Wochen nach der Behandlung erneut zählen, um den Erfolg zu bestätigen.", "en": "Recount mites 4–6 weeks after treatment to confirm it worked." }
     ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Die Alkoholwäsche tötet die Bienenprobe (~300 Bienen).",
+        "en": "The alcohol wash kills the bee sample (~300 bees)."
+      },
+      "mitigation": {
+        "de": "Die Puderzucker-Rollmethode ist eine nicht-tödliche Alternative mit vergleichbarer Genauigkeit. Bienen nach der Zählung zurück zum Volk geben.",
+        "en": "The powdered-sugar roll is a non-lethal alternative with comparable accuracy. Return the bees to the colony after counting."
+      }
+    },
     "callExpert": false
   },
   "varroa-confirmed": {
@@ -229,6 +262,17 @@
       { "de": "Apivar-Streifen (Amitraz) bei einem aktiven Volk verwenden, oder Oxalsäure bei brutlosem Volk.", "en": "Use Apivar strips (amitraz) in an active colony, or oxalic acid if the colony is broodless." },
       { "de": "Nach der Behandlung prüfen, ob das Volk stark genug zur Erholung ist — bei sehr schwachem Volk mit einem anderen zusammenlegen.", "en": "After treatment, assess whether the colony is strong enough to recover — combine with another if very weak." }
     ],
+    "risk": {
+      "level": "warning",
+      "note": {
+        "de": "Amitraz (Apivar) hinterlässt Rückstände in Wachs und Honig. Falsche Anwendung schadet den Bienen zusätzlich zum Virus.",
+        "en": "Amitraz (Apivar) leaves residues in wax and honey. Misuse harms the bees on top of the virus."
+      },
+      "mitigation": {
+        "de": "Alle Honigräume vor der Behandlung entfernen. Streifen genau zur vom Hersteller vorgeschriebenen Zeit wieder entnehmen. Gebrauchtes Wachs getrennt halten und später umschmelzen.",
+        "en": "Remove every honey super before treatment. Pull the strips exactly when the manufacturer says to. Keep treated wax separate and recycle it later, not into foundation."
+      }
+    },
     "callExpert": true
   },
   "robbing": {
@@ -240,6 +284,17 @@
       { "de": "Den Stock während einer Räuberei nicht öffnen — es verschlimmert die Situation erheblich.", "en": "Do not inspect the hive during a robbing event — it makes it significantly worse." },
       { "de": "Wenn die Räuberei aufhört, die verbleibenden Vorräte und Stärke des Volkes beurteilen.", "en": "Once robbing stops, assess the colony's remaining stores and strength." }
     ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Das Flugloch komplett zu schließen sperrt die eigenen Sammlerinnen aus und kann zum Ersticken der Traube führen.",
+        "en": "Sealing the entrance completely locks out the colony's own foragers and can suffocate the cluster."
+      },
+      "mitigation": {
+        "de": "Nur auf Bienenbreite verengern (5–8 mm), nicht schließen. Ein Räubereigitter oder ein nasses Tuch vor dem Flugloch verwirrt Räuberinnen, ohne die eigenen Sammlerinnen auszusperren.",
+        "en": "Reduce to a single bee width (5–8 mm), do not seal. A robbing screen or a wet cloth over the entrance confuses robbers without locking out the colony's own foragers."
+      }
+    },
     "callExpert": false
   }
 }
