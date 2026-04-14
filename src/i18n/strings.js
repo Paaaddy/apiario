@@ -60,6 +60,16 @@ export const strings = {
   onboarding_q_zone:   { de: 'Wo bist du ansässig?',          en: 'Where are you located?'       },
   onboarding_q_exp:    { de: 'Wie lange imkerst du schon?',   en: 'How long have you been keeping bees?' },
 
+
+  // PWA install hint
+  pwa_badge:       { de: 'App installieren', en: 'Install app' },
+  pwa_title:       { de: 'Schneller Zugriff wie eine native App', en: 'Get faster access like a native app' },
+  pwa_body:        { de: 'Installiere Apiario auf deinem Startbildschirm für Offline-Zugriff und schnelleren Start.', en: 'Install Apiario to your home screen for offline access and quicker launch.' },
+  pwa_install_cta: { de: 'Jetzt installieren', en: 'Install now' },
+  pwa_manual_hint: { de: 'Wenn kein Installieren-Button erscheint: Browser-Menü öffnen und „Zum Startbildschirm hinzufügen“ wählen.', en: 'If no install button appears, open your browser menu and choose “Add to Home Screen”.' },
+  pwa_later_hint:  { de: 'Du kannst das auch später in „Mein Stock“ machen.', en: 'You can also do this later from “My Hive”.' },
+  pwa_dismiss:     { de: 'Installationshinweis schließen', en: 'Dismiss install hint' },
+
   // Voice overlay
   voice_title:             { de: 'Freisprechmodus aktiv',    en: 'Hands-free mode active'    },
   voice_listening:         { de: 'Auf Befehle hörend…',      en: 'Listening for commands...' },

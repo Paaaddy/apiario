@@ -7,6 +7,7 @@ const DEBUG = new URLSearchParams(window.location.search).has('debug')
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
+import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
@@ -14,6 +15,7 @@ import Onboarding from './screens/Onboarding'
 import SeasonScreen from './screens/SeasonScreen'
 import DiagnoseScreen from './screens/DiagnoseScreen'
 import MyHiveScreen from './screens/MyHiveScreen'
+import PwaInstallHint from './components/PwaInstallHint'
 
 function AppContent() {
   const { profile, updateProfile } = useProfile()
@@ -22,6 +24,7 @@ function AppContent() {
   const [voiceActive, setVoiceActive] = useState(false)
   const [lastCommand, setLastCommand] = useState('')
   const { speak, stopSpeaking, startListening, stopListening } = useVoice()
+  const pwaInstall = usePwaInstallPrompt()
 
   const handleVoiceStop = useCallback(() => {
     setVoiceActive(false)
@@ -59,6 +62,7 @@ function AppContent() {
       <div className="flex flex-col h-full bg-cream">
         <Onboarding
           onComplete={(answers) => updateProfile({ ...answers, onboardingDone: true })}
+          pwaInstall={pwaInstall}
         />
       </div>
     )
@@ -67,6 +71,15 @@ function AppContent() {
   return (
     <div className="flex flex-col h-full bg-cream">
       <main className="flex-1 overflow-y-auto">
+        <div className="px-4 pt-4">
+          <PwaInstallHint
+            isInstalled={pwaInstall.isInstalled}
+            installSupported={pwaInstall.installSupported}
+            onInstall={pwaInstall.promptInstall}
+            compact
+            dismissible
+          />
+        </div>
         {activeTab === 'season' && (
           <SeasonScreen
             profile={profile}

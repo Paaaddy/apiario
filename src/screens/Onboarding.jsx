@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import LanguageToggle from '../components/LanguageToggle'
+import PwaInstallHint from '../components/PwaInstallHint'
 
-export default function Onboarding({ onComplete }) {
+export default function Onboarding({ onComplete, pwaInstall = { isInstalled: true, installSupported: false, promptInstall: () => {} } }) {
   const { t } = useLanguage()
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState({})
@@ -92,6 +93,14 @@ export default function Onboarding({ onComplete }) {
             {t(label)}
           </button>
         ))}
+      </div>
+
+      <div className="px-6 pt-6">
+        <PwaInstallHint
+          isInstalled={pwaInstall.isInstalled}
+          installSupported={pwaInstall.installSupported}
+          onInstall={pwaInstall.promptInstall}
+        />
       </div>
 
       <div className="mt-auto px-6 py-8">
