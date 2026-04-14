@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
+import { validateDiagnosisTree } from '../utils/validateDiagnosis'
 import { strings as s } from '../i18n/strings'
 import diagnosisData from '../data/diagnosis.json'
 import DiagnosisResult from '../components/DiagnosisResult'
@@ -9,6 +10,8 @@ export default function DiagnoseScreen() {
   const { t } = useLanguage()
   const [currentNodeId, setCurrentNodeId] = useState('root')
   const [history, setHistory] = useState([])
+
+  useEffect(() => { validateDiagnosisTree() }, [])
 
   const node = diagnosisData[currentNodeId]
 

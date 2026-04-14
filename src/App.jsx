@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
+import ErrorBoundary from './components/ErrorBoundary'
 import DebugPanel from './components/DebugPanel'
 
 const DEBUG = new URLSearchParams(window.location.search).has('debug')
@@ -95,7 +96,9 @@ function AppContent() {
 export default function App() {
   return (
     <LanguageProvider>
-      <AppContent />
+      <ErrorBoundary>
+        <AppContent />
+      </ErrorBoundary>
       {DEBUG && <DebugPanel />}
     </LanguageProvider>
   )

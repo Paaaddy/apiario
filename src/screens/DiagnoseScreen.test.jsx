@@ -27,29 +27,29 @@ describe('DiagnoseScreen', () => {
     const user = userEvent.setup()
     wrap(<DiagnoseScreen />)
     await user.click(screen.getByText(/very few bees/i))
-    expect(screen.getByText(/when did you last inspect/i)).toBeInTheDocument()
+    expect(await screen.findByText(/when did you last inspect/i)).toBeInTheDocument()
   })
 
   it('shows "Start over" button after first selection', async () => {
     const user = userEvent.setup()
     wrap(<DiagnoseScreen />)
     await user.click(screen.getByText(/very few bees/i))
-    expect(screen.getByText(/start over/i)).toBeInTheDocument()
+    expect(await screen.findByText(/start over/i)).toBeInTheDocument()
   })
 
   it('shows a diagnosis result at a leaf node', async () => {
     const user = userEvent.setup()
     wrap(<DiagnoseScreen />)
     await user.click(screen.getByText(/very few bees/i))
-    await user.click(screen.getByText(/more than a month ago/i))
-    expect(screen.getByText(/unknown — inspection overdue/i)).toBeInTheDocument()
+    await user.click(await screen.findByText(/more than a month ago/i))
+    expect(await screen.findByText(/unknown — inspection overdue/i)).toBeInTheDocument()
   })
 
   it('resets to the root question when start over is clicked', async () => {
     const user = userEvent.setup()
     wrap(<DiagnoseScreen />)
     await user.click(screen.getByText(/very few bees/i))
-    await user.click(screen.getByText(/start over/i))
-    expect(screen.getByText(/what are you seeing/i)).toBeInTheDocument()
+    await user.click(await screen.findByText(/start over/i))
+    expect(await screen.findByText(/what are you seeing/i)).toBeInTheDocument()
   })
 })

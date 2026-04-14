@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 
 const STORAGE_KEY = 'apiario-log'
+const MAX_ENTRIES = 500
 
 function loadLog() {
   try {
@@ -17,6 +18,10 @@ function saveLog(log) {
   } catch {}
 }
 
+function cap(log) {
+  return log.length > MAX_ENTRIES ? log.slice(0, MAX_ENTRIES) : log
+}
+
 export function useTaskLog() {
   const [log, setLog] = useState(loadLog)
 
@@ -30,7 +35,7 @@ export function useTaskLog() {
       const exists = prev.find((e) => e.type === 'task' && e.taskId === task.id)
       const next = exists
         ? prev.filter((e) => !(e.type === 'task' && e.taskId === task.id))
-        : [
+        : cap([
             {
               id: `task-${task.id}-${Date.now()}`,
               type: 'task',
@@ -39,7 +44,7 @@ export function useTaskLog() {
               completedAt: new Date().toISOString().split('T')[0],
             },
             ...prev,
-          ]
+          ])
       saveLog(next)
       return next
     })
@@ -47,7 +52,7 @@ export function useTaskLog() {
 
   const addCustomEntry = useCallback(({ text, date }) => {
     setLog((prev) => {
-      const next = [
+      const next = cap([
         {
           id: `custom-${Date.now()}`,
           type: 'custom',
@@ -55,7 +60,7 @@ export function useTaskLog() {
           date,
         },
         ...prev,
-      ]
+      ])
       saveLog(next)
       return next
     })

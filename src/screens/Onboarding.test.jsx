@@ -21,15 +21,15 @@ describe('Onboarding', () => {
     const user = userEvent.setup()
     wrap(<Onboarding onComplete={() => {}} />)
     await user.click(screen.getByText('1 hive'))
-    expect(screen.getByText(/where are you located/i)).toBeInTheDocument()
+    expect(await screen.findByText(/where are you located/i)).toBeInTheDocument()
   })
 
   it('advances to step 3 after selecting climate zone', async () => {
     const user = userEvent.setup()
     wrap(<Onboarding onComplete={() => {}} />)
     await user.click(screen.getByText('1 hive'))
-    await user.click(screen.getByText('Central Europe'))
-    expect(screen.getByText(/how long have you been/i)).toBeInTheDocument()
+    await user.click(await screen.findByText('Central Europe'))
+    expect(await screen.findByText(/how long have you been/i)).toBeInTheDocument()
   })
 
   it('calls onComplete with profile data after step 3', async () => {
@@ -37,8 +37,8 @@ describe('Onboarding', () => {
     const onComplete = vi.fn()
     wrap(<Onboarding onComplete={onComplete} />)
     await user.click(screen.getByText('1 hive'))
-    await user.click(screen.getByText('Central Europe'))
-    await user.click(screen.getByText('First year'))
+    await user.click(await screen.findByText('Central Europe'))
+    await user.click(await screen.findByText('First year'))
     expect(onComplete).toHaveBeenCalledWith({
       hiveCount: 1,
       climateZone: 'central',
