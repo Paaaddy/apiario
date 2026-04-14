@@ -96,6 +96,7 @@ function AppContent() {
             log={log}
             onAddEntry={addCustomEntry}
             onDeleteEntry={deleteEntry}
+            pwaInstall={pwaInstall}
           />
         )}
       </main>
