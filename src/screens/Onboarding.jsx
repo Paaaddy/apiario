@@ -93,6 +93,16 @@ export default function Onboarding({ onComplete }) {
           </button>
         ))}
       </div>
+
+      <div className="mt-auto px-6 py-8">
+        <p className="text-center text-xs text-brown-mid/60 leading-relaxed">
+          🇮🇹 <em>Apiario</em> —&nbsp;
+          {t({
+            de: 'Italienisch für „Bienenstand". Ein Ort, an dem Bienen gedeihen — genau wie deine Völker.',
+            en: 'Italian for "apiary". A place where bees thrive — just like your colonies.',
+          })}
+        </p>
+      </div>
     </div>
   )
 }
