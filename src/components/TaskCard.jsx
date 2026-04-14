@@ -17,7 +17,12 @@ function formatShortDate(isoDate) {
 export default function TaskCard({ task, isChecked = false, checkedDate = null, onToggle }) {
   const { t } = useLanguage()
   const style = URGENCY_STYLES[task.urgency] ?? URGENCY_STYLES.routine
-  const borderClass = isChecked ? 'border-green-400' : style.border
+  const isSecret = task.secret === true
+  const borderClass = isChecked
+    ? 'border-green-400'
+    : isSecret
+      ? 'border-purple-400'
+      : style.border
 
   return (
     <div className={`bg-white rounded-xl p-4 border-l-4 ${borderClass} shadow-sm`}>
@@ -41,6 +46,12 @@ export default function TaskCard({ task, isChecked = false, checkedDate = null, 
         )}
 
         <div className="flex-1 min-w-0">
+          {isSecret && !isChecked && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-purple-700 bg-purple-100 rounded-full px-2 py-0.5 mb-1">
+              <span aria-hidden="true">✨</span>
+              <span>{t(s.secret_badge)}</span>
+            </span>
+          )}
           <div className="flex items-start justify-between gap-3">
             <h3 className={`font-serif text-base font-semibold leading-snug flex-1 ${isChecked ? 'line-through text-brown/40' : 'text-brown'}`}>
               {t(task.name)}
@@ -59,6 +70,14 @@ export default function TaskCard({ task, isChecked = false, checkedDate = null, 
             <>
               <p className="mt-1.5 text-sm text-brown-mid leading-relaxed">{t(task.why)}</p>
               <RiskNote risk={task.risk} />
+              {isSecret && task.uniqueValue && (
+                <div className="mt-3 rounded-xl border border-purple-200 bg-purple-50 p-3 text-xs leading-relaxed text-purple-900">
+                  <p className="font-semibold uppercase tracking-wide text-[11px] opacity-80">
+                    {t(s.secret_unique_value)}
+                  </p>
+                  <p className="mt-1">{t(task.uniqueValue)}</p>
+                </div>
+              )}
             </>
           )}
         </div>

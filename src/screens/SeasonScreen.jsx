@@ -6,7 +6,8 @@ import LanguageToggle from '../components/LanguageToggle'
 
 export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask }) {
   const { t } = useLanguage()
-  const { label, icon, week, tasks } = useSeason(profile)
+  const completedCount = completedTaskIds?.size ?? 0
+  const { label, icon, week, tasks, nextLockedSecret } = useSeason(profile, completedCount)
 
   return (
     <div className="flex flex-col min-h-full">
@@ -45,6 +46,16 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
               />
             )
           })
+        )}
+
+        {nextLockedSecret && (
+          <div className="mt-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/60 p-4 text-sm text-purple-900 text-center">
+            <span className="text-xl mr-1" aria-hidden="true">🔒</span>
+            {t(s.secret_locked_teaser).replace(
+              '{n}',
+              String(Math.max(0, (nextLockedSecret.unlockAt ?? 0) - completedCount))
+            )}
+          </div>
         )}
       </div>
     </div>

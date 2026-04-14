@@ -95,4 +95,31 @@ describe('TaskCard', () => {
     expect(screen.queryByText(/something to watch/i)).not.toBeInTheDocument()
     localStorage.removeItem('apiario-locale')
   })
+
+  it('renders a secret badge and unique-value note for secret tasks', () => {
+    localStorage.setItem('apiario-locale', 'en')
+    const secretTask = {
+      ...task,
+      secret: true,
+      uniqueValue: { de: 'x', en: 'Based on Karl von Frisch research' },
+    }
+    wrap(<TaskCard task={secretTask} />)
+    expect(screen.getByText(/secret tip/i)).toBeInTheDocument()
+    expect(screen.getByText(/why this tip is special/i)).toBeInTheDocument()
+    expect(screen.getByText(/based on karl von frisch research/i)).toBeInTheDocument()
+    localStorage.removeItem('apiario-locale')
+  })
+
+  it('hides the secret badge once the task is checked', () => {
+    localStorage.setItem('apiario-locale', 'en')
+    const secretTask = {
+      ...task,
+      secret: true,
+      uniqueValue: { de: 'x', en: 'Unique rationale' },
+    }
+    wrap(<TaskCard task={secretTask} isChecked onToggle={() => {}} />)
+    expect(screen.queryByText(/secret tip/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/unique rationale/i)).not.toBeInTheDocument()
+    localStorage.removeItem('apiario-locale')
+  })
 })
