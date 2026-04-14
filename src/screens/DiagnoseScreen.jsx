@@ -5,22 +5,31 @@ import { strings as s } from '../i18n/strings'
 import diagnosisData from '../data/diagnosis.json'
 import DiagnosisResult from '../components/DiagnosisResult'
 import LanguageToggle from '../components/LanguageToggle'
+import { useWakeLock } from '../hooks/useWakeLock'
+import { haptics } from '../utils/haptics'
 
 export default function DiagnoseScreen() {
   const { t } = useLanguage()
   const [currentNodeId, setCurrentNodeId] = useState('root')
   const [history, setHistory] = useState([])
 
+  // Keep the screen awake for the duration of the diagnose wizard —
+  // the user is usually outdoors with their phone in hand, reading
+  // longer text blocks, and auto-lock mid-diagnosis is very annoying.
+  useWakeLock(true)
+
   useEffect(() => { validateDiagnosisTree() }, [])
 
   const node = diagnosisData[currentNodeId]
 
   function handleSelect(nextId) {
+    haptics.tap()
     setHistory((prev) => [...prev, currentNodeId])
     setCurrentNodeId(nextId)
   }
 
   function handleReset() {
+    haptics.tap()
     setHistory([])
     setCurrentNodeId('root')
   }

@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react'
+import { haptics } from '../utils/haptics'
 
 const STORAGE_KEY = 'apiario-log'
 const MAX_ENTRIES = 500
@@ -46,6 +47,9 @@ export function useTaskLog() {
             ...prev,
           ])
       saveLog(next)
+      // Haptic confirmation — only on check, not on uncheck, so
+      // undoing a mistake is silent and checking feels rewarding.
+      if (!exists) haptics.tap()
       return next
     })
   }, [])
