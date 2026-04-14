@@ -8,9 +8,13 @@ import '@fontsource/playfair-display/600.css'
 import '@fontsource/playfair-display/700.css'
 import '@fontsource/playfair-display/900.css'
 import './index.css'
+import { registerPwaAutoUpdate } from './pwa/registerAutoUpdate'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 )
+
+
+registerPwaAutoUpdate()
