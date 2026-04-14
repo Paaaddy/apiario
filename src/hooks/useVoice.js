@@ -1,5 +1,14 @@
 import { useRef, useCallback, useEffect } from 'react'
 
+/**
+ * Thin wrapper around `speechSynthesis` + `SpeechRecognition`.
+ *
+ * Both synthesis and recognition now honour a `lang` argument
+ * (`'de-DE'` or `'en-GB'`) so the hands-free experience actually
+ * speaks the user's language and recognises locale-native commands.
+ * Previously everything was hardcoded to `en-GB`, which made hands-
+ * free mode basically useless for a German-speaking beekeeper.
+ */
 export function useVoice() {
   const recognitionRef = useRef(null)
   const isSupported = typeof speechSynthesis !== 'undefined'
@@ -12,12 +21,12 @@ export function useVoice() {
     }
   }, [])
 
-  const speak = useCallback((text) => {
+  const speak = useCallback((text, opts = {}) => {
     if (!isSupported) return
     speechSynthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = 'en-GB'
-    utterance.rate = 0.9
+    utterance.lang = opts.lang ?? 'en-GB'
+    utterance.rate = opts.rate ?? 0.95
     speechSynthesis.speak(utterance)
   }, [isSupported])
 
@@ -25,12 +34,12 @@ export function useVoice() {
     if (isSupported) speechSynthesis.cancel()
   }, [isSupported])
 
-  const startListening = useCallback((onCommand, onError) => {
+  const startListening = useCallback((onCommand, onError, opts = {}) => {
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
     if (!Recognition) return
     const recognition = new Recognition()
     recognition.continuous = true
-    recognition.lang = 'en-GB'
+    recognition.lang = opts.lang ?? 'en-GB'
     recognition.onresult = (event) => {
       const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
       onCommand(transcript)

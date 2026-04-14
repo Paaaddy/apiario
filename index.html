@@ -2,7 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Disable pinch-zoom: Apiario is a task UI, not a document, so
+         zoom would only destabilise the layout. iOS Safari usually
+         ignores user-scalable=no for a11y, so we also set
+         `touch-action: manipulation` on body to kill double-tap
+         zoom, which is the one that actually interferes in practice. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#f5a623" />
     <title>Apiario</title>
   </head>

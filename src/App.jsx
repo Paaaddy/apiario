@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
+import { useLanguage } from './hooks/useLanguage'
 import ErrorBoundary from './components/ErrorBoundary'
 import DebugPanel from './components/DebugPanel'
 
@@ -19,6 +20,66 @@ import { useSeason } from './hooks/useSeason'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
+
+// Locale → voice configuration. Keeping this outside the component
+// so the arrays don't get recreated on every render.
+const VOICE_CONFIG = {
+  de: {
+    lang: 'de-DE',
+    greeting:
+      'Freisprechmodus aktiv. Sage: Diagnose, Saison, Stock, weiter oder stop.',
+    bye: 'Freisprechmodus beendet.',
+    commands: {
+      stop:     ['stop', 'stopp', 'beenden', 'ende', 'aus'],
+      diagnose: ['diagnose', 'diagnostizieren', 'problem'],
+      season:   ['saison', 'woche', 'aufgaben'],
+      myhive:   ['mein stock', 'stock', 'profil', 'verlauf'],
+      next:     ['weiter', 'nächste', 'nächster'],
+      repeat:   ['nochmal', 'wiederholen', 'wiederhole', 'lesen', 'lies'],
+    },
+    speech: {
+      openDiagnose: 'Diagnose wird geöffnet.',
+      openSeason:   'Saison wird geöffnet.',
+      openMyHive:   'Mein Stock wird geöffnet.',
+      next:         'Weiter.',
+      repeat:       'Wiederhole.',
+      unknown:      'Nicht verstanden. Versuche: Diagnose, Saison oder Stock.',
+    },
+  },
+  en: {
+    lang: 'en-GB',
+    greeting:
+      'Hands-free mode active. Say: diagnose, season, my hive, next, or stop.',
+    bye: 'Hands-free mode ended.',
+    commands: {
+      stop:     ['stop', 'exit', 'quit', 'end'],
+      diagnose: ['diagnose', 'diagnosis', 'problem'],
+      season:   ['season', 'tasks', 'week'],
+      myhive:   ['my hive', 'hive', 'profile', 'log', 'history'],
+      next:     ['next', 'forward'],
+      repeat:   ['read', 'repeat', 'again'],
+    },
+    speech: {
+      openDiagnose: 'Opening diagnose.',
+      openSeason:   'Opening season.',
+      openMyHive:   'Opening my hive.',
+      next:         'Next.',
+      repeat:       'Repeating.',
+      unknown:      "Didn't catch that. Try diagnose, season, or my hive.",
+    },
+  },
+}
+
+function matchCommand(transcript, commandMap) {
+  const lower = (transcript ?? '').toLowerCase()
+  for (const [action, phrases] of Object.entries(commandMap)) {
+    for (const phrase of phrases) {
+      if (lower.includes(phrase)) return action
+    }
+  }
+  return null
+}
+
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
@@ -30,6 +91,7 @@ import MyHiveScreen from './screens/MyHiveScreen'
 import PwaInstallHint from './components/PwaInstallHint'
 
 function AppContent() {
+  const { locale } = useLanguage()
   const { profile, updateProfile, addColony, updateColony, removeColony } = useProfile()
   const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry } = useTaskLog()
   const [activeTab, setActiveTabState] = useState(initialTab)
@@ -86,27 +148,49 @@ function AppContent() {
 
   const handleVoiceActivate = useCallback(() => {
     if (voiceActive) return
+    const config = VOICE_CONFIG[locale] ?? VOICE_CONFIG.en
     setVoiceActive(true)
-    speak('Hands-free mode active. Say next, read again, diagnose, or stop.')
-    startListening((command) => {
-      setLastCommand(command)
-      if (command.includes('stop')) {
+    speak(config.greeting, { lang: config.lang })
+    startListening(
+      (transcript) => {
+        setLastCommand(transcript)
+        const action = matchCommand(transcript, config.commands)
+        switch (action) {
+          case 'stop':
+            speak(config.bye, { lang: config.lang })
+            handleVoiceStopRef.current()
+            break
+          case 'diagnose':
+            speak(config.speech.openDiagnose, { lang: config.lang })
+            setActiveTab('diagnose')
+            break
+          case 'season':
+            speak(config.speech.openSeason, { lang: config.lang })
+            setActiveTab('season')
+            break
+          case 'myhive':
+            speak(config.speech.openMyHive, { lang: config.lang })
+            setActiveTab('myhive')
+            break
+          case 'next':
+            speak(config.speech.next, { lang: config.lang })
+            break
+          case 'repeat':
+            speak(config.speech.repeat, { lang: config.lang })
+            break
+          default:
+            speak(config.speech.unknown, { lang: config.lang })
+        }
+      },
+      (error) => {
         handleVoiceStopRef.current()
-      } else if (command.includes('diagnose')) {
-        setActiveTab('diagnose')
-        speak('Opening diagnose.')
-      } else if (command.includes('next')) {
-        speak('Moving to next.')
-      } else if (command.includes('read') || command.includes('repeat')) {
-        speak('Repeating.')
-      }
-    }, (error) => {
-      handleVoiceStopRef.current()
-      if (error === 'not-allowed' || error === 'service-not-allowed') {
-        setVoicePermissionBlocked(true)
-      }
-    })
-  }, [voiceActive, speak, startListening, setActiveTab])
+        if (error === 'not-allowed' || error === 'service-not-allowed') {
+          setVoicePermissionBlocked(true)
+        }
+      },
+      { lang: config.lang }
+    )
+  }, [voiceActive, locale, speak, startListening, setActiveTab])
 
   const handleVoicePermissionRetry = useCallback(() => {
     setVoicePermissionBlocked(false)
