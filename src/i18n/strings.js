@@ -89,6 +89,14 @@ export const strings = {
   risk_warning_label: { de: 'Risiko für die Bienen',         en: 'Risk to the bees'      },
   risk_mitigation:    { de: 'So vermeidest du Schaden',      en: 'How to avoid harm'     },
 
+  // Secret / unlockable tasks
+  secret_badge:          { de: 'Geheimer Tipp',              en: 'Secret tip'              },
+  secret_unique_value:   { de: 'Warum dieser Tipp besonders ist', en: 'Why this tip is special' },
+  secret_locked_teaser:  {
+    de: 'Ein weiterer geheimer Tipp wartet — noch {n} Aufgabe(n) abhaken, um ihn freizuschalten.',
+    en: 'Another secret tip is waiting — check off {n} more task(s) to unlock it.',
+  },
+
   // Voice permission modal (shown when microphone access was declined)
   voice_perm_title:   { de: 'Mikrofon blockiert',                                                                                                                                                  en: 'Microphone blocked'                                                                                                                                      },
   voice_perm_body:    { de: 'Der Freisprechmodus benötigt Zugriff auf dein Mikrofon. Es sieht so aus, als hättest du die Berechtigung versehentlich abgelehnt.',                                   en: 'Hands-free mode needs access to your microphone. It looks like the permission request was declined.'                                                     },

@@ -71,6 +71,37 @@
         "why": { "de": "Bienen Platz geben, bevor sie schwärmen wollen.", "en": "Give bees space before they decide to swarm." },
         "urgency": "routine",
         "minExperience": 0
+      },
+      {
+        "id": "sp-secret-01",
+        "name": { "de": "Erste Löwenzahnblüte beobachten", "en": "Watch for the first dandelion bloom" },
+        "why": { "de": "Wenn der erste Löwenzahn öffnet, hat der Frühjahrsaufbau begonnen — ein traditioneller Imker-Startschuss für Honigräume und Erweiterungen.", "en": "When the first dandelion opens, the spring build-up has started — the traditional beekeeper's cue to add supers and expand." },
+        "urgency": "routine",
+        "minExperience": 0,
+        "secret": true,
+        "unlockAt": 1,
+        "uniqueValue": { "de": "Löwenzahn (Taraxacum officinale) ist eine der wichtigsten frühen Pollen- und Nektarquellen in Mitteleuropa (Crane, 1990, „Bees and Beekeeping\"). Generationen von Imkern haben den Löwenzahn als verlässliches phänologisches Signal für den Volksaufbau genutzt.", "en": "Dandelion (Taraxacum officinale) is one of the most important early-spring pollen and nectar sources in central Europe (Crane, 1990, 'Bees and Beekeeping'). Generations of beekeepers have used its bloom as a reliable phenological signal that brood rearing has kicked into high gear." }
+      },
+      {
+        "id": "sp-secret-02",
+        "name": { "de": "Drohnenrahmen einhängen und später ausschneiden", "en": "Add and later cut out a drone comb frame" },
+        "why": { "de": "Varroamilben bevorzugen Drohnenbrut stark. Einen Drohnenrahmen vor der Schwarmzeit einhängen und nach vollständiger Verdeckelung ausschneiden — so entfernst du mechanisch einen großen Teil der Milben, ganz ohne Chemie.", "en": "Varroa mites strongly prefer drone brood. Add a drone-foundation frame before swarm season, and cut out the frame once it is fully capped — mechanically removing a large share of the mites with zero chemicals." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "secret": true,
+        "unlockAt": 3,
+        "uniqueValue": { "de": "Varroamilben bevorzugen Drohnenzellen 8–10-fach gegenüber Arbeiterinnenzellen wegen der längeren Verdeckelungszeit (Boot, Calis & Beetsma, 1994; Rosenkranz et al., 2010, Journal of Invertebrate Pathology). Eine einzige Drohnenwabe kann 10–30 % der Milbenpopulation mechanisch entfernen — eine biotechnische Kernmethode der integrierten Varroabehandlung.", "en": "Varroa mites are drawn to drone cells 8–10× more than worker cells because of the longer capping period (Boot, Calis & Beetsma, 1994; Rosenkranz et al., 2010, Journal of Invertebrate Pathology). A single drone frame can mechanically remove 10–30% of the mite population — a core biotechnical step in integrated varroa management." },
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Wird der Drohnenrahmen vergessen, schlüpfen die Milben wieder aus und der Befall verstärkt sich sogar.",
+            "en": "Forgetting to remove the capped drone frame releases the mites back into the colony and actually worsens the infestation."
+          },
+          "mitigation": {
+            "de": "Im Kalender vermerken und innerhalb von 24 Tagen nach dem Einhängen ausschneiden. Den ausgeschnittenen Rahmen einfrieren, bevor er kompostiert oder ausgeschmolzen wird.",
+            "en": "Put a reminder in your calendar and cut the frame out within 24 days of inserting it. Freeze the cut-out comb before composting or rendering."
+          }
+        }
       }
     ]
   },
@@ -157,6 +188,26 @@
             "en": "Float corks, pebbles, wood or marbles in the water so bees can land and drink safely."
           }
         }
+      },
+      {
+        "id": "su-secret-01",
+        "name": { "de": "Propolisgitter einlegen und ernten", "en": "Lay a propolis screen and harvest" },
+        "why": { "de": "Ein schlitzgitter (Propolisgitter) über den Rähmchen wird von den Bienen langsam mit Propolis gefüllt. Am Saisonende einfrieren und das Gitter biegen — die Propolis-Stückchen fallen heraus.", "en": "A slotted propolis screen laid above the frames is slowly filled with propolis by the bees. At season's end, freeze it and flex the screen — the propolis shards pop out cleanly." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "secret": true,
+        "unlockAt": 5,
+        "uniqueValue": { "de": "Kommerzielle Imker in Brasilien und Osteuropa nutzen Propolisgitter seit den 1970er Jahren (Bankova et al., 2000, „Propolis: recent advances in chemistry and plant origin\"). Ein Gitter liefert 50–150 g hochwertiges Propolis pro Volk und Saison — ein wertvolles Stockprodukt, das die meisten Hobbyimker ungenutzt lassen, weil sie nicht wissen, wie man es ohne Rähmchen-Zerstörung erntet.", "en": "Commercial beekeepers in Brazil and Eastern Europe have used propolis screens since the 1970s (Bankova et al., 2000, 'Propolis: recent advances in chemistry and plant origin'). One screen yields 50–150 g of high-quality propolis per colony per season — a valuable hive product most hobbyists never collect because they don't know how to harvest it without tearing up the frames." }
+      },
+      {
+        "id": "su-secret-02",
+        "name": { "de": "Tanzsprache an einem warmen Nachmittag beobachten", "en": "Watch the waggle dance on a warm afternoon" },
+        "why": { "de": "An einem ruhigen, warmen Nachmittag eine Wabe nahe am Flugloch aus dem Volk nehmen (oder eine Schaubeute verwenden) und 10 Minuten lang die zurückkehrenden Sammlerinnen beobachten. Die Achterschleifen mit Schwänzeltanz verraten dir Richtung und Entfernung der aktuellen Trachtquelle.", "en": "On a calm, warm afternoon, pull a frame near the entrance out of the colony (or use an observation hive) and watch returning foragers for 10 minutes. The figure-eight waggle runs encode the direction and distance of the current nectar source." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "secret": true,
+        "unlockAt": 8,
+        "uniqueValue": { "de": "Die Entschlüsselung der Bienentanzsprache brachte Karl von Frisch 1973 den Nobelpreis für Physiologie oder Medizin ein. Die Dauer des Schwänzelns codiert die Entfernung (ca. 1 Sekunde = 1 km), die Richtung wird relativ zum Sonnenstand auf der senkrechten Wabe angegeben. Zehn Minuten Beobachtung geben dir eine direkte Verbindung zu einem Jahrhundert Bienenforschung.", "en": "Decoding the waggle dance earned Karl von Frisch the 1973 Nobel Prize in Physiology or Medicine. The waggle duration encodes distance (≈ 1 second = 1 km), and the direction is given relative to the sun on the vertical comb surface. Ten minutes of observation give you a direct line to a century of bee research." }
       }
     ]
   },
@@ -243,6 +294,16 @@
         "why": { "de": "Die Königin muss sich im Winter mit der Traube bewegen können.", "en": "Queen must be able to move with the cluster in winter." },
         "urgency": "important",
         "minExperience": 0
+      },
+      {
+        "id": "au-secret-01",
+        "name": { "de": "Wabenhygiene: ein Drittel der Brutwaben erneuern", "en": "Comb rotation: replace a third of brood frames" },
+        "why": { "de": "Alte dunkle Brutwaben reichern Pestizidrückstände, Krankheitserreger und Schwermetalle an. Ersetze jedes Jahr etwa 33 % der Brutwaben durch frische Mittelwand — so bleibt das Wachs jung und die Krankheitslast niedrig.", "en": "Dark old brood comb accumulates pesticide residues, pathogens and heavy metals. Replace about 33% of your brood frames with fresh foundation each year — this keeps the wax cycle fresh and disease pressure low." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "secret": true,
+        "unlockAt": 12,
+        "uniqueValue": { "de": "Empfohlen vom LAVES (Niedersachsen), den USDA-ARS Bee Labs und der FAO („Good Beekeeping Practices\", 2020). Studien zeigen, dass drei Jahre alte Brutwaben bis zu 80 mg/kg Fluvalinat-Rückstände enthalten können und deutlich höhere Nosema-Sporenzahlen aufweisen als frische Waben. Eine überraschend große Mehrheit der Hobbyimker rotiert ihre Waben nie — obwohl es eine der wirkungsvollsten vorbeugenden Maßnahmen ist.", "en": "Recommended by the German LAVES bee health service, the USDA-ARS bee labs and the FAO Good Beekeeping Practices document (2020). Studies have found three-year-old brood comb carrying up to 80 mg/kg of fluvalinate residues and substantially higher Nosema spore counts than fresh comb. A surprisingly large majority of hobbyists never rotate comb at all — yet it's one of the highest-impact preventive steps in modern beekeeping." }
       }
     ]
   },
