@@ -1,13 +1,23 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import DebugPanel from './components/DebugPanel'
 
 const DEBUG = new URLSearchParams(window.location.search).has('debug')
+const VALID_TABS = ['season', 'diagnose', 'myhive']
+function initialTab() {
+  if (typeof window === 'undefined') return 'season'
+  const q = new URLSearchParams(window.location.search).get('tab')
+  return VALID_TABS.includes(q) ? q : 'season'
+}
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
+import { useAppBadge } from './hooks/useAppBadge'
+import { useSeason } from './hooks/useSeason'
+import { runWithViewTransition } from './utils/viewTransitions'
+import { haptics } from './utils/haptics'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
@@ -21,7 +31,30 @@ import PwaInstallHint from './components/PwaInstallHint'
 function AppContent() {
   const { profile, updateProfile, addColony, updateColony, removeColony } = useProfile()
   const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry } = useTaskLog()
-  const [activeTab, setActiveTab] = useState('season')
+  const [activeTab, setActiveTabState] = useState(initialTab)
+
+  // Wrap tab changes in the View Transitions API when available so
+  // the user sees a native-feeling cross-fade between Season / Diagnose
+  // / My Hive instead of a hard swap. Also gives a small haptic tap
+  // on the tab change.
+  const setActiveTab = useCallback((next) => {
+    haptics.tap()
+    runWithViewTransition(() => setActiveTabState(next))
+  }, [])
+
+  // Surface the number of outstanding urgent/important tasks on the
+  // installed app icon — the beekeeper sees "3" on the home screen
+  // without opening the app.
+  const seasonForBadge = useSeason(profile)
+  const pendingUrgentCount = useMemo(() => {
+    const tasks = seasonForBadge.tasks ?? []
+    return tasks.filter(
+      (t) =>
+        (t.urgency === 'urgent' || t.urgency === 'important') &&
+        !completedTaskIds.has(t.id)
+    ).length
+  }, [seasonForBadge.tasks, completedTaskIds])
+  useAppBadge(pendingUrgentCount)
   const [voiceActive, setVoiceActive] = useState(false)
   const [lastCommand, setLastCommand] = useState('')
   const [voicePermissionBlocked, setVoicePermissionBlocked] = useState(false)
@@ -60,7 +93,7 @@ function AppContent() {
         setVoicePermissionBlocked(true)
       }
     })
-  }, [voiceActive, speak, startListening])
+  }, [voiceActive, speak, startListening, setActiveTab])
 
   const handleVoicePermissionRetry = useCallback(() => {
     setVoicePermissionBlocked(false)

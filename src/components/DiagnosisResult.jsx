@@ -1,9 +1,37 @@
+import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import RiskNote from './RiskNote'
+import { shareOrCopy } from '../utils/share'
+import { haptics } from '../utils/haptics'
 
 export default function DiagnosisResult({ node, onReset }) {
   const { t } = useLanguage()
+  const [shareFeedback, setShareFeedback] = useState(null)
+
+  async function handleShare() {
+    const title = `🐝 Apiario — ${t(node.diagnosis)}`
+    const lines = [t(node.diagnosis)]
+    if (node.callExpert) lines.push(`⚠️ ${t(s.diagnose_call_expert)}`)
+    lines.push('')
+    lines.push(t(s.diagnose_what_to_do) + ':')
+    node.actions.forEach((action, i) => {
+      lines.push(`${i + 1}. ${t(action)}`)
+    })
+
+    const result = await shareOrCopy({
+      title,
+      text: lines.join('\n'),
+      url: typeof window !== 'undefined' ? window.location.href : undefined,
+    })
+    if (result.status === 'shared') {
+      haptics.success()
+    } else if (result.status === 'copied') {
+      haptics.tap()
+      setShareFeedback('copied')
+      setTimeout(() => setShareFeedback(null), 2500)
+    }
+  }
 
   return (
     <div className="px-4 py-6 flex flex-col gap-4">
@@ -37,8 +65,16 @@ export default function DiagnosisResult({ node, onReset }) {
       </div>
 
       <button
+        type="button"
+        onClick={handleShare}
+        className="w-full border border-amber-200 text-brown-mid font-semibold py-3 rounded-xl active:bg-amber-50 transition-colors text-sm"
+      >
+        {shareFeedback === 'copied' ? `✓ ${t(s.share_copied)}` : `📤 ${t(s.share_result)}`}
+      </button>
+
+      <button
         onClick={onReset}
-        className="mt-2 w-full bg-honey text-brown font-semibold py-3 rounded-xl active:bg-honey-dark transition-colors"
+        className="w-full bg-honey text-brown font-semibold py-3 rounded-xl active:bg-honey-dark transition-colors"
       >
         {t(s.diagnose_restart)}
       </button>

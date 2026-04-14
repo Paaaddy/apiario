@@ -66,6 +66,10 @@ export const strings = {
   diagnose_what_to_do: { de: 'Was tun',                        en: 'What to do'                   },
   diagnose_call_expert:{ de: 'Einen Imker-Experten kontaktieren', en: 'Contact a beekeeping expert' },
 
+  // Web Share
+  share_result:  { de: 'Teilen',             en: 'Share'       },
+  share_copied:  { de: 'In Zwischenablage',  en: 'Copied'      },
+
   // Onboarding
   onboarding_title:    { de: 'Apiario',                        en: 'Apiario'                      },
   onboarding_subtitle: { de: 'Dein Imker-Begleiter',           en: 'Your beekeeping companion'    },
