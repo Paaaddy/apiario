@@ -1,5 +1,6 @@
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
+import RiskNote from './RiskNote'
 
 const URGENCY_STYLES = {
   urgent:    { key: 'urgency_urgent',    border: 'border-red-400',  badge: 'bg-red-100 text-red-700' },
@@ -55,7 +56,10 @@ export default function TaskCard({ task, isChecked = false, checkedDate = null, 
             )}
           </div>
           {!isChecked && (
-            <p className="mt-1.5 text-sm text-brown-mid leading-relaxed">{t(task.why)}</p>
+            <>
+              <p className="mt-1.5 text-sm text-brown-mid leading-relaxed">{t(task.why)}</p>
+              <RiskNote risk={task.risk} />
+            </>
           )}
         </div>
       </div>

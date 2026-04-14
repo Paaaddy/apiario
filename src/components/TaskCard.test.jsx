@@ -64,4 +64,35 @@ describe('TaskCard', () => {
     wrap(<TaskCard task={task} isChecked onToggle={() => {}} />)
     expect(screen.queryByText('Königin überprüfen.')).not.toBeInTheDocument()
   })
+
+  it('renders a RiskNote when the task has a risk', () => {
+    localStorage.setItem('apiario-locale', 'en')
+    const taskWithRisk = {
+      ...task,
+      risk: {
+        level: 'warning',
+        note: { de: 'Ü', en: 'Overharvest starves the colony' },
+        mitigation: { de: 'M', en: 'Leave 15–20 kg of honey' },
+      },
+    }
+    wrap(<TaskCard task={taskWithRisk} />)
+    expect(screen.getByText(/overharvest starves the colony/i)).toBeInTheDocument()
+    expect(screen.getByText(/leave 15–20 kg of honey/i)).toBeInTheDocument()
+    localStorage.removeItem('apiario-locale')
+  })
+
+  it('hides the RiskNote when the task is checked off', () => {
+    localStorage.setItem('apiario-locale', 'en')
+    const taskWithRisk = {
+      ...task,
+      risk: {
+        level: 'caution',
+        note: { de: 'X', en: 'Something to watch' },
+        mitigation: { de: 'M', en: 'Mitigation' },
+      },
+    }
+    wrap(<TaskCard task={taskWithRisk} isChecked onToggle={() => {}} />)
+    expect(screen.queryByText(/something to watch/i)).not.toBeInTheDocument()
+    localStorage.removeItem('apiario-locale')
+  })
 })

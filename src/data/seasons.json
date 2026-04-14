@@ -9,14 +9,36 @@
         "name": { "de": "Erste Frühjahrskontrolle", "en": "First hive inspection" },
         "why": { "de": "Bestätigen, dass das Volk den Winter überlebt hat und die Königin legt.", "en": "Confirm the colony survived winter and the queen is laying." },
         "urgency": "important",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Den Stock an einem kalten Tag zu öffnen kann die Wintertraube aufbrechen und die Brut unterkühlen.",
+            "en": "Opening the hive on a cold day can break the winter cluster and chill the brood."
+          },
+          "mitigation": {
+            "de": "Nur an windstillen, sonnigen Tagen mit mindestens 12–14 °C öffnen. Kurz und zielgerichtet kontrollieren.",
+            "en": "Only open on calm, sunny days at 12–14 °C or warmer. Keep the inspection short and focused."
+          }
+        }
       },
       {
         "id": "sp-02",
         "name": { "de": "Honigvorräte prüfen", "en": "Check honey stores" },
         "why": { "de": "Völker können im Frühfrühling verhungern, bevor Blumen blühen.", "en": "Colonies can starve in early spring before flowers bloom." },
         "urgency": "important",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Durch unnötiges Öffnen des Stocks an kalten Tagen gehen wertvolle Wärmereserven verloren.",
+            "en": "Opening the hive unnecessarily on cold days wastes precious cluster heat."
+          },
+          "mitigation": {
+            "de": "Wenn möglich von hinten anheben und das Gewicht schätzen („heft test\"), ohne den Stock zu öffnen.",
+            "en": "When possible, lift the back of the hive to feel the weight (the 'heft test') without opening it."
+          }
+        }
       },
       {
         "id": "sp-03",
@@ -30,7 +52,18 @@
         "name": { "de": "Schwarmzellen kontrollieren", "en": "Check for swarm cells" },
         "why": { "de": "Frühling ist die Hauptschwarmzeit — Königinnenzellen früh erkennen.", "en": "Spring is prime swarm season — catch queen cells early." },
         "urgency": "important",
-        "minExperience": 1
+        "minExperience": 1,
+        "risk": {
+          "level": "warning",
+          "note": {
+            "de": "Alle Weiselzellen zu vernichten macht das Volk weisellos, wenn die alte Königin bereits versagt hat.",
+            "en": "Destroying every queen cell leaves the colony queenless if the old queen has already failed."
+          },
+          "mitigation": {
+            "de": "Immer zuerst nach frischen Eiern oder der Königin suchen. Im Zweifel mindestens eine offene Weiselzelle stehen lassen oder einen Kunstschwarm bilden.",
+            "en": "Always look for fresh eggs or the queen first. When in doubt, leave at least one open queen cell or perform an artificial swarm instead."
+          }
+        }
       },
       {
         "id": "sp-05",
@@ -51,7 +84,18 @@
         "name": { "de": "Wöchentliche Schwarmkontrollen", "en": "Weekly swarm checks" },
         "why": { "de": "Schwarmzeit im Frühsommer — alle 7 Tage kontrollieren.", "en": "Swarming peaks in early summer — inspect every 7 days." },
         "urgency": "important",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Zu häufiges Stören stresst das Volk und unterbricht den Nektareintrag.",
+            "en": "Too-frequent inspections stress the colony and interrupt nectar intake."
+          },
+          "mitigation": {
+            "de": "Alle 7–9 Tage reicht während der Schwarmzeit. Arbeite zielgerichtet und rauche nur sparsam.",
+            "en": "Every 7–9 days is enough during swarm season. Work with purpose and use smoke sparingly."
+          }
+        }
       },
       {
         "id": "su-02",
@@ -65,21 +109,54 @@
         "name": { "de": "Varroamilben überwachen", "en": "Monitor for varroa mites" },
         "why": { "de": "Milbenpopulationen wachsen im Sommer am schnellsten. Jetzt zählen, um rechtzeitig zu handeln.", "en": "Mite populations grow fastest in summer. Count now to act in time." },
         "urgency": "important",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Die Alkoholwäsche tötet die Bienenprobe von etwa 300 Bienen.",
+            "en": "The alcohol wash kills the sample of about 300 bees."
+          },
+          "mitigation": {
+            "de": "Die Puderzucker-Roll-Methode ist eine nicht-tödliche Alternative mit vergleichbarer Genauigkeit. Bienen danach zurück zum Volk geben.",
+            "en": "The powdered-sugar roll is a non-lethal alternative with comparable accuracy. Return the bees to the colony afterwards."
+          }
+        }
       },
       {
         "id": "su-04",
         "name": { "de": "Honig ernten (wenn Räume vollständig verdeckelt)", "en": "Harvest honey (when supers are fully capped)" },
         "why": { "de": "Verdeckelter Honig hat wenig Feuchtigkeit — unverdeckelter kann gären.", "en": "Capped honey has low enough moisture — uncapped can ferment." },
         "urgency": "routine",
-        "minExperience": 1
+        "minExperience": 1,
+        "risk": {
+          "level": "warning",
+          "note": {
+            "de": "Zu viel Honig zu ernten lässt das Volk im Winter verhungern.",
+            "en": "Harvesting too much honey leaves the colony without enough winter stores."
+          },
+          "mitigation": {
+            "de": "Je nach Klimazone 15–20 kg Honig im Stock belassen (mehr in Nordeuropa). Nie nur am Gewicht sparen, sondern zuerst den Winterbedarf einplanen.",
+            "en": "Leave 15–20 kg of honey on the hive depending on climate (more in northern Europe). Plan the winter stores first, then harvest only the surplus."
+          }
+        }
       },
       {
         "id": "su-05",
         "name": { "de": "Wasserquelle in der Nähe sicherstellen", "en": "Ensure a water source nearby" },
         "why": { "de": "Bienen brauchen Wasser zur Kühlung des Stocks bei Hitze.", "en": "Bees need water to cool the hive in hot weather." },
         "urgency": "routine",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Offene Wasserbecken ohne Landefläche lassen Bienen ertrinken.",
+            "en": "Open water without a landing surface will drown foraging bees."
+          },
+          "mitigation": {
+            "de": "Korken, Steine, Holzstücke oder Murmeln in die Wasserstelle legen, sodass Bienen sicher landen und trinken können.",
+            "en": "Float corks, pebbles, wood or marbles in the water so bees can land and drink safely."
+          }
+        }
       }
     ]
   },
@@ -93,28 +170,72 @@
         "name": { "de": "Varroa behandeln", "en": "Treat for varroa mites" },
         "why": { "de": "Herbstbehandlung schützt die Winterbienen, die bis zum Frühling überleben müssen.", "en": "Autumn treatment protects the winter bees that must survive until spring." },
         "urgency": "urgent",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "warning",
+          "note": {
+            "de": "Chemische Behandlungen können die Königin stressen, Brut schädigen und Rückstände im Wachs hinterlassen.",
+            "en": "Chemical treatments can stress the queen, harm brood, and leave residues in wax."
+          },
+          "mitigation": {
+            "de": "Herstellerdosierung und Temperaturbereich exakt einhalten. Alle Honigräume vorher entfernen. Keine Doppelbehandlung mit unterschiedlichen Wirkstoffen ohne Pause.",
+            "en": "Follow manufacturer dose and temperature range exactly. Remove every honey super before applying. Do not stack treatments without a break."
+          }
+        }
       },
       {
         "id": "au-02",
         "name": { "de": "Zuckerwasser füttern", "en": "Feed sugar syrup" },
         "why": { "de": "Völker brauchen 15–20 kg Vorräte für den Winter. Bei Mangel füttern.", "en": "Colonies need 15–20 kg of stores to survive winter. Feed if short." },
         "urgency": "important",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Offene oder verschüttete Fütterung löst Räuberei aus und kann schwache Völker zerstören.",
+            "en": "Open or spilled feeding triggers robbing and can destroy weaker colonies."
+          },
+          "mitigation": {
+            "de": "Nur Innenfütterer verwenden. Bei Dämmerung füttern. Verschütteten Sirup sofort entfernen. Flugloch während der Fütterung verengern.",
+            "en": "Use internal feeders only. Feed at dusk. Clean up any spilled syrup immediately. Reduce the entrance while feeding."
+          }
+        }
       },
       {
         "id": "au-03",
         "name": { "de": "Volksstärke beurteilen", "en": "Assess colony strength" },
         "why": { "de": "Schwache Völker überleben den Winter selten. Zusammenlegung mit einem stärkeren Volk erwägen.", "en": "Weak colonies rarely survive winter. Consider merging with a stronger hive." },
         "urgency": "important",
-        "minExperience": 1
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Beim Zusammenlegen kann eine Krankheit vom schwachen auf das starke Volk übertragen werden.",
+            "en": "Merging colonies can transfer disease from a weak to a strong hive."
+          },
+          "mitigation": {
+            "de": "Nur gesunde Völker zusammenlegen — bei Krankheitsverdacht zuerst diagnostizieren. Zeitungsmethode verwenden, damit die Bienen sich langsam vermischen.",
+            "en": "Only merge healthy colonies — diagnose first if disease is suspected. Use the newspaper method so bees integrate slowly."
+          }
+        }
       },
       {
         "id": "au-04",
         "name": { "de": "Flugloch verengern", "en": "Reduce the entrance" },
         "why": { "de": "Engeres Flugloch schützt vor Räuberbienen und Mäusen wenn das Volk kleiner wird.", "en": "Smaller entrance deters robbing bees and mice as the colony shrinks." },
         "urgency": "routine",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Ein zu kleines Flugloch kann das Volk an warmen Herbsttagen überhitzen und Sammlerinnen aussperren.",
+            "en": "An entrance that is too small can overheat the colony on warm autumn days and lock out foragers."
+          },
+          "mitigation": {
+            "de": "Schrittweise verengern, an die aktuelle Volksstärke anpassen. Erst auf Winter-Mausgitterbreite verengern, wenn der Flugbetrieb deutlich nachgelassen hat.",
+            "en": "Reduce gradually, matching current colony size. Only narrow to winter mouse-guard width once foraging has clearly slowed."
+          }
+        }
       },
       {
         "id": "au-05",
@@ -142,7 +263,18 @@
         "name": { "de": "Flugloch freihalten", "en": "Keep the entrance clear" },
         "why": { "de": "Tote Bienen blockieren Luftstrom und Reinigungsflüge. Vorsichtig freilegen ohne zu öffnen.", "en": "Dead bees block airflow and cleansing flights. Clear gently without opening." },
         "urgency": "routine",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Heftige Bewegungen am Flugloch stören die Traube und können Bienen in Alarmbereitschaft versetzen.",
+            "en": "Vigorous motion at the entrance disturbs the cluster and can put bees on alert."
+          },
+          "mitigation": {
+            "de": "Mit einem dünnen Draht oder Holzstäbchen langsam und ruhig ausräumen. Keine Luftstöße, kein Öffnen des Deckels.",
+            "en": "Gently clear with a thin wire or wooden stick — no sudden air bursts, no opening of the lid."
+          }
+        }
       },
       {
         "id": "wi-03",
@@ -156,7 +288,18 @@
         "name": { "de": "Oxalsäurebehandlung durchführen", "en": "Apply oxalic acid treatment" },
         "why": { "de": "Ohne verdeckelte Brut bekämpft Oxalsäure Varroamilben sehr effektiv.", "en": "With no capped brood, oxalic acid knocks back varroa mites very effectively." },
         "urgency": "urgent",
-        "minExperience": 0
+        "minExperience": 0,
+        "risk": {
+          "level": "warning",
+          "note": {
+            "de": "Oxalsäure ist ein Gefahrstoff für Imker UND Bienen. Überdosierung schädigt Königin und Bienenbesatz.",
+            "en": "Oxalic acid is a hazardous substance for beekeepers AND bees. Overdose harms the queen and the cluster."
+          },
+          "mitigation": {
+            "de": "Nur anwenden, wenn das Volk brutfrei ist. Schutzbrille, säurefeste Handschuhe und Atemschutz tragen. Exakte Dosierung (z. B. 35 ml einer 3,2 % Oxalsäure-Dihydrat-Sirup-Lösung pro Volk) einhalten. Keine Wiederholungsbehandlung innerhalb weniger Wochen.",
+            "en": "Only apply when the colony is broodless. Wear goggles, acid-resistant gloves and a respirator. Keep the dose exact (e.g. 35 ml of 3.2 % oxalic-acid dihydrate syrup per colony). Do not repeat within a few weeks."
+          }
+        }
       }
     ]
   }
