@@ -3,8 +3,9 @@ import { strings as s } from '../i18n/strings'
 import LanguageToggle from '../components/LanguageToggle'
 import LogSection from './LogSection'
 import ProfileSection from './ProfileSection'
+import PwaInstallHint from '../components/PwaInstallHint'
 
-export default function MyHiveScreen({ profile, onUpdate, log = [], onAddEntry, onDeleteEntry }) {
+export default function MyHiveScreen({ profile, onUpdate, log = [], onAddEntry, onDeleteEntry, pwaInstall = { isInstalled: true, installSupported: false, promptInstall: () => {} } }) {
   const { t } = useLanguage()
 
   return (
@@ -20,6 +21,15 @@ export default function MyHiveScreen({ profile, onUpdate, log = [], onAddEntry, 
       </div>
 
       <div className="px-4 pt-6">
+        <div className="mb-4">
+          <PwaInstallHint
+            isInstalled={pwaInstall.isInstalled}
+            installSupported={pwaInstall.installSupported}
+            onInstall={pwaInstall.promptInstall}
+            compact
+            dismissible
+          />
+        </div>
         <LogSection log={log} onAddEntry={onAddEntry} onDeleteEntry={onDeleteEntry} />
         <ProfileSection profile={profile} onUpdate={onUpdate} />
       </div>

@@ -7,6 +7,7 @@ const DEBUG = new URLSearchParams(window.location.search).has('debug')
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
+import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
@@ -22,6 +23,7 @@ function AppContent() {
   const [voiceActive, setVoiceActive] = useState(false)
   const [lastCommand, setLastCommand] = useState('')
   const { speak, stopSpeaking, startListening, stopListening } = useVoice()
+  const pwaInstall = usePwaInstallPrompt()
 
   const handleVoiceStop = useCallback(() => {
     setVoiceActive(false)
@@ -59,6 +61,7 @@ function AppContent() {
       <div className="flex flex-col h-full bg-cream">
         <Onboarding
           onComplete={(answers) => updateProfile({ ...answers, onboardingDone: true })}
+          pwaInstall={pwaInstall}
         />
       </div>
     )
@@ -83,6 +86,7 @@ function AppContent() {
             log={log}
             onAddEntry={addCustomEntry}
             onDeleteEntry={deleteEntry}
+            pwaInstall={pwaInstall}
           />
         )}
       </main>
