@@ -38,8 +38,8 @@ export default function DiagnoseScreen() {
 
   if (node.type === 'outcome') {
     return (
-      <div className="flex flex-col min-h-full">
-        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20">
+      <div className="relative flex flex-col min-h-full">
+        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20">
           <div className="flex items-start justify-between gap-3">
             <h1 className="min-w-0 flex-1 font-serif text-2xl font-bold text-brown">🔎 {t(s.diagnose_title)}</h1>
             <LanguageToggle />
@@ -53,8 +53,8 @@ export default function DiagnoseScreen() {
   const stepNumber = history.length + 1
 
   return (
-    <div className="flex flex-col min-h-full">
-      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20">
+    <div className="relative flex flex-col min-h-full">
+      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <h1 className="font-serif text-2xl font-bold text-brown">🔎 {t(s.diagnose_title)}</h1>

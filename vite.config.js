@@ -21,26 +21,32 @@ export default defineConfig({
           { src: 'bee-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
           { src: 'bee-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
+        // Shortcut URLs are RELATIVE to the manifest URL, not the
+        // origin root. On GitHub Pages the manifest lives at
+        // `/apiario/manifest.webmanifest`, so `?tab=season` resolves
+        // to `/apiario/?tab=season`. The previous values (`/?tab=...`)
+        // pointed at the apex of github.io and produced 404s when the
+        // user tapped a shortcut on an installed PWA.
         shortcuts: [
           {
             name: "This week's tasks",
             short_name: 'Tasks',
             description: 'Open the current season task list',
-            url: '/?tab=season',
+            url: '?tab=season',
             icons: [{ src: 'bee-192.png', sizes: '192x192', type: 'image/png' }],
           },
           {
             name: 'Diagnose a problem',
             short_name: 'Diagnose',
             description: 'Open the hive diagnosis wizard',
-            url: '/?tab=diagnose',
+            url: '?tab=diagnose',
             icons: [{ src: 'bee-192.png', sizes: '192x192', type: 'image/png' }],
           },
           {
             name: 'My Hive',
             short_name: 'My Hive',
             description: 'Profile, log and colonies',
-            url: '/?tab=myhive',
+            url: '?tab=myhive',
             icons: [{ src: 'bee-192.png', sizes: '192x192', type: 'image/png' }],
           },
         ],

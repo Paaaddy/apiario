@@ -10,5 +10,50 @@
   body {
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    /* Kill double-tap zoom without breaking scrolling.
+       pinch-zoom is disabled via viewport meta. */
+    touch-action: manipulation;
+    /* Prevent iOS text-size-adjust from inflating our typography in
+       landscape. */
+    -webkit-text-size-adjust: 100%;
   }
+
+  /* Allow iOS safe-area insets to push the sticky header down past
+     the status bar notch when running as an installed PWA. */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    .sticky-top-safe {
+      padding-top: calc(2.5rem + env(safe-area-inset-top));
+    }
+  }
+}
+
+/* -----------------------------------------------------------------
+   View-transition root styles.
+
+   Tab switches go through document.startViewTransition(), which
+   captures the old and new DOM as snapshots and cross-fades them.
+   Two problems the defaults cause in Apiario:
+
+   1. White flash. The underlying `html` element defaults to
+      transparent during the transition; any gap in snapshot coverage
+      shows the browser's canvas, which is white. We force the
+      `::view-transition` root to our cream background so any such
+      gap matches the app.
+
+   2. Sticky-header jitter. During the animation the sticky header is
+      represented by two snapshots (old + new) that fade independently.
+      If their backgrounds differ even for one frame, you see a
+      1–2 px line. Giving the root group a fixed background keeps
+      the seam invisible.
+
+   Animation duration is also tightened from the default 250ms to
+   180ms so tab switches feel snappy instead of laggy.
+   ----------------------------------------------------------------- */
+::view-transition-group(root) {
+  background-color: #fffbeb;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
 }
