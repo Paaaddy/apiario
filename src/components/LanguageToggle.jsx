@@ -4,7 +4,7 @@ export default function LanguageToggle() {
   const { locale, setLocale } = useLanguage()
 
   return (
-    <div className="flex rounded-full border border-brown/20 overflow-hidden text-xs font-semibold">
+    <div className="shrink-0 flex rounded-full border border-brown/20 overflow-hidden text-xs font-semibold">
       <button
         onClick={() => setLocale('de')}
         className={`px-2.5 py-1 transition-colors ${

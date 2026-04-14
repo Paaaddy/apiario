@@ -56,8 +56,8 @@ export default function Onboarding({ onComplete, pwaInstall = { isInstalled: tru
   return (
     <div className="min-h-full bg-cream flex flex-col">
       <div className="bg-honey px-6 pt-12 pb-8">
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
             <div className="text-5xl mb-3">🍯</div>
             <h1 className="font-serif text-3xl font-bold text-brown">{t(s.onboarding_title)}</h1>
             <p className="text-brown-light mt-1 text-sm">{t(s.onboarding_subtitle)}</p>
