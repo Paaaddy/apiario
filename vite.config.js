@@ -17,6 +17,8 @@ export default defineConfig({
         orientation: 'portrait',
         icons: [
           { src: 'bee-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'bee-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: 'bee-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
           { src: 'bee-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
