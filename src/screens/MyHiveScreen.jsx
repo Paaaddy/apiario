@@ -3,9 +3,20 @@ import { strings as s } from '../i18n/strings'
 import LanguageToggle from '../components/LanguageToggle'
 import LogSection from './LogSection'
 import ProfileSection from './ProfileSection'
+import ColoniesSection from './ColoniesSection'
 import PwaInstallHint from '../components/PwaInstallHint'
 
-export default function MyHiveScreen({ profile, onUpdate, log = [], onAddEntry, onDeleteEntry, pwaInstall = { isInstalled: true, installSupported: false, promptInstall: () => {} } }) {
+export default function MyHiveScreen({
+  profile,
+  onUpdate,
+  log = [],
+  onAddEntry,
+  onDeleteEntry,
+  onAddColony,
+  onUpdateColony,
+  onRemoveColony,
+  pwaInstall = { isInstalled: true, installSupported: false, promptInstall: () => {} },
+}) {
   const { t } = useLanguage()
 
   return (
@@ -30,6 +41,12 @@ export default function MyHiveScreen({ profile, onUpdate, log = [], onAddEntry, 
             dismissible
           />
         </div>
+        <ColoniesSection
+          colonies={profile?.colonies ?? []}
+          onAdd={onAddColony}
+          onUpdate={onUpdateColony}
+          onRemove={onRemoveColony}
+        />
         <LogSection log={log} onAddEntry={onAddEntry} onDeleteEntry={onDeleteEntry} />
         <ProfileSection profile={profile} onUpdate={onUpdate} />
       </div>

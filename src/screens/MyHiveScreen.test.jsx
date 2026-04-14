@@ -64,4 +64,34 @@ describe('MyHiveScreen', () => {
     await user.click(screen.getByText('+ Custom entry'))
     expect(screen.getByPlaceholderText(/what did you do/i)).toBeInTheDocument()
   })
+
+  it('renders the Colonies section with the profile colonies', () => {
+    const profileWithColonies = {
+      ...profile,
+      colonies: [
+        { id: 'col-1', name: 'Apple tree', createdAt: '2026-03-01', notes: '' },
+      ],
+    }
+    wrap(<MyHiveScreen profile={profileWithColonies} onUpdate={() => {}} />)
+    expect(screen.getByText(/your colonies/i)).toBeInTheDocument()
+    expect(screen.getByText(/🐝 Apple tree/)).toBeInTheDocument()
+  })
+
+  it('forwards onAddColony / onUpdateColony / onRemoveColony through', async () => {
+    const user = userEvent.setup()
+    const onAddColony = vi.fn()
+    wrap(
+      <MyHiveScreen
+        profile={{ ...profile, colonies: [] }}
+        onUpdate={() => {}}
+        onAddColony={onAddColony}
+        onUpdateColony={() => {}}
+        onRemoveColony={() => {}}
+      />
+    )
+    await user.click(screen.getByRole('button', { name: /add a colony/i }))
+    await user.type(screen.getByPlaceholderText(/colony name/i), 'Cherry')
+    await user.click(screen.getByRole('button', { name: /^save$/i }))
+    expect(onAddColony).toHaveBeenCalledWith('Cherry', '')
+  })
 })
