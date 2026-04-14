@@ -10,6 +10,11 @@ export const strings = {
   season_tasks_noun:  { de: 'Aufgaben zu prüfen',   en: 'things to check'  },
   season_nothing:     { de: 'Diese Woche nichts Dringendes. Bald wieder vorbeischauen.', en: 'Nothing urgent this week. Check back soon.' },
 
+  // Week picker
+  week_previous:      { de: 'Vorherige Woche',      en: 'Previous week'     },
+  week_next:          { de: 'Nächste Woche',        en: 'Next week'         },
+  week_today:         { de: 'Zur aktuellen Woche',  en: 'Jump to this week' },
+
   // Urgency badges
   urgency_urgent:    { de: 'Dringend', en: 'Urgent'    },
   urgency_important: { de: 'Wichtig',  en: 'Important' },

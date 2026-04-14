@@ -103,4 +103,39 @@ describe('useSeason', () => {
     )
     expect(result.current.nextLockedSecret).toBeNull()
   })
+
+  it('returns the ISO calendar week (not a season-local week)', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-14T10:00:00Z'))
+    const { result } = renderHook(() =>
+      useSeason({ hiveCount: 1, climateZone: 'central', experience: 0 })
+    )
+    expect(result.current.week).toBe(16)
+  })
+
+  it('honours `forDate`: looking at a different week gives that weeks season', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-14T10:00:00Z'))
+    // Look ahead to mid-summer — should land in summer.
+    const { result } = renderHook(() =>
+      useSeason({ hiveCount: 1, climateZone: 'central', experience: 0 }, 0, new Date('2026-07-15T10:00:00Z'))
+    )
+    expect(result.current.season).toBe('summer')
+    expect(result.current.week).toBe(29)
+  })
+
+  it('exposes weekRange Monday and Sunday for the looked-at week', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-04-14T10:00:00Z'))
+    const { result } = renderHook(() =>
+      useSeason(
+        { hiveCount: 1, climateZone: 'central', experience: 0 },
+        0,
+        new Date('2026-04-14T00:00:00Z')
+      )
+    )
+    expect(result.current.weekRange).toBeTruthy()
+    expect(result.current.weekRange.start.getDate()).toBe(13) // Mon Apr 13
+    expect(result.current.weekRange.end.getDate()).toBe(19) // Sun Apr 19
+  })
 })
