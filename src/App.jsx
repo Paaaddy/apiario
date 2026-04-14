@@ -1,5 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
+import DebugPanel from './components/DebugPanel'
+
+const DEBUG = new URLSearchParams(window.location.search).has('debug')
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
@@ -93,6 +96,7 @@ export default function App() {
   return (
     <LanguageProvider>
       <AppContent />
+      {DEBUG && <DebugPanel />}
     </LanguageProvider>
   )
 }
