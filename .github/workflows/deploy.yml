@@ -10,22 +10,35 @@ permissions:
   pages: write
   id-token: write
 
+# GitHub's official recommendation for the `pages` concurrency group:
+# do NOT cancel in-progress deployments. Cancelling a Pages deployment
+# can leave the environment in a half-applied state, so the Actions UI
+# surfaces a warning on every run that sets `cancel-in-progress: true`
+# on a Pages job. Keep it false, let the queue drain naturally.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # Current active LTS. Node 20 is still supported but 22 is
+          # the version everything in this repo targets today.
+          node-version: 22
           cache: npm
+          cache-dependency-path: package-lock.json
 
-      - run: npm ci
+      # --no-audit --no-fund silences the audit summary and funding
+      # footer that were showing up as warnings in CI. --prefer-offline
+      # is harmless when the npm cache is cold and speeds up the step
+      # when it is warm.
+      - run: npm ci --no-audit --no-fund --prefer-offline
 
       - run: npm run build -- --base /apiario/
 
@@ -36,6 +49,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
