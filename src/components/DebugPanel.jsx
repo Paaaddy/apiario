@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { haptics } from '../utils/haptics'
 
 const KEYS = {
   profile: 'apiario-profile',
@@ -22,6 +23,7 @@ function readAll() {
 export default function DebugPanel() {
   const [data, setData] = useState(readAll)
   const [open, setOpen] = useState(true)
+  const [vibrateResult, setVibrateResult] = useState(null)
 
   function reset(keys) {
     for (const key of keys) localStorage.removeItem(key)
@@ -31,6 +33,17 @@ export default function DebugPanel() {
   function reloadAfter(keys) {
     reset(keys)
     window.location.reload()
+  }
+
+  function testVibration() {
+    // Fire directly from the click handler — the whole point of this
+    // button is to confirm the user-activation path actually works.
+    const fired = haptics.tap()
+    setVibrateResult({
+      supported: haptics.isSupported,
+      fired: fired !== false,
+      at: new Date().toLocaleTimeString(),
+    })
   }
 
   if (!open) {
@@ -78,7 +91,43 @@ export default function DebugPanel() {
           >
             Refresh
           </button>
+          <button
+            onClick={testVibration}
+            className="bg-purple-800 text-purple-200 px-2 py-1 rounded text-xs"
+          >
+            Test vibration
+          </button>
         </div>
+
+        {vibrateResult && (
+          <div className="text-[10px] leading-relaxed bg-gray-800 rounded p-2 text-gray-200">
+            <p>
+              <span className="text-gray-400">supported:</span>{' '}
+              <span className={vibrateResult.supported ? 'text-green-300' : 'text-red-300'}>
+                {String(vibrateResult.supported)}
+              </span>
+            </p>
+            <p>
+              <span className="text-gray-400">navigator.vibrate returned:</span>{' '}
+              <span className={vibrateResult.fired ? 'text-green-300' : 'text-red-300'}>
+                {String(vibrateResult.fired)}
+              </span>
+            </p>
+            <p className="text-gray-500">tested at {vibrateResult.at}</p>
+            {!vibrateResult.supported && (
+              <p className="text-yellow-300 mt-1">
+                This browser/device has no Vibration API (most likely iOS Safari, desktop Firefox, or a
+                desktop browser without a vibration motor).
+              </p>
+            )}
+            {vibrateResult.supported && !vibrateResult.fired && (
+              <p className="text-yellow-300 mt-1">
+                API exists but vibrate() returned false. Check Battery Saver, Do Not Disturb, or
+                Settings → Accessibility → Disable Vibrations.
+              </p>
+            )}
+          </div>
+        )}
 
         {/* State dump */}
         {Object.entries(data).map(([name, value]) => (

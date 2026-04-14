@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useRef } from 'react'
 import { haptics } from '../utils/haptics'
 
 const STORAGE_KEY = 'apiario-log'
@@ -26,12 +26,32 @@ function cap(log) {
 export function useTaskLog() {
   const [log, setLog] = useState(loadLog)
 
+  // Mirror `log` into a ref so the event-handler path below can read
+  // the latest log synchronously without having to re-bind the
+  // callback on every log change. This is what lets us decide
+  // "is this a check or an uncheck?" *before* we fire the haptic.
+  const logRef = useRef(log)
+  logRef.current = log
+
   const completedTaskIds = useMemo(
     () => new Set(log.filter((e) => e.type === 'task').map((e) => e.taskId)),
     [log]
   )
 
   const toggleTask = useCallback((task) => {
+    // IMPORTANT: fire the haptic SYNCHRONOUSLY from the outer callback,
+    // not from inside the `setLog` state updater. React schedules the
+    // updater to run during the commit phase, which can happen outside
+    // the user-activation window that Chrome / Android require for
+    // `navigator.vibrate()` to actually trigger the motor. Calling
+    // haptics.tap() here keeps us inside the click handler's gesture.
+    const alreadyChecked = (logRef.current ?? []).some(
+      (e) => e.type === 'task' && e.taskId === task.id
+    )
+    // Only buzz on check — undoing a mistake stays silent so it feels
+    // reversible rather than rewarded.
+    if (!alreadyChecked) haptics.tap()
+
     setLog((prev) => {
       const exists = prev.find((e) => e.type === 'task' && e.taskId === task.id)
       const next = exists
@@ -47,9 +67,6 @@ export function useTaskLog() {
             ...prev,
           ])
       saveLog(next)
-      // Haptic confirmation — only on check, not on uncheck, so
-      // undoing a mistake is silent and checking feels rewarding.
-      if (!exists) haptics.tap()
       return next
     })
   }, [])
