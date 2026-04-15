@@ -81,6 +81,12 @@ export const strings = {
   onboarding_q_hives:  { de: 'Wie viele Völker hältst du?',   en: 'How many hives do you keep?'  },
   onboarding_q_zone:   { de: 'Wo bist du ansässig?',          en: 'Where are you located?'       },
   onboarding_q_exp:    { de: 'Wie lange imkerst du schon?',   en: 'How long have you been keeping bees?' },
+  onboarding_lets_go:              { de: "Los geht's",                              en: "Let's go"                                   },
+  onboarding_continue:             { de: 'Weiter',                                  en: 'Continue'                                   },
+  onboarding_complete_title:       { de: 'Du bist startklar!',                      en: "You're all set!"                            },
+  onboarding_feature_season_desc:  { de: 'Saisonale Aufgaben für deine Völker',     en: 'Seasonal tasks for your colonies'           },
+  onboarding_feature_diagnose_desc:{ de: 'Symptome prüfen und Diagnose stellen',    en: 'Check symptoms and get a diagnosis'         },
+  onboarding_feature_myhive_desc:  { de: 'Verlauf führen und Profil anpassen',      en: 'Track your history and update your profile' },
 
 
   // PWA install hint
