@@ -30,7 +30,7 @@ Deployed at: https://paaaddy.github.io/apiario/
 Single-page, tab-based. `LanguageProvider` wraps everything. `ErrorBoundary` wraps `AppContent`. `useProfile` gates the onboarding flow. After onboarding, renders three tab screens plus two persistent overlays (BottomNav, BeeFab). Tab state is local to App — no router.
 
 ### State model
-- **Profile** (`useProfile`): localStorage under `apiario-profile`. Shape: `{ schemaVersion, hiveCount, climateZone, experience, onboardingDone }`. `schemaVersion` enables future migrations via `migrate()`. `experience` is a numeric level used to filter tasks.
+- **Profile** (`useProfile`): localStorage under `apiario-profile`. Shape: `{ schemaVersion, hiveCount, climateZone, experience, onboardingDone, colonies[] }`. `schemaVersion` enables future migrations via `migrate()`. `experience` is a numeric level used to filter tasks. `colonies` is an array of `{ id, name, notes, createdAt }` objects managed via `addColony`, `updateColony`, `removeColony` helpers exposed by the hook.
 - **Locale** (`LanguageContext`): localStorage under `apiario-locale`. Defaults to `'de'`. `t()` resolves `{ de, en }` bilingual objects or passes plain strings through unchanged.
 - **Task log** (`useTaskLog`): localStorage under `apiario-log`. Two entry types: `task` (from season checkbox) and `custom` (free text). Capped at 500 entries. Exposes `completedTaskIds` Set for O(1) checkbox state lookup.
 - **Season** (`useSeason`): pure derivation from current date + profile. Reads `src/data/seasons.json`, filters tasks by `minExperience`.
@@ -46,10 +46,11 @@ All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "
 ### Screen structure
 - `SeasonScreen` — sticky header, task cards with checkboxes
 - `DiagnoseScreen` — branching wizard; runs `validateDiagnosisTree()` on mount in dev
-- `MyHiveScreen` — composes `LogSection` + `ProfileSection`
+- `MyHiveScreen` — composes `ColoniesSection` + `LogSection` + `ProfileSection`
+- `ColoniesSection` — named colony list with add / edit / delete; state lives in `useProfile`
 - `LogSection` — Verlauf log with month grouping + custom entry form
 - `ProfileSection` — hive count / climate / experience option groups
-- `Onboarding` — 3-step first-launch wizard
+- `Onboarding` — 6-step OnboardJS flow (welcome → features → hiveCount → climateZone → experience → complete) using `@onboardjs/react`. Steps are created once in a `stepsRef` and a `COMPONENT_REGISTRY` maps step keys to React components.
 
 ### Voice / hands-free
 `useVoice` wraps Web Speech API (`SpeechSynthesis` + `SpeechRecognition`). Command dispatch lives in `App.jsx` — the hook itself is stateless. Voice is a progressive enhancement; the app is fully usable without it.

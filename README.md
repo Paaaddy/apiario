@@ -10,7 +10,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 
 - **Season tab** — weekly task cards filtered by your experience level, with checkboxes that log completed tasks
 - **Diagnose tab** — branching wizard covering queen issues, varroa, disease, swarming, and more
-- **My Hive tab** — edit your profile (hive count, climate zone, experience) and view your activity log
+- **My Hive tab** — manage named colonies, edit your profile (hive count, climate zone, experience), and view your activity log
 - **DE / EN toggle** — full German and English support, switch instantly in any screen
 - **Offline-first** — works with no signal after the first visit; all content and fonts are precached
 - **Installable** — add to home screen on Android and iOS (PWA)
@@ -25,6 +25,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 | Framework | React 18 + Vite 5 |
 | Styling | Tailwind CSS 3 |
 | Offline | vite-plugin-pwa + Workbox |
+| Onboarding | @onboardjs/react |
 | Fonts | @fontsource (self-hosted, precached) |
 | State | React context + localStorage |
 | Voice | Web Speech API |
