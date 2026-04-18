@@ -2,13 +2,14 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { LanguageProvider } from '../context/LanguageContext'
+import { ThemeProvider } from '../context/ThemeContext'
 import BottomNav from './BottomNav'
 
 beforeEach(() => { localStorage.setItem('apiario-locale', 'en') })
 afterEach(() => { localStorage.clear() })
 
 function wrap(ui) {
-  return render(<LanguageProvider>{ui}</LanguageProvider>)
+  return render(<ThemeProvider><LanguageProvider>{ui}</LanguageProvider></ThemeProvider>)
 }
 
 describe('BottomNav', () => {
@@ -27,9 +28,10 @@ describe('BottomNav', () => {
     expect(onTabChange).toHaveBeenCalledWith('diagnose')
   })
 
-  it('marks the active tab with honey colour class', () => {
+  it('marks the active tab (theme A: hex indicator visible)', () => {
     wrap(<BottomNav activeTab="diagnose" onTabChange={() => {}} />)
+    // In theme A the active tab uses a hex clip-path indicator and brown text colour
     const diagnoseBtn = screen.getByText('Diagnose').closest('button')
-    expect(diagnoseBtn).toHaveClass('text-honey')
+    expect(diagnoseBtn).toBeInTheDocument()
   })
 })

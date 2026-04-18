@@ -12,7 +12,9 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@fontsource/fraunces": "^5.2.9",
     "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/playfair-display": "^5.2.8",
     "@onboardjs/core": "^1.0.0-rc.3",
     "@onboardjs/react": "^1.0.0-rc.3",

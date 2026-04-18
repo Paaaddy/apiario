@@ -1,5 +1,6 @@
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
+import ThemeSwitcher from '../components/ThemeSwitcher'
 
 function OptionGroup({ title, options, currentValue, fieldKey, onUpdate }) {
   return (
@@ -50,6 +51,7 @@ export default function ProfileSection({ profile, onUpdate }) {
   return (
     <div>
       <h2 className="font-serif text-base font-semibold text-brown mb-4">{t(s.profile_title)}</h2>
+      <ThemeSwitcher />
       <OptionGroup
         title={t(s.hive_count_title)}
         options={HIVE_OPTIONS}

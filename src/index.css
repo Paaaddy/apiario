@@ -2,24 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme A: Honeycomb (default) ─── */
+:root, [data-theme="a"] {
+  --theme-bg: #fffbeb;
+  --theme-header-bg: #f5a623;
+  --theme-ink: #3d1f00;
+  --theme-ink-mid: #92400e;
+  --theme-ink-light: #7a3f00;
+  --theme-accent: #f5a623;
+  --theme-accent-dark: #e8890c;
+  --theme-rule: #f0e4c2;
+  --theme-card-bg: #ffffff;
+  --theme-nav-bg: #ffffff;
+  --theme-nav-border: #fde68a;
+  --theme-font-head: "Playfair Display", Georgia, serif;
+  --theme-font-mono: system-ui, sans-serif;
+  --theme-body-bg: #fffbeb;
+}
+
+/* ── Theme B: Field Notebook ─── */
+[data-theme="b"] {
+  --theme-bg: #f4ecd8;
+  --theme-header-bg: #f4ecd8;
+  --theme-ink: #2b1d0e;
+  --theme-ink-mid: #6b5838;
+  --theme-ink-light: #98876b;
+  --theme-accent: #c98a1e;
+  --theme-accent-dark: #a57018;
+  --theme-rule: #c8b890;
+  --theme-card-bg: transparent;
+  --theme-nav-bg: #f4ecd8;
+  --theme-nav-border: #c8b890;
+  --theme-font-head: "Fraunces", "Playfair Display", Georgia, serif;
+  --theme-font-mono: "JetBrains Mono", "Courier New", monospace;
+  --theme-body-bg: #f4ecd8;
+}
+
+/* ── Theme C: Seasonal Light ─── */
+[data-theme="c"] {
+  --theme-bg: #faf6ee;
+  --theme-header-bg: transparent;
+  --theme-ink: #1c1410;
+  --theme-ink-mid: #6b5843;
+  --theme-ink-light: #9b8b7a;
+  --theme-accent: #f5a623;
+  --theme-accent-dark: #d4800a;
+  --theme-rule: rgba(28,20,16,0.1);
+  --theme-card-bg: rgba(255,251,240,0.72);
+  --theme-nav-bg: transparent;
+  --theme-nav-border: transparent;
+  --theme-font-head: "Playfair Display", Georgia, serif;
+  --theme-font-mono: system-ui, sans-serif;
+  --theme-body-bg: #faf6ee;
+}
+
+[data-theme="b"] html,
+[data-theme="b"] body,
+[data-theme="b"] #root {
+  background-color: #f4ecd8 !important;
+}
+
+[data-theme="c"] html,
+[data-theme="c"] body,
+[data-theme="c"] #root {
+  background-color: #faf6ee !important;
+}
+
 @layer base {
   html, body, #root {
     height: 100%;
-    background-color: #fffbeb;
+    background-color: var(--theme-body-bg, #fffbeb);
   }
   body {
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
-    /* Kill double-tap zoom without breaking scrolling.
-       pinch-zoom is disabled via viewport meta. */
     touch-action: manipulation;
-    /* Prevent iOS text-size-adjust from inflating our typography in
-       landscape. */
     -webkit-text-size-adjust: 100%;
   }
 
-  /* Allow iOS safe-area insets to push the sticky header down past
-     the status bar notch when running as an installed PWA. */
   @supports (padding-top: env(safe-area-inset-top)) {
     .sticky-top-safe {
       padding-top: calc(2.5rem + env(safe-area-inset-top));
@@ -29,28 +89,9 @@
 
 /* -----------------------------------------------------------------
    View-transition root styles.
-
-   Tab switches go through document.startViewTransition(), which
-   captures the old and new DOM as snapshots and cross-fades them.
-   Two problems the defaults cause in Apiario:
-
-   1. White flash. The underlying `html` element defaults to
-      transparent during the transition; any gap in snapshot coverage
-      shows the browser's canvas, which is white. We force the
-      `::view-transition` root to our cream background so any such
-      gap matches the app.
-
-   2. Sticky-header jitter. During the animation the sticky header is
-      represented by two snapshots (old + new) that fade independently.
-      If their backgrounds differ even for one frame, you see a
-      1–2 px line. Giving the root group a fixed background keeps
-      the seam invisible.
-
-   Animation duration is also tightened from the default 250ms to
-   180ms so tab switches feel snappy instead of laggy.
    ----------------------------------------------------------------- */
 ::view-transition-group(root) {
-  background-color: #fffbeb;
+  background-color: var(--theme-body-bg, #fffbeb);
 }
 
 ::view-transition-old(root),

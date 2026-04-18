@@ -7,6 +7,9 @@ export default {
         honey: { DEFAULT: '#f5a623', dark: '#e8890c', light: '#f7c948' },
         brown: { DEFAULT: '#3d1f00', mid: '#92400e', light: '#7a3f00' },
         cream: { DEFAULT: '#fffbeb', dark: '#fff8e7' },
+        paper: { DEFAULT: '#f4ecd8', dark: '#e9dcb8' },
+        ink:   { DEFAULT: '#2b1d0e', mid: '#6b5838', light: '#98876b' },
+        sage:  { DEFAULT: '#6f7f56', bg: '#dde2c7' },
       },
       fontFamily: {
         serif: ['"Playfair Display"', 'Georgia', 'serif'],

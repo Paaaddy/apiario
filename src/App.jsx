@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
+import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
 import ErrorBoundary from './components/ErrorBoundary'
 import DebugPanel from './components/DebugPanel'
@@ -260,11 +261,13 @@ function AppContent() {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <ErrorBoundary>
-        <AppContent />
-      </ErrorBoundary>
-      {DEBUG && <DebugPanel />}
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <ErrorBoundary>
+          <AppContent />
+        </ErrorBoundary>
+        {DEBUG && <DebugPanel />}
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }
