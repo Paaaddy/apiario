@@ -11,6 +11,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 - **Season tab** — weekly task cards filtered by your experience level, with checkboxes that log completed tasks
 - **Diagnose tab** — branching wizard covering queen issues, varroa, disease, swarming, and more
 - **My Hive tab** — manage named colonies, edit your profile (hive count, climate zone, experience), and view your activity log
+- **Three visual themes** — Honeycomb (default), Field Notebook, and Seasonal Light; switch in My Hive → Settings, persisted across sessions
 - **DE / EN toggle** — full German and English support, switch instantly in any screen
 - **Offline-first** — works with no signal after the first visit; all content and fonts are precached
 - **Installable** — add to home screen on Android and iOS (PWA)
