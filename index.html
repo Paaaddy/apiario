@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; worker-src 'self' blob:; connect-src 'self';" />
     <!-- Disable pinch-zoom: Apiario is a task UI, not a document, so
          zoom would only destabilise the layout. iOS Safari usually
          ignores user-scalable=no for a11y, so we also set

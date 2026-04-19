@@ -4,6 +4,7 @@ import { useTheme } from '../hooks/useTheme'
 import { useSeason } from '../hooks/useSeason'
 import { strings as s } from '../i18n/strings'
 import TaskCard from '../components/TaskCard'
+import HexWatermark from '../components/HexWatermark'
 import LanguageToggle from '../components/LanguageToggle'
 import { addWeeks, isSameIsoWeek } from '../utils/season'
 import { haptics } from '../utils/haptics'
@@ -22,23 +23,16 @@ function getSeasonPalette(date) {
   return { sun: '#6b8fa6', bloom: '#4a6b80', leaf: '#3a5b70', sunDeep: '#2a4b60' }
 }
 
-function HexWatermark() {
-  return (
-    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.12, pointerEvents: 'none' }}>
-      <defs>
-        <pattern id="hex-wm" patternUnits="userSpaceOnUse" width="42" height="48">
-          <polygon points="21,4 38,14 38,34 21,44 4,34 4,14" fill="none" stroke="#3d1f00" strokeWidth="1" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#hex-wm)" />
-    </svg>
-  )
-}
-
 export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask }) {
   const { t, locale } = useLanguage()
   const { theme } = useTheme()
   const completedCount = completedTaskIds?.size ?? 0
+
+  const logByTaskId = useMemo(() => {
+    const map = new Map()
+    log?.forEach(e => { if (e.type === 'task') map.set(e.taskId, e) })
+    return map
+  }, [log])
 
   const [selectedDate, setSelectedDate] = useState(() => new Date())
   const today = useMemo(() => new Date(), [])
@@ -113,7 +107,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
           ) : (
             <div style={{ background: 'rgba(255,251,240,0.72)', backdropFilter: 'blur(18px) saturate(140%)', WebkitBackdropFilter: 'blur(18px) saturate(140%)', borderRadius: 22, border: '1px solid rgba(255,255,255,0.6)', boxShadow: '0 2px 4px rgba(61,31,0,0.06), 0 12px 36px rgba(61,31,0,0.10)', overflow: 'hidden' }}>
               {tasks.map((task) => {
-                const logEntry = log?.find((e) => e.type === 'task' && e.taskId === task.id)
+                const logEntry = logByTaskId.get(task.id)
                 return (
                   <TaskCard key={task.id} task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null} onToggle={onToggleTask ? () => onToggleTask(task) : undefined} inGlassContainer />
                 )
@@ -174,7 +168,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
             <p style={{ textAlign: 'center', color: '#6b5838', padding: '2rem 0', fontFamily: 'var(--theme-font-head)', fontSize: 18, fontStyle: 'italic' }}>{t(s.season_nothing)}</p>
           ) : (
             tasks.map((task) => {
-              const logEntry = log?.find((e) => e.type === 'task' && e.taskId === task.id)
+              const logEntry = logByTaskId.get(task.id)
               return (
                 <TaskCard key={task.id} task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null} onToggle={onToggleTask ? () => onToggleTask(task) : undefined} />
               )
@@ -240,7 +234,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
           <p className="text-center text-brown-mid py-8 font-serif text-lg">{t(s.season_nothing)}</p>
         ) : (
           tasks.map((task) => {
-            const logEntry = log?.find((e) => e.type === 'task' && e.taskId === task.id)
+            const logEntry = logByTaskId.get(task.id)
             return (
               <TaskCard key={task.id} task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null} onToggle={onToggleTask ? () => onToggleTask(task) : undefined} />
             )

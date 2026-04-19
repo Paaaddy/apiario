@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import RiskNote from './RiskNote'
@@ -8,28 +8,38 @@ import { haptics } from '../utils/haptics'
 export default function DiagnosisResult({ node, onReset }) {
   const { t } = useLanguage()
   const [shareFeedback, setShareFeedback] = useState(null)
+  const feedbackTimerRef = useRef(null)
+
+  useEffect(() => {
+    return () => { if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current) }
+  }, [])
 
   async function handleShare() {
-    const title = `🐝 Apiario — ${t(node.diagnosis)}`
-    const lines = [t(node.diagnosis)]
-    if (node.callExpert) lines.push(`⚠️ ${t(s.diagnose_call_expert)}`)
-    lines.push('')
-    lines.push(t(s.diagnose_what_to_do) + ':')
-    node.actions.forEach((action, i) => {
-      lines.push(`${i + 1}. ${t(action)}`)
-    })
+    try {
+      const title = `🐝 Apiario — ${t(node.diagnosis)}`
+      const lines = [t(node.diagnosis)]
+      if (node.callExpert) lines.push(`⚠️ ${t(s.diagnose_call_expert)}`)
+      lines.push('')
+      lines.push(t(s.diagnose_what_to_do) + ':')
+      node.actions.forEach((action, i) => {
+        lines.push(`${i + 1}. ${t(action)}`)
+      })
 
-    const result = await shareOrCopy({
-      title,
-      text: lines.join('\n'),
-      url: typeof window !== 'undefined' ? window.location.href : undefined,
-    })
-    if (result.status === 'shared') {
-      haptics.success()
-    } else if (result.status === 'copied') {
-      haptics.tap()
-      setShareFeedback('copied')
-      setTimeout(() => setShareFeedback(null), 2500)
+      const result = await shareOrCopy({
+        title,
+        text: lines.join('\n'),
+        url: typeof window !== 'undefined' ? window.location.href : undefined,
+      })
+      if (result.status === 'shared') {
+        haptics.success()
+      } else if (result.status === 'copied') {
+        haptics.tap()
+        setShareFeedback('copied')
+        if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current)
+        feedbackTimerRef.current = setTimeout(() => setShareFeedback(null), 2500)
+      }
+    } catch {
+      // User dismissed share sheet or share unsupported — no action needed
     }
   }
 

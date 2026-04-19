@@ -6,19 +6,7 @@ import LogSection from './LogSection'
 import ProfileSection from './ProfileSection'
 import ColoniesSection from './ColoniesSection'
 import PwaInstallHint from '../components/PwaInstallHint'
-
-function HexWatermark() {
-  return (
-    <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.12, pointerEvents: 'none' }}>
-      <defs>
-        <pattern id="hex-wm-h" patternUnits="userSpaceOnUse" width="42" height="48">
-          <polygon points="21,4 38,14 38,34 21,44 4,34 4,14" fill="none" stroke="#3d1f00" strokeWidth="1" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#hex-wm-h)" />
-    </svg>
-  )
-}
+import HexWatermark from '../components/HexWatermark'
 
 export default function MyHiveScreen({
   profile,
