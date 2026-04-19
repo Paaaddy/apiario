@@ -3,6 +3,7 @@ import { OnboardingProvider, useOnboarding } from '@onboardjs/react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import LanguageToggle from '../components/LanguageToggle'
+import HexWatermark from '../components/HexWatermark'
 
 // ── Step: Welcome ────────────────────────────────────────────────────────────
 
@@ -11,8 +12,9 @@ function WelcomeStep() {
   const { next } = useOnboarding()
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8">
-        <div className="flex items-start justify-between gap-3">
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexWatermark />
+        <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="text-5xl mb-3">🍯</div>
             <h1 className="font-serif text-3xl font-bold text-brown">{t(s.onboarding_title)}</h1>
@@ -46,8 +48,9 @@ function FeaturesStep() {
   ]
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8">
-        <div className="flex items-start justify-between gap-3">
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexWatermark />
+        <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="text-5xl mb-3">🍯</div>
             <h1 className="font-serif text-3xl font-bold text-brown">{t(s.onboarding_title)}</h1>
@@ -95,8 +98,9 @@ function QuestionStep({ payload, onDataChange }) {
 
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8">
-        <div className="flex items-start justify-between gap-3">
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexWatermark />
+        <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="text-5xl mb-3">🍯</div>
             <h1 className="font-serif text-3xl font-bold text-brown">{t(s.onboarding_title)}</h1>
@@ -139,8 +143,9 @@ function CompleteStep({ payload }) {
   const { t } = useLanguage()
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8">
-        <div className="flex items-start justify-between gap-3">
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexWatermark />
+        <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <div className="text-5xl mb-3">🍯</div>
             <h1 className="font-serif text-3xl font-bold text-brown">{t(s.onboarding_title)}</h1>
