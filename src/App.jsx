@@ -1,11 +1,11 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
+import { useState, useCallback, useRef, useEffect, useMemo, lazy, Suspense } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
 import ErrorBoundary from './components/ErrorBoundary'
 import DebugPanel from './components/DebugPanel'
 
-const DEBUG = new URLSearchParams(window.location.search).has('debug')
+const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
 const VALID_TABS = ['season', 'diagnose', 'myhive']
 function initialTab() {
   if (typeof window === 'undefined') return 'season'
@@ -85,11 +85,11 @@ import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
 import VoiceOverlay from './components/VoiceOverlay'
 import VoicePermissionModal from './components/VoicePermissionModal'
-import Onboarding from './screens/Onboarding'
-import SeasonScreen from './screens/SeasonScreen'
-import DiagnoseScreen from './screens/DiagnoseScreen'
-import MyHiveScreen from './screens/MyHiveScreen'
 import PwaInstallHint from './components/PwaInstallHint'
+const Onboarding = lazy(() => import('./screens/Onboarding'))
+const SeasonScreen = lazy(() => import('./screens/SeasonScreen'))
+const DiagnoseScreen = lazy(() => import('./screens/DiagnoseScreen'))
+const MyHiveScreen = lazy(() => import('./screens/MyHiveScreen'))
 
 function AppContent() {
   const { locale } = useLanguage()
@@ -204,10 +204,12 @@ function AppContent() {
   if (!profile.onboardingDone) {
     return (
       <div className="flex flex-col h-full bg-cream">
-        <Onboarding
-          onComplete={(answers) => updateProfile({ ...answers, onboardingDone: true })}
-          pwaInstall={pwaInstall}
-        />
+        <Suspense fallback={<div className="flex-1" />}>
+          <Onboarding
+            onComplete={(answers) => updateProfile({ ...answers, onboardingDone: true })}
+            pwaInstall={pwaInstall}
+          />
+        </Suspense>
       </div>
     )
   }
@@ -215,28 +217,30 @@ function AppContent() {
   return (
     <div className="flex flex-col h-full bg-cream">
       <main className="flex-1 overflow-y-auto">
-        {activeTab === 'season' && (
-          <SeasonScreen
-            profile={profile}
-            log={log}
-            completedTaskIds={completedTaskIds}
-            onToggleTask={toggleTask}
-          />
-        )}
-        {activeTab === 'diagnose' && <DiagnoseScreen />}
-        {activeTab === 'myhive' && (
-          <MyHiveScreen
-            profile={profile}
-            onUpdate={updateProfile}
-            log={log}
-            onAddEntry={addCustomEntry}
-            onDeleteEntry={deleteEntry}
-            onAddColony={addColony}
-            onUpdateColony={updateColony}
-            onRemoveColony={removeColony}
-            pwaInstall={pwaInstall}
-          />
-        )}
+        <Suspense fallback={<div className="flex-1" />}>
+          {activeTab === 'season' && (
+            <SeasonScreen
+              profile={profile}
+              log={log}
+              completedTaskIds={completedTaskIds}
+              onToggleTask={toggleTask}
+            />
+          )}
+          {activeTab === 'diagnose' && <DiagnoseScreen />}
+          {activeTab === 'myhive' && (
+            <MyHiveScreen
+              profile={profile}
+              onUpdate={updateProfile}
+              log={log}
+              onAddEntry={addCustomEntry}
+              onDeleteEntry={deleteEntry}
+              onAddColony={addColony}
+              onUpdateColony={updateColony}
+              onRemoveColony={removeColony}
+              pwaInstall={pwaInstall}
+            />
+          )}
+        </Suspense>
       </main>
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
       <BeeFab onActivate={handleVoiceActivate} isActive={voiceActive} />

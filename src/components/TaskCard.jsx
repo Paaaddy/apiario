@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
@@ -15,7 +16,7 @@ function formatShortDate(isoDate) {
   return `${day}.${month}`
 }
 
-export default function TaskCard({ task, isChecked = false, checkedDate = null, onToggle, inGlassContainer = false }) {
+const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate = null, onToggle, inGlassContainer = false }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const style = URGENCY_STYLES[task.urgency] ?? URGENCY_STYLES.routine
@@ -164,4 +165,11 @@ export default function TaskCard({ task, isChecked = false, checkedDate = null, 
       </div>
     </div>
   )
-}
+}, (prev, next) =>
+  prev.task.id === next.task.id &&
+  prev.isChecked === next.isChecked &&
+  prev.checkedDate === next.checkedDate &&
+  prev.inGlassContainer === next.inGlassContainer
+)
+
+export default TaskCard

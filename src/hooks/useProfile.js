@@ -81,7 +81,7 @@ export function useProfile() {
   const updateProfile = useCallback((updates) => {
     setProfile((prev) => {
       const next = { ...prev, ...updates }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
       return next
     })
   }, [])
@@ -96,7 +96,7 @@ export function useProfile() {
         notes,
       }
       const next = { ...prev, colonies: [...existing, colony] }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
       return next
     })
   }, [])
@@ -107,7 +107,7 @@ export function useProfile() {
         c.id === id ? { ...c, ...updates } : c
       )
       const next = { ...prev, colonies }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
       return next
     })
   }, [])
@@ -116,7 +116,7 @@ export function useProfile() {
     setProfile((prev) => {
       const colonies = (prev.colonies ?? []).filter((c) => c.id !== id)
       const next = { ...prev, colonies }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
       return next
     })
   }, [])

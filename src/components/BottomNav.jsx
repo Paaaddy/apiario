@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
@@ -37,7 +38,7 @@ function HiveIcon({ active }) {
   )
 }
 
-export default function BottomNav({ activeTab, onTabChange }) {
+const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
 
@@ -180,4 +181,6 @@ export default function BottomNav({ activeTab, onTabChange }) {
       })}
     </nav>
   )
-}
+})
+
+export default BottomNav
