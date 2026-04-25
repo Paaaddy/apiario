@@ -57,19 +57,20 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   if (theme === 'c') {
     const pal = getSeasonPalette(selectedDate)
     return (
-      <div style={{ position: 'relative', minHeight: '100%', background: '#faf6ee', overflow: 'hidden' }}>
-        <div style={{ position: 'relative', overflow: 'hidden', minHeight: 260 }}>
+      <div style={{ position: 'relative', minHeight: '100%', background: '#faf6ee' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: pal.sun + 'e8', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#1c1410', letterSpacing: 1, textTransform: 'uppercase', display: 'flex', gap: 6, alignItems: 'center' }}>
+            <span>{icon}</span> {t(label)} · {t(s.season_week)} {week}
+          </div>
+          <LanguageToggle />
+        </div>
+        <div style={{ position: 'relative', overflow: 'hidden', minHeight: 220 }}>
           <div style={{
             position: 'absolute', inset: 0,
             background: `radial-gradient(ellipse 140% 80% at 30% 0%, ${pal.sun}dd 0%, ${pal.sun}88 30%, transparent 60%), radial-gradient(ellipse 100% 70% at 80% 20%, ${pal.bloom}66 0%, transparent 50%), radial-gradient(ellipse 120% 100% at 50% 100%, ${pal.leaf}33 0%, transparent 70%), linear-gradient(180deg, ${pal.sun} 0%, #f2bd5e 40%, #faf6ee 100%)`,
           }} />
           <div style={{ position: 'absolute', top: 60, left: -50, width: 200, height: 200, borderRadius: '50%', background: `radial-gradient(circle, #ffe9a8 0%, ${pal.sun} 50%, ${pal.sunDeep} 100%)`, filter: 'blur(1px)', opacity: 0.85 }} />
-          <div style={{ position: 'relative', padding: '42px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 2 }}>
-            <div style={{ padding: '6px 12px', borderRadius: 999, background: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', fontSize: 11, fontWeight: 700, color: '#1c1410', letterSpacing: 1, textTransform: 'uppercase', display: 'flex', gap: 6, alignItems: 'center' }}>
-              <span>{icon}</span> {t(label)} · {t(s.season_week)} {week}
-            </div>
-            <LanguageToggle />
-          </div>
+
           <div style={{ position: 'relative', padding: '12px 22px 24px', zIndex: 2 }}>
             <h1 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 58, lineHeight: 0.92, fontWeight: 700, color: '#1c1410', letterSpacing: -1 }}>
               {viewingToday

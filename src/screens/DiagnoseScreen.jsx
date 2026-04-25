@@ -43,7 +43,7 @@ export default function DiagnoseScreen() {
       return (
         <div style={{ minHeight: '100%', background: '#1c1410', position: 'relative' }}>
           <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 20%, rgba(245,166,35,0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(232,123,160,0.13) 0%, transparent 60%)', pointerEvents: 'none' }} />
-          <div style={{ position: 'relative', padding: '42px 22px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1c1410', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <h1 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 22, fontWeight: 700, color: '#fff' }}>🔎 {t(s.diagnose_title)}</h1>
             <LanguageToggle />
           </div>
@@ -57,7 +57,7 @@ export default function DiagnoseScreen() {
     return (
       <div style={{ minHeight: '100%', background: '#1c1410', position: 'relative' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 20%, rgba(245,166,35,0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(232,123,160,0.13) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'relative', padding: '42px 22px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1c1410', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', fontSize: 11, color: '#fff', letterSpacing: 1, textTransform: 'uppercase', fontWeight: 600 }}>
             🔎 {t(s.diagnose_step)} {String(stepNumber).padStart(2, '0')}/06
           </div>
