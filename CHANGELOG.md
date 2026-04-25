@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.1](https://github.com/Paaaddy/apiario/compare/v1.1.0...v1.1.1) (2026-04-25)
+
+
+### Bug Fixes
+
+* block pinch-zoom via JS touchstart/touchmove for Firefox/IronFox ([ab517db](https://github.com/Paaaddy/apiario/commit/ab517dbf4d5d84d86d61f8a8bf9da048f2d6bdcd))
+* disable pinch-zoom and remove fixed-chrome scaling infrastructure ([6ee4cc1](https://github.com/Paaaddy/apiario/commit/6ee4cc197bfd224dcbf9683f686e3e52c80268b5))
+* downgrade vite to v7 and fix Tailwind v4 PostCSS config ([68d8dc5](https://github.com/Paaaddy/apiario/commit/68d8dc50c1857ca921063948609c354164e85bc8))
+* pin vite to v7 and tailwindcss to v3 ([71eef2f](https://github.com/Paaaddy/apiario/commit/71eef2f75e27b2a1ab1e64da272d2eb3c1741668))
+* prevent pinch-zoom on Firefox and make Theme C headers sticky ([2218079](https://github.com/Paaaddy/apiario/commit/221807976a54fbabcbf8296109a7c8f212628d9b))
+* remove position:relative override that broke Theme A sticky headers ([cfa6054](https://github.com/Paaaddy/apiario/commit/cfa6054a58e514fcec7c5f25b1486281b12bf265))
+
 ## [1.1.0](https://github.com/Paaaddy/apiario/compare/v1.0.0...v1.1.0) (2026-04-25)
 
 
