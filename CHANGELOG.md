@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Paaaddy/apiario/compare/v1.0.0...v1.1.0) (2026-04-25)
+
+
+### Features
+
+* **zoom:** keep UI chrome fixed while content scales ([#28](https://github.com/Paaaddy/apiario/issues/28)) ([345c0bd](https://github.com/Paaaddy/apiario/commit/345c0bd6c8ffc32acc0ea14d4b2d047c70b7cd0b))
+
 ## 1.0.0 (2026-04-21)
 
 
