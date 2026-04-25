@@ -129,7 +129,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   if (theme === 'b') {
     return (
       <div style={{ minHeight: '100%', background: '#f4ecd8' }}>
-        <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890' }}>
+        <div className="fixed-chrome" style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890', '--chrome-origin': 'top center' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: '#6b5838' }}>
               {t(label)} · {t(s.season_week)} {week}{rangeLabel ? ` · ${rangeLabel}` : ''}

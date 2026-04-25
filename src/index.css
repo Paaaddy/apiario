@@ -98,3 +98,29 @@
 ::view-transition-new(root) {
   animation-duration: 180ms;
 }
+
+/* -----------------------------------------------------------------
+   Fixed chrome counter-scaling.
+
+   --app-zoom is kept in sync with the combined pinch/browser/OS zoom
+   factor by useFixedChromeScale. Elements marked .fixed-chrome scale
+   by 1/zoom so their on-screen size stays stable while the rest of
+   the page is free to grow for accessibility.
+
+   --vv-* track the visual viewport (offsetTop/Left + width/height)
+   so chrome that lives in screen-corner positions can follow the
+   pinched window instead of clinging to the layout viewport edge.
+   ----------------------------------------------------------------- */
+:root {
+  --app-zoom: 1;
+  --vv-offset-top: 0px;
+  --vv-offset-left: 0px;
+  --vv-width: 100vw;
+  --vv-height: 100vh;
+}
+
+.fixed-chrome {
+  transform: scale(calc(1 / var(--app-zoom)));
+  transform-origin: var(--chrome-origin, center);
+  will-change: transform;
+}
