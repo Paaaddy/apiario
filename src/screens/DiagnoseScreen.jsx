@@ -103,7 +103,7 @@ export default function DiagnoseScreen() {
     if (node.type === 'outcome') {
       return (
         <div style={{ minHeight: '100%', background: '#f4ecd8' }}>
-          <div className="fixed-chrome" style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890', '--chrome-origin': 'top center' }}>
+          <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: '#6b5838' }}>
                 {t(s.diagnose_title)}
@@ -121,7 +121,7 @@ export default function DiagnoseScreen() {
 
     return (
       <div style={{ minHeight: '100%', background: '#f4ecd8' }}>
-        <div className="fixed-chrome" style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890', '--chrome-origin': 'top center' }}>
+        <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: '#6b5838' }}>
               {t(s.diagnose_title)} · {t(s.diagnose_step)} {String(stepNumber).padStart(2, '0')}/06

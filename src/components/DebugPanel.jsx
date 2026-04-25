@@ -50,8 +50,7 @@ export default function DebugPanel() {
     return (
       <button
         onClick={() => setOpen(true)}
-        style={{ '--chrome-origin': 'bottom left' }}
-        className="fixed-chrome fixed bottom-24 left-2 z-50 bg-gray-900 text-green-400 text-xs font-mono px-2 py-1 rounded opacity-70"
+        className="fixed bottom-24 left-2 z-50 bg-gray-900 text-green-400 text-xs font-mono px-2 py-1 rounded opacity-70"
       >
         debug
       </button>
@@ -60,8 +59,7 @@ export default function DebugPanel() {
 
   return (
     <div
-      style={{ '--chrome-origin': 'bottom center' }}
-      className="fixed-chrome fixed inset-x-2 bottom-24 z-50 bg-gray-900 text-green-400 font-mono text-xs rounded-xl shadow-2xl overflow-hidden"
+      className="fixed inset-x-2 bottom-24 z-50 bg-gray-900 text-green-400 font-mono text-xs rounded-xl shadow-2xl overflow-hidden"
     >
       <div className="flex items-center justify-between px-3 py-2 bg-gray-800">
         <span className="font-bold text-white">🐛 Debug</span>

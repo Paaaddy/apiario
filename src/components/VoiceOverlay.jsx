@@ -18,8 +18,7 @@ export default function VoiceOverlay({ onStop, lastCommand }) {
       <div className="absolute inset-0 bg-brown/70" onClick={onStop} />
 
       <div
-        style={{ '--chrome-origin': 'center' }}
-        className="fixed-chrome relative z-50 flex flex-col items-center gap-5 px-6 w-full max-w-sm"
+        className="relative z-50 flex flex-col items-center gap-5 px-6 w-full max-w-sm"
       >
         <div className="w-16 h-16 rounded-full bg-honey border-4 border-honey-dark flex items-center justify-center text-3xl animate-pulse-glow shadow-xl">
           🐝

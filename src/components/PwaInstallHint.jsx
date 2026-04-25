@@ -16,13 +16,13 @@ export default function PwaInstallHint({
   if (isInstalled || dismissed) return null
 
   const cardClass = floating
-    ? 'fixed-chrome fixed bottom-24 left-4 right-4 z-30 max-w-md mx-auto bg-white/95 backdrop-blur border border-amber-200 rounded-2xl shadow-lg p-3'
+    ? 'fixed bottom-24 left-4 right-4 z-30 max-w-md mx-auto bg-white/95 backdrop-blur border border-amber-200 rounded-2xl shadow-lg p-3'
     : `bg-white border border-amber-200 rounded-2xl shadow-sm ${compact ? 'p-4' : 'p-5'}`
 
   return (
     <section
       className={cardClass}
-      style={floating ? { '--chrome-origin': 'bottom center' } : undefined}
+      
     >
       <div className="flex items-start justify-between gap-4">
         <div>

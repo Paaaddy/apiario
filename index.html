@@ -4,15 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; worker-src 'self' blob:; connect-src 'self';" />
-    <!-- Allow user zoom for accessibility (WCAG 1.4.4). The persistent
-         chrome (BottomNav, BeeFab, sticky headers) is counter-scaled at
-         runtime via the `.fixed-chrome` utility + useFixedChromeScale,
-         so zooming grows content but leaves the navigation layer at a
-         stable on-screen size. `touch-action: manipulation` on body
-         still kills the unwanted double-tap zoom. -->
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <meta name="theme-color" content="#f5a623" />
     <title>Apiario</title>

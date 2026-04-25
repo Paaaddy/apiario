@@ -50,10 +50,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
 
   if (theme === 'c') {
     return (
-      <nav
-        className="fixed-chrome flex justify-center pb-5 pt-1"
-        style={{ '--chrome-origin': 'bottom center' }}
-      >
+      <nav className="flex justify-center pb-5 pt-1">
         <div style={{
           display: 'flex',
           padding: 6,
@@ -100,14 +97,12 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   if (theme === 'b') {
     return (
       <nav
-        className="fixed-chrome"
         style={{
           background: 'var(--theme-nav-bg)',
           borderTop: '1px solid var(--theme-nav-border)',
           paddingBottom: 28,
           paddingTop: 10,
           display: 'flex',
-          '--chrome-origin': 'bottom center',
         }}
       >
         {TABS.map(({ key, label, Icon }) => {
@@ -158,10 +153,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
 
   // Theme A: hex active indicator
   return (
-    <nav
-      className="fixed-chrome bg-white border-t border-amber-100 flex"
-      style={{ '--chrome-origin': 'bottom center' }}
-    >
+    <nav className="bg-white border-t border-amber-100 flex">
       {TABS.map(({ key, label, emoji }) => {
         const isActive = activeTab === key
         return (
