@@ -12,6 +12,22 @@ on:
       - 'vite.config.*'
       - 'tailwind.config.*'
       - 'postcss.config.*'
+  # Run the `build` job on PRs targeting master too so branch
+  # protection's required check is satisfied. The `deploy` job below
+  # is gated on `github.event_name == 'push'`, so PR builds verify
+  # the artifact compiles without shipping anything to Pages.
+  pull_request:
+    branches: [master]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.*'
+      - 'tailwind.config.*'
+      - 'postcss.config.*'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
@@ -51,12 +67,17 @@ jobs:
 
       - run: npm run build -- --base /apiario/
 
-      - uses: actions/upload-pages-artifact@v5
+      # Only ship the artifact when this run was triggered by a push to
+      # master (or a manual dispatch). PR builds stop at the build step
+      # — they verify the artifact compiles, nothing more.
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     environment:
