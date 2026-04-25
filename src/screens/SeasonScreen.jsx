@@ -191,7 +191,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   // ── Theme A: Honeycomb (default) ─────────────────────────────────
   return (
     <div className="relative flex flex-col min-h-full">
-      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
