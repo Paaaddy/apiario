@@ -18,6 +18,7 @@ import { useTaskLog } from './hooks/useTaskLog'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import { useAppBadge } from './hooks/useAppBadge'
 import { useSeason } from './hooks/useSeason'
+import { useFixedChromeScale } from './hooks/useFixedChromeScale'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
@@ -92,6 +93,11 @@ const DiagnoseScreen = lazy(() => import('./screens/DiagnoseScreen'))
 const MyHiveScreen = lazy(() => import('./screens/MyHiveScreen'))
 
 function AppContent() {
+  // Track pinch / browser / OS zoom and expose --app-zoom + --vv-* on
+  // :root. Mounted before the onboarding early return so chrome stays
+  // counter-scaled during onboarding too.
+  useFixedChromeScale()
+
   const { locale } = useLanguage()
   const { profile, updateProfile, addColony, updateColony, removeColony } = useProfile()
   const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry } = useTaskLog()
