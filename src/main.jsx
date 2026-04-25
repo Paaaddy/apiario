@@ -14,6 +14,9 @@ import '@fontsource/jetbrains-mono/600.css'
 import './index.css'
 import { registerPwaAutoUpdate } from './pwa/registerAutoUpdate'
 
+document.addEventListener('touchstart', (e) => { if (e.touches.length > 1) e.preventDefault() }, { passive: false })
+document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.preventDefault() }, { passive: false })
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
