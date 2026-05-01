@@ -26,6 +26,10 @@ function nextColonyId(existing) {
   return `col-${max + 1}`
 }
 
+function saveProfile(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)) } catch {}
+}
+
 /**
  * Migrate an incoming profile to the current schema. The migration is
  * idempotent: running it on an already-current profile is a no-op.
@@ -81,7 +85,7 @@ export function useProfile() {
   const updateProfile = useCallback((updates) => {
     setProfile((prev) => {
       const next = { ...prev, ...updates }
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+      saveProfile(next)
       return next
     })
   }, [])
@@ -96,7 +100,7 @@ export function useProfile() {
         notes,
       }
       const next = { ...prev, colonies: [...existing, colony] }
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+      saveProfile(next)
       return next
     })
   }, [])
@@ -107,7 +111,7 @@ export function useProfile() {
         c.id === id ? { ...c, ...updates } : c
       )
       const next = { ...prev, colonies }
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+      saveProfile(next)
       return next
     })
   }, [])
@@ -116,7 +120,7 @@ export function useProfile() {
     setProfile((prev) => {
       const colonies = (prev.colonies ?? []).filter((c) => c.id !== id)
       const next = { ...prev, colonies }
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+      saveProfile(next)
       return next
     })
   }, [])

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
@@ -42,11 +42,11 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
 
-  const TABS = [
+  const TABS = useMemo(() => [
     { key: 'season',   label: t(s.nav_season),   emoji: '📅', Icon: SproutIcon },
     { key: 'diagnose', label: t(s.nav_diagnose),  emoji: '🔎', Icon: MagnifyIcon },
     { key: 'myhive',   label: t(s.nav_myhive),    emoji: '🐝', Icon: HiveIcon },
-  ]
+  ], [t])
 
   if (theme === 'c') {
     return (

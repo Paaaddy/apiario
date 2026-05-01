@@ -25,7 +25,12 @@ export function useSeason(profile, completedCount = 0, forDate = null) {
     const week = getIsoWeek(now)
     const weekRange = getIsoWeekRange(now)
     const seasonData = seasonsData[season]
-    const experience = profile?.experience ?? 0
+
+    if (!profile) {
+      return { season, label: seasonData?.label ?? '', icon: seasonData?.icon ?? '', week, weekRange, tasks: [], nextLockedSecret: null, completedCount }
+    }
+
+    const experience = profile.experience ?? 0
 
     const allTasks = seasonData?.tasks ?? []
 
@@ -54,5 +59,5 @@ export function useSeason(profile, completedCount = 0, forDate = null) {
       nextLockedSecret,
       completedCount,
     }
-  }, [profile?.experience, completedCount, targetTime])
+  }, [profile, completedCount, targetTime])
 }

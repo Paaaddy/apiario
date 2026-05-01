@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import ThemeSwitcher from '../components/ThemeSwitcher'
@@ -30,23 +31,23 @@ function OptionGroup({ title, options, currentValue, fieldKey, onUpdate }) {
 export default function ProfileSection({ profile, onUpdate }) {
   const { t } = useLanguage()
 
-  const HIVE_OPTIONS = [
+  const HIVE_OPTIONS = useMemo(() => [
     { label: t(s.hive_1),  value: 1  },
     { label: t(s.hive_2),  value: 2  },
     { label: t(s.hive_5),  value: 5  },
     { label: t(s.hive_10), value: 10 },
-  ]
-  const ZONE_OPTIONS = [
+  ], [t])
+  const ZONE_OPTIONS = useMemo(() => [
     { label: t(s.zone_northern),      value: 'northern'      },
     { label: t(s.zone_central),       value: 'central'       },
     { label: t(s.zone_mediterranean), value: 'mediterranean' },
     { label: t(s.zone_other),         value: 'other'         },
-  ]
-  const EXPERIENCE_OPTIONS = [
+  ], [t])
+  const EXPERIENCE_OPTIONS = useMemo(() => [
     { label: t(s.exp_0), value: 0 },
     { label: t(s.exp_1), value: 1 },
     { label: t(s.exp_2), value: 2 },
-  ]
+  ], [t])
 
   return (
     <div>

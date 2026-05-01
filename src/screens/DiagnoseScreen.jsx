@@ -36,6 +36,7 @@ export default function DiagnoseScreen() {
   if (!node) return null
 
   const stepNumber = history.length + 1
+  const stepLabel = String(stepNumber).padStart(2, '0')
 
   // ── Theme C: Seasonal Light — dark moody diagnose ─────────────
   if (theme === 'c') {
@@ -59,7 +60,7 @@ export default function DiagnoseScreen() {
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 20%, rgba(245,166,35,0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(232,123,160,0.13) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1c1410', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', fontSize: 11, color: '#fff', letterSpacing: 1, textTransform: 'uppercase', fontWeight: 600 }}>
-            🔎 {t(s.diagnose_step)} {String(stepNumber).padStart(2, '0')}/06
+            🔎 {t(s.diagnose_step)} {stepLabel}/06
           </div>
           <LanguageToggle />
         </div>
@@ -124,7 +125,7 @@ export default function DiagnoseScreen() {
         <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: '#6b5838' }}>
-              {t(s.diagnose_title)} · {t(s.diagnose_step)} {String(stepNumber).padStart(2, '0')}/06
+              {t(s.diagnose_title)} · {t(s.diagnose_step)} {stepLabel}/06
             </p>
             <LanguageToggle />
           </div>

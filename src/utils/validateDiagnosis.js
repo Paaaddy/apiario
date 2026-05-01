@@ -4,13 +4,13 @@ import diagnosisData from '../data/diagnosis.json'
  * Dev-only: walks the diagnosis tree and logs any broken `next` pointers
  * or missing required fields. Called once on mount in DiagnoseScreen.
  */
-export function validateDiagnosisTree() {
+export function validateDiagnosisTree(data = diagnosisData) {
   if (!import.meta.env.DEV) return
 
   const errors = []
-  const ids = new Set(Object.keys(diagnosisData))
+  const ids = new Set(Object.keys(data))
 
-  for (const [id, node] of Object.entries(diagnosisData)) {
+  for (const [id, node] of Object.entries(data)) {
     if (!node.type) {
       errors.push(`[${id}] missing 'type'`)
       continue
