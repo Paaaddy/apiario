@@ -16,7 +16,7 @@ npm run test:ui      # Vitest browser UI
 
 Run a single test file: `npx vitest run src/hooks/useProfile.test.js`
 
-Add `?debug` to the URL in any environment to open the debug panel (shows localStorage state, reset buttons).
+Add `?debug` in dev mode (`npm run dev`) to open the debug panel (shows localStorage state, reset buttons). Absent from production builds.
 
 ## What this is
 
