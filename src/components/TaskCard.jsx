@@ -3,6 +3,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import RiskNote from './RiskNote'
+import { formatShortDate } from '../utils/format'
 
 const URGENCY_STYLES = {
   urgent:    { key: 'urgency_urgent',    border: 'border-red-400',  badge: 'bg-red-100 text-red-700',     color: '#c23b22' },
@@ -10,11 +11,6 @@ const URGENCY_STYLES = {
   routine:   { key: 'urgency_routine',   border: 'border-gray-200', badge: 'bg-gray-100 text-gray-500',   color: '#98876b' },
 }
 
-function formatShortDate(isoDate) {
-  if (!isoDate) return ''
-  const [, month, day] = isoDate.split('-')
-  return `${day}.${month}`
-}
 
 const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate = null, onToggle, inGlassContainer = false }) {
   const { t } = useLanguage()

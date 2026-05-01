@@ -1,12 +1,7 @@
 import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
-
-function formatShortDate(isoDate) {
-  if (!isoDate) return ''
-  const [, month, day] = isoDate.split('-')
-  return `${day}.${month}`
-}
+import { formatShortDate } from '../utils/format'
 
 function formatMonthHeading(isoDate, locale) {
   if (!isoDate) return ''
