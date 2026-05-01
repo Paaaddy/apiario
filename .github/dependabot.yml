@@ -6,6 +6,9 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 10
+    commit-message:
+      prefix: "fix"
+      include: "scope"
     ignore:
       - dependency-name: "vite"
         update-types: ["version-update:semver-major"]
@@ -34,3 +37,6 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 5
+    commit-message:
+      prefix: "fix"
+      include: "scope"
