@@ -49,4 +49,9 @@ describe('useLanguage', () => {
     const { result } = renderHook(() => useLanguage(), { wrapper })
     expect(result.current.locale).toBe('en')
   })
+
+  it('t() returns empty string for object missing both de and en', () => {
+    const { result } = renderHook(() => useLanguage(), { wrapper })
+    expect(result.current.t({})).toBe('')
+  })
 })

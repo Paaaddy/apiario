@@ -154,4 +154,17 @@ describe('useProfile', () => {
       expect(result.current.profile.colonies[0].id).toBe('col-2')
     })
   })
+
+  it('returns DEFAULT_PROFILE when localStorage contains invalid JSON', () => {
+    localStorage.setItem(STORAGE_KEY, '{corrupted')
+    const { result } = renderHook(() => useProfile())
+    expect(result.current.profile.onboardingDone).toBe(false)
+    expect(result.current.profile.colonies).toEqual([])
+  })
+
+  it('addColony falls back to "Hive N" when name is whitespace-only', () => {
+    const { result } = renderHook(() => useProfile())
+    act(() => result.current.addColony('   '))
+    expect(result.current.profile.colonies[0].name).toBe('Hive 1')
+  })
 })

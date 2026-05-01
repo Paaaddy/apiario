@@ -88,6 +88,22 @@ describe('useTaskLog', () => {
     expect(result.current.completedTaskIds.has('sp-02')).toBe(true)
   })
 
+  it('returns empty log when localStorage contains invalid JSON', () => {
+    localStorage.setItem('apiario-log', '{corrupted')
+    const { result } = renderHook(() => useTaskLog())
+    expect(result.current.log).toEqual([])
+  })
+
+  it('caps log at 500 entries when localStorage seed exceeds MAX_ENTRIES', () => {
+    localStorage.setItem('apiario-log', JSON.stringify(
+      Array.from({ length: 501 }, (_, i) => ({
+        id: `task-t${i}-0`, type: 'task', taskId: `t${i}`, completedAt: '2026-01-01',
+      }))
+    ))
+    const { result } = renderHook(() => useTaskLog())
+    expect(result.current.log).toHaveLength(500)
+  })
+
   describe('haptic feedback', () => {
     it('fires navigator.vibrate when a task is checked', () => {
       const { result } = renderHook(() => useTaskLog())

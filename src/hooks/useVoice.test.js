@@ -9,15 +9,15 @@ const mockStop = vi.fn()
 
 beforeEach(() => {
   global.speechSynthesis = { speak: mockSpeak, cancel: mockCancel }
-  global.SpeechSynthesisUtterance = vi.fn().mockImplementation((text) => ({ text }))
-  global.SpeechRecognition = vi.fn().mockImplementation(() => ({
-    continuous: false,
-    lang: '',
-    start: mockStart,
-    stop: mockStop,
-    onresult: null,
-    onerror: null,
-  }))
+  global.SpeechSynthesisUtterance = vi.fn().mockImplementation(function(text) { this.text = text })
+  global.SpeechRecognition = vi.fn().mockImplementation(function() {
+    this.continuous = false
+    this.lang = ''
+    this.start = mockStart
+    this.stop = mockStop
+    this.onresult = null
+    this.onerror = null
+  })
   vi.clearAllMocks()
 })
 

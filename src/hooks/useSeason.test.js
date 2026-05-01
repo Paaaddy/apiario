@@ -5,6 +5,11 @@ import { useSeason } from './useSeason'
 afterEach(() => vi.useRealTimers())
 
 describe('useSeason', () => {
+  it('returns empty tasks when profile is null', () => {
+    const { result } = renderHook(() => useSeason(null))
+    expect(result.current.tasks).toEqual([])
+  })
+
   it('returns the correct season for the mocked date', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-04-13'))

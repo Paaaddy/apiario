@@ -7,7 +7,8 @@ const MAX_ENTRIES = 500
 function loadLog() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
+    const parsed = raw ? JSON.parse(raw) : []
+    return Array.isArray(parsed) ? cap(parsed) : []
   } catch {
     return []
   }
