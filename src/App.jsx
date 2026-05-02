@@ -15,6 +15,7 @@ function initialTab() {
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
+import { useInspections } from './hooks/useInspections'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import { useAppBadge } from './hooks/useAppBadge'
 import { useSeason } from './hooks/useSeason'
@@ -95,6 +96,12 @@ function AppContent() {
   const { locale } = useLanguage()
   const { profile, updateProfile, addColony, updateColony, removeColony } = useProfile()
   const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry } = useTaskLog()
+  const { inspections, addInspection, updateInspection, removeInspection, removeInspectionsByColonyId } = useInspections()
+
+  const handleRemoveColony = useCallback((colonyId) => {
+    removeInspectionsByColonyId(colonyId)
+    removeColony(colonyId)
+  }, [removeColony, removeInspectionsByColonyId])
   const [activeTab, setActiveTabState] = useState(initialTab)
 
   // Wrap tab changes in the View Transitions API when available so
@@ -226,7 +233,7 @@ function AppContent() {
               onToggleTask={toggleTask}
             />
           )}
-          {activeTab === 'diagnose' && <DiagnoseScreen />}
+          {activeTab === 'diagnose' && <DiagnoseScreen inspections={inspections} />}
           {activeTab === 'myhive' && (
             <MyHiveScreen
               profile={profile}
@@ -236,7 +243,11 @@ function AppContent() {
               onDeleteEntry={deleteEntry}
               onAddColony={addColony}
               onUpdateColony={updateColony}
-              onRemoveColony={removeColony}
+              onRemoveColony={handleRemoveColony}
+              inspections={inspections}
+              onAddInspection={addInspection}
+              onUpdateInspection={updateInspection}
+              onDeleteInspection={removeInspection}
               pwaInstall={pwaInstall}
             />
           )}

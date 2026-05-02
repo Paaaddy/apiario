@@ -138,4 +138,56 @@ export const strings = {
 
   // BeeFab
   fab_label: { de: 'Bienen-Freisprechmodus', en: 'Bee hands-free mode' },
+
+  // My Hive tab strip
+  tab_colonies:    { de: 'Völker',     en: 'Colonies'    },
+  tab_inspections: { de: 'Kontrollen', en: 'Inspections' },
+  tab_log:         { de: 'Verlauf',    en: 'Log'         },
+  tab_profile:     { de: 'Profil',     en: 'Profile'     },
+
+  // Inspection form
+  insp_title_add:             { de: 'Neue Kontrolle',              en: 'New inspection'           },
+  insp_title_edit:            { de: 'Kontrolle bearbeiten',        en: 'Edit inspection'          },
+  insp_section_when:          { de: 'Datum & Volk',                en: 'Date & colony'            },
+  insp_section_health:        { de: 'Gesundheit',                  en: 'Health'                   },
+  insp_section_treatment:     { de: 'Behandlung',                  en: 'Treatment'                },
+  insp_date_label:            { de: 'Datum',                       en: 'Date'                     },
+  insp_colony_label:          { de: 'Volk',                        en: 'Colony'                   },
+  insp_colony_placeholder:    { de: 'Volk auswählen',              en: 'Select colony'            },
+  insp_queen_label:           { de: 'Königin',                     en: 'Queen'                    },
+  insp_queen_seen:            { de: 'Gesehen',                     en: 'Seen'                     },
+  insp_queen_eggs:            { de: 'Eier',                        en: 'Eggs'                     },
+  insp_queen_larvae:          { de: 'Maden',                       en: 'Larvae'                   },
+  insp_queen_not_seen:        { de: 'Nicht gesehen',               en: 'Not seen'                 },
+  insp_brood_label:           { de: 'Brutstimmung',                en: 'Brood pattern'            },
+  insp_stores_label:          { de: 'Honigvorrat',                 en: 'Honey stores'             },
+  insp_population_label:      { de: 'Volksstärke',                 en: 'Population'               },
+  insp_temperament_label:     { de: 'Temperament',                 en: 'Temperament'              },
+  insp_temperament_calm:      { de: 'Ruhig',                       en: 'Calm'                     },
+  insp_temperament_normal:    { de: 'Normal',                      en: 'Normal'                   },
+  insp_temperament_defensive: { de: 'Nervös',                      en: 'Defensive'                },
+  insp_varroa_label:          { de: 'Varroa (pro 100 Bienen)',     en: 'Varroa (per 100 bees)'    },
+  insp_varroa_not_tested:     { de: 'Nicht getestet',              en: 'Not tested'               },
+  insp_treatment_label:       { de: 'Behandlung',                  en: 'Treatment'                },
+  insp_treatment_placeholder: { de: 'z. B. Oxalsäure 4 g',        en: 'e.g. Oxalic acid 4g'      },
+  insp_notes_label:           { de: 'Notizen',                     en: 'Notes'                    },
+  insp_notes_placeholder:     { de: 'Was ist sonst aufgefallen?',  en: 'Anything else observed?'  },
+  insp_save:                  { de: 'Speichern',                   en: 'Save'                     },
+  insp_cancel:                { de: 'Abbrechen',                   en: 'Cancel'                   },
+  insp_delete:                { de: 'Löschen',                     en: 'Delete'                   },
+  insp_delete_confirm:        { de: 'Diese Kontrolle wirklich löschen?', en: 'Really delete this inspection?' },
+  insp_add_button:            { de: '+ Kontrolle',                 en: '+ Inspect'                },
+  insp_edit_label:            { de: 'Bearbeiten',                  en: 'Edit'                     },
+
+  // Inspection tab / colony card
+  insp_tab_empty:      { de: 'Noch keine Kontrollen. Tippe auf + Kontrolle, um deine erste aufzuzeichnen.', en: 'No inspections yet. Tap + Inspect to record your first one.' },
+  insp_last_inspected: { de: 'Zuletzt kontrolliert',               en: 'Last inspected'           },
+  insp_days_ago:       { de: 'vor {n} Tag(en)',                    en: '{n} day(s) ago'           },
+  insp_today:          { de: 'Heute',                              en: 'Today'                    },
+  insp_yesterday:      { de: 'Gestern',                            en: 'Yesterday'                },
+  insp_show_all:       { de: 'Alle anzeigen',                      en: 'Show all'                 },
+  insp_never:          { de: 'Noch nie kontrolliert',              en: 'Never inspected'          },
+
+  // Diagnose pre-fill
+  diagnose_from_inspection: { de: 'Von letzter Kontrolle starten', en: 'Start from last inspection' },
 }

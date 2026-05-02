@@ -10,11 +10,24 @@ import { useWakeLock } from '../hooks/useWakeLock'
 import { haptics } from '../utils/haptics'
 import HexWatermark from '../components/HexWatermark'
 
-export default function DiagnoseScreen() {
+function routeFromInspection(inspection) {
+  if (!inspection) return null
+  if (inspection.queenStatus === 'not_seen') return 'queenless'
+  if (inspection.varroa != null && inspection.varroa >= 3) return 'varroa-suspect'
+  if (inspection.broodPattern != null && inspection.broodPattern <= 2) return 'sick-brood'
+  return null
+}
+
+export default function DiagnoseScreen({ inspections = [] }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const [currentNodeId, setCurrentNodeId] = useState('root')
   const [history, setHistory] = useState([])
+
+  const latestInspection = inspections.length > 0
+    ? inspections.slice().sort((a, b) => b.date.localeCompare(a.date))[0]
+    : null
+  const prefilledNodeId = routeFromInspection(latestInspection)
 
   useWakeLock(true)
   useEffect(() => { validateDiagnosisTree() }, [])
@@ -75,6 +88,15 @@ export default function DiagnoseScreen() {
           </h1>
         </div>
         <div style={{ position: 'relative', padding: '8px 22px 120px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {currentNodeId === 'root' && prefilledNodeId && (
+            <button
+              type="button"
+              onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
+              style={{ width: '100%', textAlign: 'left', padding: '14px 18px', borderRadius: 16, background: 'rgba(245,166,35,0.15)', border: '1px solid rgba(245,166,35,0.4)', color: '#f5a623', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+            >
+              🔍 {t(s.diagnose_from_inspection)}
+            </button>
+          )}
           {node.options.map((option, i) => (
             <button
               key={option.next}
@@ -142,6 +164,15 @@ export default function DiagnoseScreen() {
           </p>
         </div>
         <div style={{ padding: '16px 24px 120px' }}>
+          {currentNodeId === 'root' && prefilledNodeId && (
+            <button
+              type="button"
+              onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
+              style={{ width: '100%', textAlign: 'left', marginBottom: 12, padding: '12px 14px', background: '#f4ecd8', border: '1px solid #c8b890', borderRadius: 4, fontFamily: 'var(--theme-font-head)', fontSize: 14, color: '#2b1d0e', cursor: 'pointer' }}
+            >
+              🔍 {t(s.diagnose_from_inspection)}
+            </button>
+          )}
           {node.options.map((option, i) => (
             <div
               key={option.next}
@@ -205,6 +236,17 @@ export default function DiagnoseScreen() {
       <div className="px-4 pt-6 pb-3">
         <h2 className="font-serif text-lg font-semibold text-brown">{t(node.question)}</h2>
       </div>
+
+      {currentNodeId === 'root' && prefilledNodeId && (
+        <div className="px-4 mb-1">
+          <button
+            onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
+            className="w-full text-left bg-amber-50 border border-honey rounded-xl px-5 py-3 text-brown text-sm font-semibold"
+          >
+            🔍 {t(s.diagnose_from_inspection)}
+          </button>
+        </div>
+      )}
 
       <div className="px-4 flex flex-col gap-3">
         {node.options.map((option) => (

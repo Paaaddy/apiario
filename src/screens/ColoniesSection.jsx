@@ -1,17 +1,32 @@
 import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
+import InspectionForm from '../components/InspectionForm'
 
-/**
- * Lists the user's colonies and lets them add / rename / annotate / remove.
- * All state lives in `useProfile` — this component is purely a view over
- * `profile.colonies` plus the three colony helpers.
- */
+function daysSince(dateStr) {
+  const d = new Date(dateStr)
+  const now = new Date()
+  return Math.floor((now - d) / (1000 * 60 * 60 * 24))
+}
+
+function lastInspectedLabel(colonyId, inspections, t) {
+  const sorted = inspections
+    .filter((i) => i.colonyId === colonyId)
+    .sort((a, b) => b.date.localeCompare(a.date))
+  if (sorted.length === 0) return t(s.insp_never)
+  const days = daysSince(sorted[0].date)
+  if (days === 0) return t(s.insp_today)
+  if (days === 1) return t(s.insp_yesterday)
+  return t(s.insp_days_ago).replace('{n}', days)
+}
+
 export default function ColoniesSection({
   colonies = [],
   onAdd,
   onUpdate,
   onRemove,
+  inspections = [],
+  onAddInspection,
 }) {
   const { t } = useLanguage()
   const [isAdding, setIsAdding] = useState(false)
@@ -20,6 +35,7 @@ export default function ColoniesSection({
   const [editingId, setEditingId] = useState(null)
   const [editName, setEditName] = useState('')
   const [editNotes, setEditNotes] = useState('')
+  const [inspectColonyId, setInspectColonyId] = useState(null)
 
   function submitAdd() {
     const name = draftName.trim()
@@ -60,6 +76,10 @@ export default function ColoniesSection({
       onRemove?.(id)
     }
   }
+
+  const inspectTarget = inspectColonyId
+    ? colonies.find((c) => c.id === inspectColonyId) ?? null
+    : null
 
   return (
     <section className="mb-8">
@@ -126,13 +146,25 @@ export default function ColoniesSection({
                       {colony.notes}
                     </p>
                   )}
+                  <p className="mt-1 text-xs text-brown-mid/60">
+                    {t(s.insp_last_inspected)}: {lastInspectedLabel(colony.id, inspections, t)}
+                  </p>
                   {colony.createdAt && (
-                    <p className="mt-1 text-xs text-brown-mid/60">
+                    <p className="mt-0.5 text-xs text-brown-mid/40">
                       {t(s.colonies_created_on)} {colony.createdAt}
                     </p>
                   )}
                 </div>
-                <div className="flex flex-col gap-1 shrink-0">
+                <div className="flex flex-col gap-1 shrink-0 items-end">
+                  {onAddInspection && (
+                    <button
+                      type="button"
+                      onClick={() => setInspectColonyId(colony.id)}
+                      className="text-xs font-semibold text-honey bg-brown rounded-lg px-2 py-1"
+                    >
+                      {t(s.insp_add_button)}
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={() => beginEdit(colony)}
@@ -198,6 +230,18 @@ export default function ColoniesSection({
         >
           {t(s.colonies_add_button)}
         </button>
+      )}
+
+      {inspectColonyId && (
+        <InspectionForm
+          colonies={inspectTarget ? [inspectTarget] : colonies}
+          initial={inspectTarget ? { colonyId: inspectColonyId } : null}
+          onSave={(data) => {
+            onAddInspection?.(data)
+            setInspectColonyId(null)
+          }}
+          onClose={() => setInspectColonyId(null)}
+        />
       )}
     </section>
   )
