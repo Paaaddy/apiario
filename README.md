@@ -23,14 +23,14 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 
 | Concern | Choice |
 |---|---|
-| Framework | React 18 + Vite 5 |
-| Styling | Tailwind CSS 3 |
+| Framework | React 18 + Vite 6 |
+| Styling | Tailwind CSS 4 |
 | Offline | vite-plugin-pwa + Workbox |
 | Onboarding | @onboardjs/react |
 | Fonts | @fontsource (self-hosted, precached) |
 | State | React context + localStorage |
 | Voice | Web Speech API |
-| Tests | Vitest + Testing Library |
+| Tests | Vitest + Testing Library (193 tests) |
 | Deploy | GitHub Actions → GitHub Pages |
 
 ---
@@ -41,11 +41,12 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 npm install
 npm run dev              # http://localhost:5173
 npm run dev -- --host    # expose on local network
-npm run test:run         # run all tests
+npm run test:run         # run all tests (193 tests, 25 suites)
 npm run build            # production build
+npm run lint             # ESLint
 ```
 
-Add `?debug` to any URL to open the debug panel (localStorage inspector + reset buttons).
+Add `?debug` to any URL in dev mode to open the debug panel (localStorage inspector + reset buttons).
 
 ---
 
@@ -56,6 +57,12 @@ All content lives in two bundled JSON files — no server needed:
 - `src/data/seasons.json` — seasonal tasks for spring / summer / autumn / winter, bilingual (DE/EN)
 - `src/data/diagnosis.json` — branching diagnosis tree, bilingual (DE/EN)
 - `src/i18n/strings.js` — all UI strings, bilingual
+
+---
+
+## Architecture
+
+See [CLAUDE.md](CLAUDE.md) for a full description of the app architecture, data model, theming system, and testing conventions.
 
 ---
 
