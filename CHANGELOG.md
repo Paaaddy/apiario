@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.0.0](https://github.com/Paaaddy/apiario/compare/v1.1.2...v2.0.0) (2026-05-02)
+
+### Features
+
+* **Hive Inspection Journal** — log structured inspections per colony (queen status, varroa count 0–5, brood pattern 0–5, free-text notes). Each colony now shows a "last inspected" label and a quick "+ Inspect" button.
+* **Inspections tab** in My Hive — browse all inspections across colonies, edit or delete individual records.
+* **Diagnosis pre-routing** — the Diagnose tab reads your latest inspection and offers a one-tap shortcut to jump straight to the relevant branch (queenless, varroa suspect, or sick brood).
+* **My Hive tab strip** — My Hive is now split into four tabs: Colonies, Inspections, Log, and Profile.
+* **Cascade delete** — removing a colony also deletes all its inspection records.
+
+### For contributors
+
+* New hook `useInspections` (localStorage key `apiario-inspections`) following the same pattern as `useTaskLog`.
+* 20 new tests across `useInspections.test.js` and `InspectionForm.test.jsx`; 215 tests total across 27 suites.
+
 ## [1.1.2](https://github.com/Paaaddy/apiario/compare/v1.1.1...v1.1.2) (2026-05-02)
 
 

@@ -9,9 +9,10 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 ## Features
 
 - **Season tab** — weekly task cards filtered by your experience level, with checkboxes that log completed tasks
-- **Diagnose tab** — branching wizard covering queen issues, varroa, disease, swarming, and more
-- **My Hive tab** — manage named colonies, edit your profile (hive count, climate zone, experience), and view your activity log
-- **Three visual themes** — Honeycomb (default), Field Notebook, and Seasonal Light; switch in My Hive → Settings, persisted across sessions
+- **Diagnose tab** — branching wizard covering queen issues, varroa, disease, swarming, and more; pre-routes from your last hive inspection automatically
+- **My Hive tab** — four tabs: Colonies (named hives with add/edit/delete), Inspections (queen status, varroa counts, brood pattern per colony), Log (activity history), and Profile
+- **Hive inspection journal** — log inspections per colony with structured fields; shortcut from the colony list; links directly into the diagnosis wizard
+- **Three visual themes** — Honeycomb (default), Field Notebook, and Seasonal Light; switch in My Hive → Profile, persisted across sessions
 - **DE / EN toggle** — full German and English support, switch instantly in any screen
 - **Offline-first** — works with no signal after the first visit; all content and fonts are precached
 - **Installable** — add to home screen on Android and iOS (PWA)
@@ -23,14 +24,14 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 
 | Concern | Choice |
 |---|---|
-| Framework | React 18 + Vite 6 |
-| Styling | Tailwind CSS 4 |
+| Framework | React 19 + Vite 7 |
+| Styling | Tailwind CSS 3 |
 | Offline | vite-plugin-pwa + Workbox |
 | Onboarding | @onboardjs/react |
 | Fonts | @fontsource (self-hosted, precached) |
 | State | React context + localStorage |
 | Voice | Web Speech API |
-| Tests | Vitest + Testing Library (193 tests) |
+| Tests | Vitest + Testing Library (215 tests) |
 | Deploy | GitHub Actions → GitHub Pages |
 
 ---
@@ -41,7 +42,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 npm install
 npm run dev              # http://localhost:5173
 npm run dev -- --host    # expose on local network
-npm run test:run         # run all tests (193 tests, 25 suites)
+npm run test:run         # run all tests (215 tests, 27 suites)
 npm run build            # production build
 npm run lint             # ESLint
 ```

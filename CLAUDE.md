@@ -35,7 +35,8 @@ Single-page, tab-based. `ThemeProvider` wraps everything, then `LanguageProvider
 - **Theme** (`ThemeContext`): localStorage under `apiario-theme`. Values: `'a'` (Honeycomb, default), `'b'` (Field Notebook), `'c'` (Seasonal Light). Sets `data-theme` attribute on `<html>` for CSS variable cascade. `useTheme()` returns `{ theme, setTheme }`.
 - **Task log** (`useTaskLog`): localStorage under `apiario-log`. Two entry types: `task` (from season checkbox) and `custom` (free text). Capped at 500 entries. Exposes `completedTaskIds` Set for O(1) checkbox state lookup.
 - **Season** (`useSeason`): pure derivation from current date + profile. Reads `src/data/seasons.json`, filters tasks by `minExperience`.
-- **Diagnosis** (`DiagnoseScreen`): tree traversal through `src/data/diagnosis.json`. Nodes keyed by ID; `type: 'outcome'` nodes are terminal.
+- **Inspections** (`useInspections`): localStorage under `apiario-inspections`. Shape: `{ id, colonyId, date, queenStatus, varroa, broodPattern, notes, createdAt }`. Exposes `addInspection`, `updateInspection`, `removeInspection`, `removeInspectionsByColonyId` (cascade-delete, call before `removeColony`), `getColonyInspections` (sorted newest-first), `getLatestInspection`.
+- **Diagnosis** (`DiagnoseScreen`): tree traversal through `src/data/diagnosis.json`. Nodes keyed by ID; `type: 'outcome'` nodes are terminal. Accepts `inspections` prop; latest inspection auto-routes to a relevant node when queen/varroa/brood anomalies are detected.
 
 ### Content data
 All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "..." }`. Structural fields (`id`, `urgency`, `type`, `next`, `callExpert`, `minExperience`) are plain values.
@@ -46,9 +47,10 @@ All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "
 
 ### Screen structure
 - `SeasonScreen` — sticky header (theme A/B) or full-bleed seasonal hero (theme C), task cards with checkboxes
-- `DiagnoseScreen` — branching wizard; runs `validateDiagnosisTree()` on mount in dev; dark background in theme C
-- `MyHiveScreen` — composes `ColoniesSection` + `LogSection` + `ProfileSection`
-- `ColoniesSection` — named colony list with add / edit / delete; state lives in `useProfile`
+- `DiagnoseScreen` — branching wizard; runs `validateDiagnosisTree()` on mount in dev; dark background in theme C; `routeFromInspection()` maps latest inspection fields to a starting node (queenless / varroa-suspect / sick-brood)
+- `MyHiveScreen` — four-tab layout via `MyHiveTabStrip` (Colonies | Inspections | Log | Profile); tab strip lives in the sticky header of each theme branch
+- `ColoniesSection` — named colony list with add / edit / delete; shows "last inspected" label per colony; "+ Inspect" shortcut opens `InspectionForm` overlay
+- `InspectionTab` — all inspections for all colonies, grouped; `InspectionCard` renders one record with edit/delete; `InspectionForm` handles add/edit with `InspectionScaleInput` for 0–5 scales
 - `LogSection` — Verlauf log with month grouping + custom entry form
 - `ProfileSection` — hive count / climate / experience option groups + `ThemeSwitcher`
 - `Onboarding` — 6-step OnboardJS flow (welcome → features → hiveCount → climateZone → experience → complete) using `@onboardjs/react`. Steps are created once in a `stepsRef` and a `COMPONENT_REGISTRY` maps step keys to React components.
