@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Paaaddy/apiario/compare/v1.1.2...v1.2.0) (2026-05-02)
+
+
+### Features
+
+* add Hive Inspection Journal — bump to v2.0.0 ([e17baf5](https://github.com/Paaaddy/apiario/commit/e17baf529f31e454daac2d0c32dff53faec2a74d))
+
 ## [1.1.2](https://github.com/Paaaddy/apiario/compare/v1.1.1...v1.1.2) (2026-05-02)
 
 
