@@ -20,9 +20,11 @@ export default function InspectionTab({
   const [editTarget, setEditTarget]     = useState(null)
   const [expandedColonies, setExpanded] = useState({})
 
-  const isDark = theme === 'c'
-  const inkMid = isDark ? 'rgba(255,255,255,0.55)' : theme === 'b' ? '#6b5838' : '#92400e'
-  const ink    = isDark ? '#fff'    : theme === 'b' ? '#2b1d0e' : '#3d1f00'
+  const isDark    = theme === 'c'
+  const inkMid    = isDark ? 'rgba(255,255,255,0.55)' : theme === 'b' ? '#6b5838' : '#92400e'
+  const ink       = isDark ? '#fff' : theme === 'b' ? '#2b1d0e' : '#3d1f00'
+  const addBtnBg  = isDark ? 'rgba(255,255,255,0.15)' : theme === 'b' ? '#2b1d0e' : '#f5a623'
+  const addBtnClr = isDark ? '#fff' : theme === 'b' ? '#f4ecd8' : '#3d1f00'
 
   const colonyMap = useMemo(
     () => Object.fromEntries(colonies.map((c) => [c.id, c.name])),
@@ -63,6 +65,17 @@ export default function InspectionTab({
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
+  if (colonies.length === 0) {
+    return (
+      <div style={{ paddingTop: 32, textAlign: 'center' }}>
+        <p style={{ fontSize: 32, marginBottom: 8 }}>🐝</p>
+        <p style={{ fontSize: 14, color: inkMid, maxWidth: 280, margin: '0 auto' }}>
+          {t(s.insp_no_colonies)}
+        </p>
+      </div>
+    )
+  }
+
   if (inspections.length === 0) {
     return (
       <div style={{ paddingTop: 32, textAlign: 'center' }}>
@@ -73,7 +86,7 @@ export default function InspectionTab({
         <button
           type="button"
           onClick={openAdd}
-          style={{ padding: '12px 24px', borderRadius: 24, background: '#f5a623', border: 'none', color: '#3d1f00', fontWeight: 700, fontSize: 15, cursor: 'pointer' }}
+          style={{ padding: '12px 24px', borderRadius: 24, background: addBtnBg, border: 'none', color: addBtnClr, fontWeight: 700, fontSize: 15, cursor: 'pointer' }}
         >
           {t(s.insp_add_button)}
         </button>
@@ -95,7 +108,7 @@ export default function InspectionTab({
         <button
           type="button"
           onClick={openAdd}
-          style={{ padding: '10px 18px', borderRadius: 24, background: '#f5a623', border: 'none', color: '#3d1f00', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}
+          style={{ padding: '10px 18px', borderRadius: 24, background: addBtnBg, border: 'none', color: addBtnClr, fontWeight: 700, fontSize: 14, cursor: 'pointer' }}
         >
           {t(s.insp_add_button)}
         </button>

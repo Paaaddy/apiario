@@ -6,7 +6,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 import DebugPanel from './components/DebugPanel'
 
 const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
-const VALID_TABS = ['season', 'diagnose', 'myhive']
+const VALID_TABS = ['season', 'diagnose', 'inspect', 'myhive']
 function initialTab() {
   if (typeof window === 'undefined') return 'season'
   const q = new URLSearchParams(window.location.search).get('tab')
@@ -90,6 +90,7 @@ import PwaInstallHint from './components/PwaInstallHint'
 const Onboarding = lazy(() => import('./screens/Onboarding'))
 const SeasonScreen = lazy(() => import('./screens/SeasonScreen'))
 const DiagnoseScreen = lazy(() => import('./screens/DiagnoseScreen'))
+const InspectScreen = lazy(() => import('./screens/InspectScreen'))
 const MyHiveScreen = lazy(() => import('./screens/MyHiveScreen'))
 
 function AppContent() {
@@ -234,6 +235,15 @@ function AppContent() {
             />
           )}
           {activeTab === 'diagnose' && <DiagnoseScreen inspections={inspections} />}
+          {activeTab === 'inspect' && (
+            <InspectScreen
+              colonies={profile?.colonies ?? []}
+              inspections={inspections}
+              onAdd={addInspection}
+              onUpdate={updateInspection}
+              onDelete={removeInspection}
+            />
+          )}
           {activeTab === 'myhive' && (
             <MyHiveScreen
               profile={profile}

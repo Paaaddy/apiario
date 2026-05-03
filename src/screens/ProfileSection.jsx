@@ -1,28 +1,56 @@
 import { useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
+import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import ThemeSwitcher from '../components/ThemeSwitcher'
 
-function OptionGroup({ title, options, currentValue, fieldKey, onUpdate }) {
+function getButtonStyle(theme, isActive) {
+  if (theme === 'b') {
+    return isActive
+      ? { background: '#2b1d0e', borderColor: '#2b1d0e', color: '#f4ecd8' }
+      : { background: '#fff', borderColor: '#c8b890', color: '#2b1d0e' }
+  }
+  if (theme === 'c') {
+    return isActive
+      ? { background: 'rgba(255,255,255,0.6)', borderColor: 'rgba(255,255,255,0.4)', color: '#1c1410' }
+      : { background: 'transparent', borderColor: 'rgba(255,255,255,0.15)', color: '#6b5843' }
+  }
+  return isActive
+    ? { background: '#f5a623', borderColor: '#e8890c', color: '#3d1f00' }
+    : { background: '#fff', borderColor: '#fde68a', color: '#92400e' }
+}
+
+function OptionGroup({ title, options, currentValue, fieldKey, onUpdate, theme }) {
   return (
-    <div className="mb-6">
-      <h3 className="font-serif text-sm font-semibold text-brown-mid uppercase tracking-widest mb-2">
+    <div style={{ marginBottom: 24 }}>
+      <h3 style={{ fontFamily: 'var(--theme-font-head, serif)', fontSize: 12, fontWeight: 600, color: 'var(--theme-ink-mid, #92400e)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8, marginTop: 0 }}>
         {title}
       </h3>
-      <div className="flex flex-col gap-2">
-        {options.map(({ label, value }) => (
-          <button
-            key={String(value)}
-            onClick={() => onUpdate({ [fieldKey]: value })}
-            className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-colors ${
-              currentValue === value
-                ? 'bg-honey border-honey-dark text-brown'
-                : 'bg-white border-amber-100 text-brown-mid'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {options.map(({ label, value }) => {
+          const isActive = currentValue === value
+          const btnStyle = getButtonStyle(theme, isActive)
+          return (
+            <button
+              key={String(value)}
+              onClick={() => onUpdate({ [fieldKey]: value })}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                padding: '12px 16px',
+                borderRadius: 12,
+                border: '1px solid',
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'background 0.15s',
+                ...btnStyle,
+              }}
+            >
+              {label}
+            </button>
+          )
+        })}
       </div>
     </div>
   )
@@ -30,6 +58,7 @@ function OptionGroup({ title, options, currentValue, fieldKey, onUpdate }) {
 
 export default function ProfileSection({ profile, onUpdate }) {
   const { t } = useLanguage()
+  const { theme } = useTheme()
 
   const HIVE_OPTIONS = useMemo(() => [
     { label: t(s.hive_1),  value: 1  },
@@ -51,7 +80,7 @@ export default function ProfileSection({ profile, onUpdate }) {
 
   return (
     <div>
-      <h2 className="font-serif text-base font-semibold text-brown mb-4">{t(s.profile_title)}</h2>
+      <h2 style={{ fontFamily: 'var(--theme-font-head, serif)', fontSize: 16, fontWeight: 600, color: 'var(--theme-ink, #3d1f00)', marginBottom: 16 }}>{t(s.profile_title)}</h2>
       <ThemeSwitcher />
       <OptionGroup
         title={t(s.hive_count_title)}
@@ -59,6 +88,7 @@ export default function ProfileSection({ profile, onUpdate }) {
         currentValue={profile.hiveCount}
         fieldKey="hiveCount"
         onUpdate={onUpdate}
+        theme={theme}
       />
       <OptionGroup
         title={t(s.climate_title)}
@@ -66,6 +96,7 @@ export default function ProfileSection({ profile, onUpdate }) {
         currentValue={profile.climateZone}
         fieldKey="climateZone"
         onUpdate={onUpdate}
+        theme={theme}
       />
       <OptionGroup
         title={t(s.experience_title)}
@@ -73,6 +104,7 @@ export default function ProfileSection({ profile, onUpdate }) {
         currentValue={profile.experience}
         fieldKey="experience"
         onUpdate={onUpdate}
+        theme={theme}
       />
     </div>
   )

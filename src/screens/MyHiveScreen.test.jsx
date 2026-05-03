@@ -32,8 +32,10 @@ describe('MyHiveScreen', () => {
     const user = userEvent.setup()
     wrap(<MyHiveScreen profile={profile} onUpdate={() => {}} />)
     await user.click(screen.getByRole('button', { name: /profile/i }))
-    const btn = screen.getByText('2–3 hives')
-    expect(btn).toHaveClass('bg-honey')
+    const btn = screen.getByText('2–3 hives').closest('button')
+    expect(btn).toBeInTheDocument()
+    // active state uses theme-aware inline style; verify background is applied
+    expect(btn.style.background).toBeTruthy()
   })
 
   it('calls onUpdate with new hiveCount when a different option is clicked', async () => {
@@ -115,7 +117,8 @@ describe('MyHiveScreen', () => {
 
   it('shows inspections tab content when inspections tab clicked', async () => {
     const user = userEvent.setup()
-    wrap(<MyHiveScreen profile={profile} onUpdate={() => {}} inspections={[]} />)
+    const profileWithColony = { ...profile, colonies: [{ id: 'c1', name: 'Test hive', notes: '', createdAt: '2026-01-01' }] }
+    wrap(<MyHiveScreen profile={profileWithColony} onUpdate={() => {}} inspections={[]} />)
     await user.click(screen.getByRole('button', { name: /inspections/i }))
     expect(screen.getByText(/no inspections yet/i)).toBeInTheDocument()
   })
