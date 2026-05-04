@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/Paaaddy/apiario/compare/v2.0.0...v2.1.0) (2026-05-04)
+
+
+### Features
+
+* add Inspect nav tab, fix theme parity across all three themes ([b9b44a8](https://github.com/Paaaddy/apiario/commit/b9b44a8e9714c620d998a6780508fa553776c6a5))
+
+
+### Bug Fixes
+
+* fix InspectionCard theme C contrast — use dark-on-light colors to match light background ([f82ef16](https://github.com/Paaaddy/apiario/commit/f82ef16843b612143888903b5f66af2359f37e72))
+* pre-landing review fixes — extract shared getButtonStyle, fix theme C contrast in InspectionTab ([ce21479](https://github.com/Paaaddy/apiario/commit/ce21479b4eb818250fb723ebe363f5912a638249))
+
 ## [2.1.0] - 2026-05-04
 
 ### Added
