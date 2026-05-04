@@ -21,6 +21,7 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
               key={id}
               type="button"
               onClick={() => onTabChange(id)}
+              aria-current={active ? 'true' : undefined}
               style={{
                 flex: 1,
                 padding: '8px 4px',
@@ -35,6 +36,7 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
                 fontWeight: active ? 700 : 400,
                 cursor: 'pointer',
                 marginBottom: -1,
+                minHeight: 44,
               }}
             >
               {t(s[key])}
@@ -55,18 +57,20 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
               key={id}
               type="button"
               onClick={() => onTabChange(id)}
+              aria-current={active ? 'true' : undefined}
               style={{
                 flex: 1,
                 padding: '7px 6px',
                 borderRadius: 20,
                 border: 'none',
-                background: active ? 'rgba(245,166,35,0.85)' : 'rgba(255,255,255,0.08)',
+                background: active ? 'rgba(245,166,35,0.85)' : 'rgba(28,20,16,0.06)',
                 backdropFilter: 'blur(8px)',
-                color: active ? '#1c1410' : 'rgba(255,255,255,0.55)',
+                color: active ? '#1c1410' : '#6b5843',
                 fontSize: 12,
                 fontWeight: active ? 700 : 400,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
+                minHeight: 44,
               }}
             >
               {t(s[key])}
@@ -87,6 +91,7 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
             key={id}
             type="button"
             onClick={() => onTabChange(id)}
+            aria-current={active ? 'true' : undefined}
             style={{
               flex: 1,
               padding: '6px 4px',
@@ -99,6 +104,7 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
               cursor: 'pointer',
               whiteSpace: 'nowrap',
               transition: 'background 0.15s',
+              minHeight: 44,
             }}
           >
             {t(s[key])}
