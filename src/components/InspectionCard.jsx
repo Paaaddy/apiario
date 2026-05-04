@@ -31,10 +31,10 @@ export default function InspectionCard({ inspection, colonyName, onEdit, onDelet
   const [expanded, setExpanded] = useState(false)
 
   const isDark = theme === 'c'
-  const bg     = isDark ? 'rgba(255,255,255,0.06)' : theme === 'b' ? '#fff9f0' : '#fff'
-  const ink    = isDark ? '#fff'    : theme === 'b' ? '#2b1d0e' : '#3d1f00'
-  const inkMid = isDark ? 'rgba(255,255,255,0.55)' : theme === 'b' ? '#6b5838' : '#92400e'
-  const border = isDark ? 'rgba(255,255,255,0.12)' : theme === 'b' ? '#c8b890' : '#f0e0b8'
+  const bg     = isDark ? 'rgba(28,20,16,0.06)' : theme === 'b' ? '#fff9f0' : '#fff'
+  const ink    = isDark ? '#1c1410'  : theme === 'b' ? '#2b1d0e' : '#3d1f00'
+  const inkMid = isDark ? '#6b5843' : theme === 'b' ? '#6b5838' : '#92400e'
+  const border = isDark ? 'rgba(28,20,16,0.12)' : theme === 'b' ? '#c8b890' : '#f0e0b8'
 
   const queenEmoji = QUEEN_EMOJI[inspection.queenStatus] ?? '❓'
 

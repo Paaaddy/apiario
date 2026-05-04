@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.1.0] - 2026-05-04
+
+### Added
+
+* **Inspect tab** — a dedicated top-level tab for inspections, accessible directly from the bottom navigation. Previously, inspections were only reachable through My Hive → Inspections.
+* `nav_inspect` i18n string (de/en) for the new tab label.
+* `insp_no_colonies` i18n string shown when no colonies exist yet.
+* Shared `getButtonStyle` utility (`src/utils/themeButtonStyle.js`) for consistent theme-aware button styling.
+
+### Changed
+
+* **Theme B (Field Notebook) and Theme C (Seasonal Light) parity** — ThemeSwitcher and ProfileSection option buttons now use correct per-theme colors in all three themes.
+* **InspectionCard and InspectionTab theme C** — switched from light-on-dark (white text) to dark-on-light (#1c1410 on #faf6ee) to match the light background both `InspectScreen` and `MyHiveScreen` use for theme C.
+
+### Fixed
+
+* Theme C contrast: add-inspection button was white text on near-white background — now uses readable dark-on-light styling.
+* InspectionCard text was white-on-transparent in theme C on a light background — now consistent with InspectionTab.
+
+### For contributors
+
+* 14 new tests across `InspectScreen.test.jsx`, `InspectionTab.test.jsx`, and `ThemeSwitcher.test.jsx`; 231 tests total across 30 suites.
+
 ## [2.0.0](https://github.com/Paaaddy/apiario/compare/v1.1.2...v2.0.0) (2026-05-02)
 
 ### Features

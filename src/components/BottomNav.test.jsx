@@ -13,10 +13,11 @@ function wrap(ui) {
 }
 
 describe('BottomNav', () => {
-  it('renders all three tabs', () => {
+  it('renders all four tabs', () => {
     wrap(<BottomNav activeTab="season" onTabChange={() => {}} />)
     expect(screen.getByText('Season')).toBeInTheDocument()
     expect(screen.getByText('Diagnose')).toBeInTheDocument()
+    expect(screen.getByText('Inspect')).toBeInTheDocument()
     expect(screen.getByText('My Hive')).toBeInTheDocument()
   })
 
@@ -28,9 +29,27 @@ describe('BottomNav', () => {
     expect(onTabChange).toHaveBeenCalledWith('diagnose')
   })
 
+  it('calls onTabChange("inspect") when Inspect tab is clicked', async () => {
+    const user = userEvent.setup()
+    const onTabChange = vi.fn()
+    wrap(<BottomNav activeTab="season" onTabChange={onTabChange} />)
+    await user.click(screen.getByText('Inspect'))
+    expect(onTabChange).toHaveBeenCalledWith('inspect')
+  })
+
+  it('renders Inspect tab as active across all three themes', () => {
+    for (const theme of ['a', 'b', 'c']) {
+      localStorage.setItem('apiario-theme', theme)
+      const { unmount } = wrap(<BottomNav activeTab="inspect" onTabChange={() => {}} />)
+      expect(screen.getByText('Inspect')).toBeInTheDocument()
+      unmount()
+      localStorage.clear()
+      localStorage.setItem('apiario-locale', 'en')
+    }
+  })
+
   it('marks the active tab (theme A: hex indicator visible)', () => {
     wrap(<BottomNav activeTab="diagnose" onTabChange={() => {}} />)
-    // In theme A the active tab uses a hex clip-path indicator and brown text colour
     const diagnoseBtn = screen.getByText('Diagnose').closest('button')
     expect(diagnoseBtn).toBeInTheDocument()
   })

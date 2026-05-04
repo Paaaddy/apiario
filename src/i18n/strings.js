@@ -2,6 +2,7 @@ export const strings = {
   // Navigation
   nav_season:   { de: 'Saison',     en: 'Season'  },
   nav_diagnose: { de: 'Diagnose',   en: 'Diagnose' },
+  nav_inspect:  { de: 'Kontrolle',  en: 'Inspect'  },
   nav_myhive:   { de: 'Mein Stock', en: 'My Hive'  },
 
   // Season screen
@@ -181,6 +182,7 @@ export const strings = {
 
   // Inspection tab / colony card
   insp_tab_empty:      { de: 'Noch keine Kontrollen. Tippe auf + Kontrolle, um deine erste aufzuzeichnen.', en: 'No inspections yet. Tap + Inspect to record your first one.' },
+  insp_no_colonies:    { de: 'Füge zuerst ein Volk hinzu, um Kontrollen zu erfassen.', en: 'Add a colony in My Hive first to start logging inspections.' },
   insp_last_inspected: { de: 'Zuletzt kontrolliert',               en: 'Last inspected'           },
   insp_days_ago:       { de: 'vor {n} Tag(en)',                    en: '{n} day(s) ago'           },
   insp_today:          { de: 'Heute',                              en: 'Today'                    },

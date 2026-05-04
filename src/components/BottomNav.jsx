@@ -38,6 +38,18 @@ function HiveIcon({ active }) {
   )
 }
 
+function ClipboardIcon({ active }) {
+  const c = active ? '#2b1d0e' : '#98876b'
+  const w = active ? 2 : 1.5
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+      <rect x="8" y="2" width="8" height="4" rx="1"/>
+      <path d="M9 12h6M9 16h4"/>
+    </svg>
+  )
+}
+
 const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
@@ -45,6 +57,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   const TABS = useMemo(() => [
     { key: 'season',   label: t(s.nav_season),   emoji: '📅', Icon: SproutIcon },
     { key: 'diagnose', label: t(s.nav_diagnose),  emoji: '🔎', Icon: MagnifyIcon },
+    { key: 'inspect',  label: t(s.nav_inspect),   emoji: '📋', Icon: ClipboardIcon },
     { key: 'myhive',   label: t(s.nav_myhive),    emoji: '🐝', Icon: HiveIcon },
   ], [t])
 
