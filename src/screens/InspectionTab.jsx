@@ -21,10 +21,10 @@ export default function InspectionTab({
   const [expandedColonies, setExpanded] = useState({})
 
   const isDark    = theme === 'c'
-  const inkMid    = isDark ? 'rgba(255,255,255,0.55)' : theme === 'b' ? '#6b5838' : '#92400e'
-  const ink       = isDark ? '#fff' : theme === 'b' ? '#2b1d0e' : '#3d1f00'
-  const addBtnBg  = isDark ? 'rgba(255,255,255,0.15)' : theme === 'b' ? '#2b1d0e' : '#f5a623'
-  const addBtnClr = isDark ? '#fff' : theme === 'b' ? '#f4ecd8' : '#3d1f00'
+  const inkMid    = isDark ? '#6b5843' : theme === 'b' ? '#6b5838' : '#92400e'
+  const ink       = isDark ? '#1c1410' : theme === 'b' ? '#2b1d0e' : '#3d1f00'
+  const addBtnBg  = isDark ? '#1c1410' : theme === 'b' ? '#2b1d0e' : '#f5a623'
+  const addBtnClr = isDark ? '#faf6ee' : theme === 'b' ? '#f4ecd8' : '#3d1f00'
 
   const colonyMap = useMemo(
     () => Object.fromEntries(colonies.map((c) => [c.id, c.name])),
