@@ -73,7 +73,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
           borderRadius: 999,
           gap: 4,
           boxShadow: '0 10px 30px rgba(28,20,16,0.25)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          border: '1px solid rgba(255,255,255,0.18)',
         }}>
           {TABS.map(({ key, label, emoji }) => {
             const isActive = activeTab === key
@@ -82,6 +82,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
                 key={key}
                 type="button"
                 onClick={() => onTabChange(key)}
+                aria-current={isActive ? 'page' : undefined}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -90,15 +91,17 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
                   background: isActive ? '#fff' : 'transparent',
                   borderRadius: 999,
                   border: 'none',
-                  color: isActive ? '#1c1410' : 'rgba(255,255,255,0.75)',
+                  color: isActive ? '#1c1410' : 'rgba(255,255,255,0.9)',
                   fontSize: 12.5,
                   fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'all .2s',
+                  minHeight: 44,
                 }}
               >
-                <span style={{ fontSize: 15 }}>{emoji}</span>
+                <span aria-hidden="true" style={{ fontSize: 15 }}>{emoji}</span>
                 {isActive && <span>{label}</span>}
+                {!isActive && <span className="sr-only">{label}</span>}
               </button>
             )
           })}
@@ -125,6 +128,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
               key={key}
               type="button"
               onClick={() => onTabChange(key)}
+              aria-current={isActive ? 'page' : undefined}
               style={{
                 flex: 1,
                 display: 'flex',
@@ -136,6 +140,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
+                minHeight: 44,
               }}
             >
               {isActive && (
@@ -174,19 +179,20 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
             key={key}
             type="button"
             onClick={() => onTabChange(key)}
+            aria-current={isActive ? 'page' : undefined}
             className="flex-1 flex flex-col items-center py-2 gap-0.5 text-xs font-medium transition-colors"
-            style={{ color: isActive ? '#3d1f00' : '#9ca3af' }}
+            style={{ color: isActive ? '#3d1f00' : '#6b7280', minHeight: 44 }}
           >
             <div style={{ position: 'relative', width: 40, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {isActive && (
-                <div style={{
+                <div aria-hidden="true" style={{
                   position: 'absolute',
                   inset: 0,
                   background: '#f5a623',
                   clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
                 }} />
               )}
-              <span style={{ position: 'relative', fontSize: 18, filter: isActive ? 'none' : 'grayscale(0.2) opacity(0.6)' }}>
+              <span aria-hidden="true" style={{ position: 'relative', fontSize: 18, filter: isActive ? 'none' : 'grayscale(0.2) opacity(0.6)' }}>
                 {emoji}
               </span>
             </div>

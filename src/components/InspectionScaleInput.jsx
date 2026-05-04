@@ -3,9 +3,9 @@
  * Each segment is ≥44px for mobile tap targets.
  * Tap the same value again to deselect (returns null).
  */
-export default function InspectionScaleInput({ value, onChange, theme = 'a' }) {
+export default function InspectionScaleInput({ value, onChange, theme = 'a', labelId }) {
   return (
-    <div style={{ display: 'flex', gap: 8 }} role="group">
+    <div style={{ display: 'flex', gap: 8 }} role="group" aria-labelledby={labelId}>
       {[1, 2, 3, 4, 5].map((n) => {
         const selected = value >= n
         return (

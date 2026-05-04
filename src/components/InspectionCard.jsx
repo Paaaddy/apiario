@@ -46,6 +46,7 @@ export default function InspectionCard({ inspection, colonyName, onEdit, onDelet
         onClick={() => setExpanded((v) => !v)}
         style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
         aria-expanded={expanded}
+        aria-label={`${inspection.date}${colonyName ? `, ${colonyName}` : ''} — ${expanded ? 'collapse' : 'expand'}`}
       >
         <span style={{ fontSize: 20 }}>{queenEmoji}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -71,7 +72,7 @@ export default function InspectionCard({ inspection, colonyName, onEdit, onDelet
             )}
           </div>
         </div>
-        <span style={{ color: inkMid, fontSize: 14, flexShrink: 0 }}>{expanded ? '▲' : '▼'}</span>
+        <span aria-hidden="true" style={{ color: inkMid, fontSize: 14, flexShrink: 0 }}>{expanded ? '▲' : '▼'}</span>
       </button>
 
       {/* expanded detail */}

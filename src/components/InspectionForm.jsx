@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
@@ -24,6 +24,29 @@ const TEMPERAMENT_OPTIONS = [
 export default function InspectionForm({ colonies = [], initial = null, onSave, onClose }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
+  const dialogRef = useRef(null)
+
+  useEffect(() => {
+    const el = dialogRef.current
+    if (!el) return
+    const focusable = el.querySelectorAll(
+      'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])'
+    )
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (first) first.focus()
+    function trap(e) {
+      if (e.key === 'Escape') { onClose(); return }
+      if (e.key !== 'Tab') return
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus() }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first?.focus() }
+      }
+    }
+    el.addEventListener('keydown', trap)
+    return () => el.removeEventListener('keydown', trap)
+  }, [onClose])
 
   const [date, setDate]                   = useState(initial?.date ?? today())
   const [colonyId, setColonyId]           = useState(initial?.colonyId ?? (colonies[0]?.id ?? ''))
@@ -73,19 +96,17 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
     )
   }
 
-  function FieldLabel({ text }) {
-    return (
-      <p style={{ margin: '0 0 6px', fontSize: 13, fontWeight: 600, color: ink }}>
-        {text}
-      </p>
-    )
+  function FieldLabel({ text, htmlFor, id }) {
+    const style = { margin: '0 0 6px', fontSize: 13, fontWeight: 600, color: ink, display: 'block' }
+    if (htmlFor) return <label htmlFor={htmlFor} style={style}>{text}</label>
+    return <p id={id} style={style}>{text}</p>
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', flexDirection: 'column', background: bg }}>
+    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="insp-form-title" style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', flexDirection: 'column', background: bg }}>
       {/* sticky header */}
       <div style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${border}`, position: 'sticky', top: 0, background: bg, zIndex: 1 }}>
-        <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: ink, fontFamily: headFont }}>
+        <h2 id="insp-form-title" style={{ margin: 0, fontSize: 18, fontWeight: 700, color: ink, fontFamily: headFont }}>
           {isEditing ? t(s.insp_title_edit) : t(s.insp_title_add)}
         </h2>
         <button type="button" onClick={onClose} style={{ fontSize: 15, color: inkMid, background: 'none', border: 'none', cursor: 'pointer', padding: '4px 8px' }}>
@@ -100,8 +121,9 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         <SectionLabel text={t(s.insp_section_when)} />
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_date_label)} />
+          <FieldLabel text={t(s.insp_date_label)} htmlFor="insp-date" />
           <input
+            id="insp-date"
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
@@ -110,11 +132,12 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_colony_label)} />
+          <FieldLabel text={t(s.insp_colony_label)} htmlFor="insp-colony" />
           {colonies.length === 0 ? (
             <p style={{ color: inkMid, fontSize: 13 }}>{t(s.colonies_empty)}</p>
           ) : (
             <select
+              id="insp-colony"
               value={colonyId}
               onChange={(e) => setColonyId(e.target.value)}
               style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
@@ -130,8 +153,8 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         <SectionLabel text={t(s.insp_section_health)} />
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_queen_label)} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <FieldLabel text={t(s.insp_queen_label)} id="insp-queen-lbl" />
+          <div role="group" aria-labelledby="insp-queen-lbl" style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {QUEEN_OPTIONS.map((opt) => {
               const active = queenStatus === opt.value
               return (
@@ -160,23 +183,23 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_brood_label)} />
-          <InspectionScaleInput value={broodPattern} onChange={setBrood} theme={theme} />
+          <FieldLabel text={t(s.insp_brood_label)} id="insp-brood-lbl" />
+          <InspectionScaleInput value={broodPattern} onChange={setBrood} theme={theme} labelId="insp-brood-lbl" />
         </div>
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_stores_label)} />
-          <InspectionScaleInput value={honeyStores} onChange={setStores} theme={theme} />
+          <FieldLabel text={t(s.insp_stores_label)} id="insp-stores-lbl" />
+          <InspectionScaleInput value={honeyStores} onChange={setStores} theme={theme} labelId="insp-stores-lbl" />
         </div>
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_population_label)} />
-          <InspectionScaleInput value={population} onChange={setPop} theme={theme} />
+          <FieldLabel text={t(s.insp_population_label)} id="insp-pop-lbl" />
+          <InspectionScaleInput value={population} onChange={setPop} theme={theme} labelId="insp-pop-lbl" />
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_temperament_label)} />
-          <div style={{ display: 'flex', gap: 8 }}>
+          <FieldLabel text={t(s.insp_temperament_label)} id="insp-temper-lbl" />
+          <div role="group" aria-labelledby="insp-temper-lbl" style={{ display: 'flex', gap: 8 }}>
             {TEMPERAMENT_OPTIONS.map((opt) => {
               const active = temperament === opt.value
               return (
@@ -234,8 +257,9 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_treatment_label)} />
+          <FieldLabel text={t(s.insp_treatment_label)} htmlFor="insp-treatment" />
           <input
+            id="insp-treatment"
             type="text"
             value={treatment}
             onChange={(e) => setTreatment(e.target.value)}
@@ -245,8 +269,9 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_notes_label)} />
+          <FieldLabel text={t(s.insp_notes_label)} htmlFor="insp-notes" />
           <textarea
+            id="insp-notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder={t(s.insp_notes_placeholder)}
@@ -263,6 +288,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
           type="button"
           onClick={handleSave}
           disabled={!canSave}
+          aria-disabled={!canSave}
           style={{
             width: '100%',
             padding: '14px',

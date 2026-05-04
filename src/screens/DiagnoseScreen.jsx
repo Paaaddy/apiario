@@ -77,9 +77,9 @@ export default function DiagnoseScreen({ inspections = [] }) {
           </div>
           <LanguageToggle />
         </div>
-        <div style={{ position: 'relative', padding: '18px 22px 0', display: 'flex', gap: 5 }}>
+        <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={6} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} style={{ position: 'relative', padding: '18px 22px 0', display: 'flex', gap: 5 }}>
           {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i < stepNumber ? '#f5a623' : 'rgba(255,255,255,0.12)' }} />
+            <div aria-hidden="true" key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i < stepNumber ? '#f5a623' : 'rgba(255,255,255,0.12)' }} />
           ))}
         </div>
         <div style={{ position: 'relative', padding: '22px 24px 12px' }}>
@@ -151,9 +151,9 @@ export default function DiagnoseScreen({ inspections = [] }) {
             </p>
             <LanguageToggle />
           </div>
-          <div style={{ display: 'flex', gap: 5, marginTop: 14 }}>
+          <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={6} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} style={{ display: 'flex', gap: 5, marginTop: 14 }}>
             {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} style={{ flex: 1, height: 2, background: i < stepNumber ? '#2b1d0e' : '#c8b890' }} />
+              <div aria-hidden="true" key={i} style={{ flex: 1, height: 2, background: i < stepNumber ? '#2b1d0e' : '#c8b890' }} />
             ))}
           </div>
           <h1 style={{ margin: '18px 0 4px', fontFamily: 'var(--theme-font-head)', fontSize: 26, fontWeight: 400, color: '#2b1d0e', lineHeight: 1.2 }}>
@@ -179,14 +179,14 @@ export default function DiagnoseScreen({ inspections = [] }) {
               onClick={() => handleSelect(option.next)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && handleSelect(option.next)}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option.next)}
               style={{ padding: '16px 4px', borderBottom: '1px solid rgba(200,184,144,0.4)', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }}
             >
               <span style={{ fontFamily: 'var(--theme-font-mono)', fontSize: 10, color: '#98876b', width: 22, flexShrink: 0 }}>
                 {String(i + 1).padStart(2, '0')}
               </span>
               <span style={{ flex: 1, fontFamily: 'var(--theme-font-head)', fontSize: 17, color: '#2b1d0e', lineHeight: 1.3 }}>{t(option.label)}</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#98876b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#98876b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 6l6 6-6 6"/>
               </svg>
             </div>
@@ -229,8 +229,8 @@ export default function DiagnoseScreen({ inspections = [] }) {
         </div>
       </div>
 
-      <div className="h-1 bg-amber-100">
-        <div className="h-1 bg-honey transition-all" style={{ width: `${Math.min((stepNumber / 6) * 100, 95)}%` }} />
+      <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={6} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} className="h-1 bg-amber-100">
+        <div aria-hidden="true" className="h-1 bg-honey transition-all" style={{ width: `${Math.min((stepNumber / 6) * 100, 95)}%` }} />
       </div>
 
       <div className="px-4 pt-6 pb-3">
