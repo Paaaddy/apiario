@@ -65,6 +65,11 @@ jobs:
       # when it is warm.
       - run: npm ci --no-audit --no-fund --prefer-offline
 
+      # Tests gate the deploy. Without this, a compromised dependency that
+      # builds cleanly would auto-merge via dependabot-automerge.yml and
+      # ship to every installed PWA via the autoUpdate service worker.
+      - run: npm run test:run
+
       - run: npm run build -- --base /apiario/
 
       # Only ship the artifact when this run was triggered by a push to
