@@ -110,3 +110,53 @@ Use `findByText` (not `getByText`) for post-interaction assertions to avoid Reac
 ## Deployment
 
 GitHub Actions deploys to GitHub Pages on every push to `master`. Build uses `--base /apiario/`. No staging environment — test locally before pushing.
+
+## gstack
+
+This repo uses [gstack](https://github.com/paaaddy/gstack) skills for planning, review, QA, and shipping. Invoke any skill with `/<skill-name>`.
+
+### Available skills
+
+**Planning & review**
+- `/office-hours` — brainstorm an idea before any code
+- `/plan-ceo-review` — strategy / scope review (think bigger or strip down)
+- `/plan-eng-review` — engineering review (architecture, edge cases, tests)
+- `/plan-design-review` — design plan review (visual hierarchy, spacing, hierarchy)
+- `/plan-devex-review` — developer-experience review for APIs/CLIs/SDKs
+- `/autoplan` — runs the full review gauntlet (CEO + Design + Eng + DX) automatically
+- `/codex` — independent second opinion via OpenAI Codex CLI
+
+**Build & design**
+- `/design-consultation` — generate a project DESIGN.md
+- `/design-shotgun` — explore multiple AI-generated visual variants
+- `/design-html` — turn approved mockups into production HTML/CSS
+
+**QA & verification**
+- `/browse` — fast headless browser for manual QA, screenshots, dogfooding
+- `/qa` — systematic QA + auto-fix loop, `/qa-only` for report-only mode
+- `/design-review` — live visual QA: spacing, hierarchy, AI-slop patterns
+- `/devex-review` — live DX audit: docs, getting started, error messages
+- `/benchmark` — perf regression detection (Web Vitals, bundle size)
+- `/health` — composite code-quality dashboard
+- `/cso` — security audit (OWASP, STRIDE, supply chain, secrets)
+- `/review` — pre-landing PR diff review
+
+**Ship & deploy**
+- `/ship` — bump VERSION, update CHANGELOG, commit, push, open PR
+- `/land-and-deploy` — merge PR, wait for CI, verify production health
+- `/canary` — post-deploy monitoring against the live app
+- `/document-release` — sync docs to what shipped after a merge
+
+**Workflow**
+- `/investigate` — root-cause debugging (no fixes without root cause)
+- `/context-save` + `/context-restore` — checkpoint working state across sessions
+- `/learn` — review/prune project learnings
+- `/retro` — weekly engineering retrospective
+
+### When to use `/browse`
+
+Reach for `/browse` whenever you need to **see** the app — manual QA of a flow, verifying a deploy on https://paaaddy.github.io/apiario/, capturing before/after screenshots for a design change, or producing repro evidence for a bug. It's ~100ms per command, so it's cheap to use even for quick checks. For multi-step user flows or auth, pair with `/setup-browser-cookies`.
+
+### Use `/guard` for risky work
+
+Before touching production, debugging live systems, running migrations, or doing anything destructive, enable `/guard` (combines `/careful` + `/freeze`). It warns on `rm -rf`, `DROP TABLE`, force-push, `git reset --hard`, etc., **and** scopes edits to the directory you're working in so you don't accidentally "fix" unrelated code. For just one of the two, use `/careful` (warnings only) or `/freeze` (scope only). Clear with `/unfreeze` when done.
