@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.1.3](https://github.com/Paaaddy/apiario/compare/v2.1.2...v2.1.3) (2026-05-14)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group with 4 updates ([#45](https://github.com/Paaaddy/apiario/issues/45)) ([54e0e63](https://github.com/Paaaddy/apiario/commit/54e0e63858cb337b676190d5c0041e52869f2c9d))
+* **deps:** bump dependabot/fetch-metadata from 2.5.0 to 3.1.0 ([#44](https://github.com/Paaaddy/apiario/issues/44)) ([09f5fcf](https://github.com/Paaaddy/apiario/commit/09f5fcf8ba3707cf2fd7762f0b89433011982a51))
+* **deps:** bump react from 19.2.5 to 19.2.6 ([2b209af](https://github.com/Paaaddy/apiario/commit/2b209af3bed44fccb00bbba319db00bb6b561c20))
+* **deps:** bump react-dom from 19.2.5 to 19.2.6 ([#46](https://github.com/Paaaddy/apiario/issues/46)) ([0ff9b30](https://github.com/Paaaddy/apiario/commit/0ff9b30f4db05b6258f99ed22df52ac53a44f862))
+
 ## [2.1.2](https://github.com/Paaaddy/apiario/compare/v2.1.1...v2.1.2) (2026-05-05)
 
 
