@@ -2,6 +2,13 @@
 
 ## [2.1.4](https://github.com/Paaaddy/apiario/compare/v2.1.3...v2.1.4) (2026-05-15)
 
+
+### Performance Improvements
+
+* **core:** memoize inspection lookups, harden input limits ([53011ec](https://github.com/Paaaddy/apiario/commit/53011ec0ed495fa066755dd363a3b187be980d47))
+
+## [2.1.4](https://github.com/Paaaddy/apiario/compare/v2.1.3...v2.1.4) (2026-05-15)
+
 ### Performance
 
 * Precompute sorted byColony Map in useInspections — O(n) once instead of O(n log n) per lookup
