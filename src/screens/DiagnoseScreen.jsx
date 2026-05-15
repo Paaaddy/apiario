@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { validateDiagnosisTree } from '../utils/validateDiagnosis'
@@ -9,6 +9,10 @@ import LanguageToggle from '../components/LanguageToggle'
 import { useWakeLock } from '../hooks/useWakeLock'
 import { haptics } from '../utils/haptics'
 import HexWatermark from '../components/HexWatermark'
+
+if (import.meta.env.DEV) {
+  validateDiagnosisTree()
+}
 
 function routeFromInspection(inspection) {
   if (!inspection) return null
@@ -24,13 +28,15 @@ export default function DiagnoseScreen({ inspections = [] }) {
   const [currentNodeId, setCurrentNodeId] = useState('root')
   const [history, setHistory] = useState([])
 
-  const latestInspection = inspections.length > 0
-    ? inspections.slice().sort((a, b) => b.date.localeCompare(a.date))[0]
-    : null
-  const prefilledNodeId = routeFromInspection(latestInspection)
+  const latestInspection = useMemo(() =>
+    inspections.length > 0
+      ? [...inspections].sort((a, b) => b.date.localeCompare(a.date))[0]
+      : null,
+    [inspections]
+  )
+  const prefilledNodeId = useMemo(() => routeFromInspection(latestInspection), [latestInspection])
 
   useWakeLock(true)
-  useEffect(() => { validateDiagnosisTree() }, [])
 
   const node = diagnosisData[currentNodeId]
 

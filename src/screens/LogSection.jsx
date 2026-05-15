@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import { formatShortDate } from '../utils/format'
@@ -41,7 +41,7 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
     setShowForm(false)
   }
 
-  const grouped = groupByMonth(log)
+  const grouped = useMemo(() => groupByMonth(log), [log])
 
   return (
     <div className="mb-8">
@@ -60,6 +60,7 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
           <textarea
             className="w-full text-sm text-brown border border-amber-100 rounded-lg px-3 py-2 resize-none outline-none focus:border-honey"
             rows={2}
+            maxLength={500}
             placeholder={t(s.log_placeholder)}
             value={formText}
             onChange={(e) => setFormText(e.target.value)}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import InspectionForm from '../components/InspectionForm'
@@ -9,12 +9,9 @@ function daysSince(dateStr) {
   return Math.floor((now - d) / (1000 * 60 * 60 * 24))
 }
 
-function lastInspectedLabel(colonyId, inspections, t) {
-  const sorted = inspections
-    .filter((i) => i.colonyId === colonyId)
-    .sort((a, b) => b.date.localeCompare(a.date))
-  if (sorted.length === 0) return t(s.insp_never)
-  const days = daysSince(sorted[0].date)
+function lastInspectedLabel(latestInspection, t) {
+  if (!latestInspection) return t(s.insp_never)
+  const days = daysSince(latestInspection.date)
   if (days === 0) return t(s.insp_today)
   if (days === 1) return t(s.insp_yesterday)
   return t(s.insp_days_ago).replace('{n}', days)
@@ -29,6 +26,16 @@ export default function ColoniesSection({
   onAddInspection,
 }) {
   const { t } = useLanguage()
+
+  const latestByColony = useMemo(() => {
+    const map = new Map()
+    for (const i of inspections) {
+      const prev = map.get(i.colonyId)
+      if (!prev || i.date > prev.date) map.set(i.colonyId, i)
+    }
+    return map
+  }, [inspections])
+
   const [isAdding, setIsAdding] = useState(false)
   const [draftName, setDraftName] = useState('')
   const [draftNotes, setDraftNotes] = useState('')
@@ -100,6 +107,7 @@ export default function ColoniesSection({
             >
               <input
                 type="text"
+                maxLength={100}
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 placeholder={t(s.colonies_name_placeholder)}
@@ -107,6 +115,7 @@ export default function ColoniesSection({
                 aria-label={t(s.colonies_name_placeholder)}
               />
               <textarea
+                maxLength={300}
                 value={editNotes}
                 onChange={(e) => setEditNotes(e.target.value)}
                 placeholder={t(s.colonies_notes_placeholder)}
@@ -147,7 +156,7 @@ export default function ColoniesSection({
                     </p>
                   )}
                   <p className="mt-1 text-xs text-brown-mid/60">
-                    {t(s.insp_last_inspected)}: {lastInspectedLabel(colony.id, inspections, t)}
+                    {t(s.insp_last_inspected)}: {lastInspectedLabel(latestByColony.get(colony.id), t)}
                   </p>
                   {colony.createdAt && (
                     <p className="mt-0.5 text-xs text-brown-mid/40">
@@ -190,6 +199,7 @@ export default function ColoniesSection({
         <div className="bg-white border border-honey rounded-xl p-3 shadow-sm">
           <input
             type="text"
+            maxLength={100}
             value={draftName}
             onChange={(e) => setDraftName(e.target.value)}
             placeholder={t(s.colonies_name_placeholder)}
@@ -198,6 +208,7 @@ export default function ColoniesSection({
             autoFocus
           />
           <textarea
+            maxLength={300}
             value={draftNotes}
             onChange={(e) => setDraftNotes(e.target.value)}
             placeholder={t(s.colonies_notes_placeholder)}

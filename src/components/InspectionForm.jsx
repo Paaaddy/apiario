@@ -81,7 +81,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
       honeyStores,
       population,
       temperament,
-      varroa: varroaChecked ? (varroa === '' ? null : Number(varroa)) : null,
+      varroa: varroaChecked ? (varroa === '' ? null : (/^\d+(\.\d{1,2})?$/.test(varroa.trim()) ? Number(varroa) : null)) : null,
       treatment: treatment.trim() || null,
       notes: notes.trim() || null,
     })
@@ -247,6 +247,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
             <input
               type="number"
               min="0"
+              max="100"
               step="0.1"
               value={varroa}
               onChange={(e) => setVarroa(e.target.value)}
@@ -261,6 +262,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
           <input
             id="insp-treatment"
             type="text"
+            maxLength={500}
             value={treatment}
             onChange={(e) => setTreatment(e.target.value)}
             placeholder={t(s.insp_treatment_placeholder)}
@@ -272,6 +274,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
           <FieldLabel text={t(s.insp_notes_label)} htmlFor="insp-notes" />
           <textarea
             id="insp-notes"
+            maxLength={1000}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder={t(s.insp_notes_placeholder)}

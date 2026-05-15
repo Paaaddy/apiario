@@ -2,16 +2,6 @@ import { useState, useCallback, useRef, useEffect, useMemo, lazy, Suspense } fro
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
-import ErrorBoundary from './components/ErrorBoundary'
-import DebugPanel from './components/DebugPanel'
-
-const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
-const VALID_TABS = ['season', 'diagnose', 'inspect', 'myhive']
-function initialTab() {
-  if (typeof window === 'undefined') return 'season'
-  const q = new URLSearchParams(window.location.search).get('tab')
-  return VALID_TABS.includes(q) ? q : 'season'
-}
 import { useProfile } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
@@ -22,9 +12,27 @@ import { useSeason } from './hooks/useSeason'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
+import ErrorBoundary from './components/ErrorBoundary'
+import BottomNav from './components/BottomNav'
+import BeeFab from './components/BeeFab'
+import VoiceOverlay from './components/VoiceOverlay'
+import VoicePermissionModal from './components/VoicePermissionModal'
+import PwaInstallHint from './components/PwaInstallHint'
+import DebugPanel from './components/DebugPanel'
 
-// Locale → voice configuration. Keeping this outside the component
-// so the arrays don't get recreated on every render.
+const Onboarding    = lazy(() => import('./screens/Onboarding'))
+const SeasonScreen  = lazy(() => import('./screens/SeasonScreen'))
+const DiagnoseScreen = lazy(() => import('./screens/DiagnoseScreen'))
+const InspectScreen = lazy(() => import('./screens/InspectScreen'))
+const MyHiveScreen  = lazy(() => import('./screens/MyHiveScreen'))
+
+const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
+const VALID_TABS = ['season', 'diagnose', 'inspect', 'myhive']
+function initialTab() {
+  const q = new URLSearchParams(window.location.search).get('tab')
+  return VALID_TABS.includes(q) ? q : 'season'
+}
+
 const VOICE_CONFIG = {
   de: {
     lang: 'de-DE',
@@ -81,17 +89,6 @@ function matchCommand(transcript, commandMap) {
   }
   return null
 }
-
-import BottomNav from './components/BottomNav'
-import BeeFab from './components/BeeFab'
-import VoiceOverlay from './components/VoiceOverlay'
-import VoicePermissionModal from './components/VoicePermissionModal'
-import PwaInstallHint from './components/PwaInstallHint'
-const Onboarding = lazy(() => import('./screens/Onboarding'))
-const SeasonScreen = lazy(() => import('./screens/SeasonScreen'))
-const DiagnoseScreen = lazy(() => import('./screens/DiagnoseScreen'))
-const InspectScreen = lazy(() => import('./screens/InspectScreen'))
-const MyHiveScreen = lazy(() => import('./screens/MyHiveScreen'))
 
 function AppContent() {
   const { locale } = useLanguage()

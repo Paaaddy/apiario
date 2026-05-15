@@ -64,20 +64,30 @@ export function useInspections() {
     })
   }, [])
 
+  const byColony = useMemo(() => {
+    const map = new Map()
+    for (const e of inspections) {
+      const arr = map.get(e.colonyId)
+      if (arr) arr.push(e)
+      else map.set(e.colonyId, [e])
+    }
+    for (const arr of map.values()) {
+      arr.sort((a, b) => b.date.localeCompare(a.date))
+    }
+    return map
+  }, [inspections])
+
   const getColonyInspections = useCallback(
-    (colonyId) =>
-      [...inspections]
-        .filter((e) => e.colonyId === colonyId)
-        .sort((a, b) => b.date.localeCompare(a.date)),
-    [inspections]
+    (colonyId) => byColony.get(colonyId) ?? [],
+    [byColony]
   )
 
   const getLatestInspection = useCallback(
-    (colonyId) => getColonyInspections(colonyId)[0] ?? null,
-    [getColonyInspections]
+    (colonyId) => byColony.get(colonyId)?.[0] ?? null,
+    [byColony]
   )
 
-  const inspectionCount = useMemo(() => inspections.length, [inspections])
+  const inspectionCount = inspections.length
 
   return {
     inspections,
