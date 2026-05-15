@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.1.4](https://github.com/Paaaddy/apiario/compare/v2.1.3...v2.1.4) (2026-05-15)
+
+### Performance
+
+* Precompute sorted byColony Map in useInspections — O(n) once instead of O(n log n) per lookup
+* Memoize latestByColony in ColoniesSection, latestInspection and prefilledNodeId in DiagnoseScreen
+* Memoize groupByMonth in LogSection
+* Move DiagnoseScreen tree validation to module scope (was re-running on every tab mount)
+
+### Security
+
+* Add maxLength on all free-text inputs (colony name: 100, notes: 300/1000, treatment: 500, log: 500)
+* Add max="100" and regex guard on varroa number field before Number() coercion
+
+### Reliability
+
+* Consolidate App.jsx imports to top-level block; remove dead SSR guard in initialTab()
+
 ## [2.1.3](https://github.com/Paaaddy/apiario/compare/v2.1.2...v2.1.3) (2026-05-14)
 
 
