@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.5](https://github.com/Paaaddy/apiario/compare/v2.1.4...v2.1.5) (2026-05-20)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group across 1 directory with 2 updates ([#50](https://github.com/Paaaddy/apiario/issues/50)) ([93918df](https://github.com/Paaaddy/apiario/commit/93918df5639a3c3a1cfc89bdcb4736cfe7b04e5a))
+* **deps:** bump @onboardjs/core from 1.0.0-rc.3 to 1.0.0-rc.4 ([#52](https://github.com/Paaaddy/apiario/issues/52)) ([7f1d2e5](https://github.com/Paaaddy/apiario/commit/7f1d2e589ba4162ce5fe7c11d77b65450dad95c8))
+* **deps:** bump @onboardjs/react from 1.0.0-rc.3 to 1.0.0-rc.5 ([#51](https://github.com/Paaaddy/apiario/issues/51)) ([e6e83ff](https://github.com/Paaaddy/apiario/commit/e6e83ffb7987d86e70d6b3602a3fda4bed06b6f8))
+
 ## [2.1.4](https://github.com/Paaaddy/apiario/compare/v2.1.3...v2.1.4) (2026-05-15)
 
 
