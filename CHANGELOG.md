@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.1.6](https://github.com/Paaaddy/apiario/compare/v2.1.5...v2.1.6) (2026-06-30)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump @types/react in the dev-dependencies group ([#58](https://github.com/Paaaddy/apiario/issues/58)) ([9ec4384](https://github.com/Paaaddy/apiario/commit/9ec43845ad69bf9c858eafbebd1e31ae9d0dcba7))
+* **deps-dev:** bump the dev-dependencies group across 1 directory with 5 updates ([#65](https://github.com/Paaaddy/apiario/issues/65)) ([1cbdd37](https://github.com/Paaaddy/apiario/commit/1cbdd3784fd2f9dd870482c4bc1744536601505b))
+* **deps-dev:** bump the dev-dependencies group with 3 updates ([#54](https://github.com/Paaaddy/apiario/issues/54)) ([b427ea2](https://github.com/Paaaddy/apiario/commit/b427ea2ba0090b66f386f4e3ea9cba22b606c9fa))
+* **deps-dev:** bump the dev-dependencies group with 4 updates ([#55](https://github.com/Paaaddy/apiario/issues/55)) ([23720ec](https://github.com/Paaaddy/apiario/commit/23720ec7066f79eba7b0077824d6de0bd7370eb0))
+* **deps-dev:** bump the dev-dependencies group with 4 updates ([#61](https://github.com/Paaaddy/apiario/issues/61)) ([8173d38](https://github.com/Paaaddy/apiario/commit/8173d3885d1c0273179edd8e4062ba8a2fc6786a))
+* **deps-dev:** bump undici from 7.25.0 to 7.28.0 ([#62](https://github.com/Paaaddy/apiario/issues/62)) ([66147ed](https://github.com/Paaaddy/apiario/commit/66147edd78828737ee84451c3c84ab18cf2dd0eb))
+* **deps:** bump actions/checkout from 6 to 7 ([#63](https://github.com/Paaaddy/apiario/issues/63)) ([0622b4b](https://github.com/Paaaddy/apiario/commit/0622b4b1c04c5628daaa03ddd764af2362368134))
+* **deps:** bump esbuild and vite ([#59](https://github.com/Paaaddy/apiario/issues/59)) ([7046a7e](https://github.com/Paaaddy/apiario/commit/7046a7ef5a35692d5369f2cad6e383ea6a989b73))
+* **deps:** bump react-dom from 19.2.6 to 19.2.7 ([#57](https://github.com/Paaaddy/apiario/issues/57)) ([6f2101a](https://github.com/Paaaddy/apiario/commit/6f2101ade09d8c7c0790f84fd17a7653f75a86a8))
+* **deps:** upgrade @babel/core to &gt;=7.29.6 via override ([f88b5a1](https://github.com/Paaaddy/apiario/commit/f88b5a1031068c964a4a007177dae8031d508e2f))
+
 ## [2.1.5](https://github.com/Paaaddy/apiario/compare/v2.1.4...v2.1.5) (2026-05-20)
 
 
