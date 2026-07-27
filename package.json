@@ -20,7 +20,7 @@
     "@onboardjs/core": "^1.0.0-rc.4",
     "@onboardjs/react": "^1.0.0-rc.5",
     "react": "^19.2.6",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.8"
   },
   "overrides": {
     "@babel/core": ">=7.29.6"
