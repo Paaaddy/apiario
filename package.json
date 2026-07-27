@@ -19,7 +19,7 @@
     "@fontsource/playfair-display": "^5.2.8",
     "@onboardjs/core": "^1.0.0-rc.4",
     "@onboardjs/react": "^1.0.0-rc.5",
-    "react": "^19.2.6",
+    "react": "^19.2.8",
     "react-dom": "^19.2.7"
   },
   "overrides": {
