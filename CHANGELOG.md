@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.7](https://github.com/Paaaddy/apiario/compare/v2.1.6...v2.1.7) (2026-08-02)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump fast-uri from 3.1.2 to 3.1.4 ([#71](https://github.com/Paaaddy/apiario/issues/71)) ([817264e](https://github.com/Paaaddy/apiario/commit/817264e85b6b79a97401b56c094d21b725601171))
+* **deps-dev:** bump postcss from 8.5.16 to 8.5.23 ([#75](https://github.com/Paaaddy/apiario/issues/75)) ([e056034](https://github.com/Paaaddy/apiario/commit/e056034cce310a245901a5a19793002bc331bf42))
+* **deps-dev:** bump the dev-dependencies group across 1 directory with 6 updates ([#76](https://github.com/Paaaddy/apiario/issues/76)) ([8c6aa34](https://github.com/Paaaddy/apiario/commit/8c6aa3439a6245c0cf1f528695d978b02842e870))
+* **deps-dev:** bump the dev-dependencies group with 3 updates ([#66](https://github.com/Paaaddy/apiario/issues/66)) ([be51abe](https://github.com/Paaaddy/apiario/commit/be51abe6c5d587a26cb05dd3e85dfb594589f580))
+* **deps:** bump actions/setup-node from 6 to 7 ([#68](https://github.com/Paaaddy/apiario/issues/68)) ([b84da9c](https://github.com/Paaaddy/apiario/commit/b84da9cc266c898ea12a67252f295178ba45d667))
+* **deps:** bump react-dom from 19.2.7 to 19.2.8 ([#72](https://github.com/Paaaddy/apiario/issues/72)) ([1fc2809](https://github.com/Paaaddy/apiario/commit/1fc2809b4122f37684b5718d38d367fd30c0297f))
+* **deps:** bump the fontsource group across 1 directory with 4 updates ([#69](https://github.com/Paaaddy/apiario/issues/69)) ([efb8d67](https://github.com/Paaaddy/apiario/commit/efb8d672b63322d4191ef4ae6c174b32bd975104))
+
 ## [2.1.6](https://github.com/Paaaddy/apiario/compare/v2.1.5...v2.1.6) (2026-06-30)
 
 
