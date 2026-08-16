@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.9](https://github.com/Paaaddy/apiario/compare/v2.1.8...v2.1.9) (2026-08-16)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump brace-expansion from 2.1.0 to 2.1.4 ([#80](https://github.com/Paaaddy/apiario/issues/80)) ([d2cca56](https://github.com/Paaaddy/apiario/commit/d2cca56a9f5b9201505be3116cb89f150c2f4d02))
+* **deps-dev:** bump the dev-dependencies group with 5 updates ([#81](https://github.com/Paaaddy/apiario/issues/81)) ([5260374](https://github.com/Paaaddy/apiario/commit/5260374eaec44a7db327d4f8a70d0d089afea60f))
+
 ## [2.1.8](https://github.com/Paaaddy/apiario/compare/v2.1.7...v2.1.8) (2026-08-04)
 
 
