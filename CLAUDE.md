@@ -160,3 +160,13 @@ Reach for `/browse` whenever you need to **see** the app — manual QA of a flow
 ### Use `/guard` for risky work
 
 Before touching production, debugging live systems, running migrations, or doing anything destructive, enable `/guard` (combines `/careful` + `/freeze`). It warns on `rm -rf`, `DROP TABLE`, force-push, `git reset --hard`, etc., **and** scopes edits to the directory you're working in so you don't accidentally "fix" unrelated code. For just one of the two, use `/careful` (warnings only) or `/freeze` (scope only). Clear with `/unfreeze` when done.
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues (Paaaddy/apiario), via `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` + `docs/adr/` at repo root. See `docs/agents/domain.md`.
