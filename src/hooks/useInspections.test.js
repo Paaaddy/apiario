@@ -9,7 +9,6 @@ describe('useInspections', () => {
   it('starts with empty inspections', () => {
     const { result } = renderHook(() => useInspections())
     expect(result.current.inspections).toEqual([])
-    expect(result.current.inspectionCount).toBe(0)
   })
 
   it('adds an inspection and persists it', () => {

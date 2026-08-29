@@ -3,12 +3,17 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { useSeason } from '../hooks/useSeason'
 import { strings as s } from '../i18n/strings'
+import { validateSeasonsTree } from '../utils/validateSeasons'
 import TaskCard from '../components/TaskCard'
 import HexWatermark from '../components/HexWatermark'
 import LanguageToggle from '../components/LanguageToggle'
 import SeasonHeader from '../components/SeasonHeader'
 import { addWeeks, isSameIsoWeek } from '../utils/season'
 import { haptics } from '../utils/haptics'
+
+if (import.meta.env.DEV) {
+  validateSeasonsTree()
+}
 
 function formatDayMonth(date, locale) {
   if (!date) return ''

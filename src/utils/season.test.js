@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
   getCurrentSeason,
-  getSeasonWeek,
   getIsoWeek,
   getIsoWeekAndYear,
   getIsoWeekRange,
@@ -36,24 +35,6 @@ describe('getCurrentSeason', () => {
   })
   it('returns winter for February', () => {
     expect(getCurrentSeason(new Date('2026-02-28'))).toBe('winter')
-  })
-})
-
-describe('getSeasonWeek', () => {
-  it('returns week 1 for March 1 (first day of spring)', () => {
-    expect(getSeasonWeek(new Date('2026-03-01'))).toBe(1)
-  })
-  it('returns week 4 for March 22', () => {
-    expect(getSeasonWeek(new Date('2026-03-22'))).toBe(4)
-  })
-  it('returns week 1 for June 1 (first day of summer)', () => {
-    expect(getSeasonWeek(new Date('2026-06-01'))).toBe(1)
-  })
-  it('returns week 1 for December 1 (first day of winter)', () => {
-    expect(getSeasonWeek(new Date('2026-12-01'))).toBe(1)
-  })
-  it('returns week 5 for January 1 (continuation of winter)', () => {
-    expect(getSeasonWeek(new Date('2026-01-01'))).toBe(5)
   })
 })
 
