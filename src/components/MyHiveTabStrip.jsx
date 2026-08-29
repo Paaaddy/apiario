@@ -1,5 +1,6 @@
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
+import { themeColors } from '../utils/themeTokens'
 
 const TABS = [
   { id: 'colonies',    key: 'tab_colonies'    },
@@ -10,10 +11,11 @@ const TABS = [
 
 export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) {
   const { t } = useLanguage()
+  const c = themeColors(theme)
 
   if (theme === 'b') {
     return (
-      <div style={{ display: 'flex', borderBottom: '1px solid #c8b890', gap: 0, marginTop: 10 }}>
+      <div style={{ display: 'flex', borderBottom: `1px solid ${c.rule}`, gap: 0, marginTop: 10 }}>
         {TABS.map(({ id, key }) => {
           const active = activeTab === id
           return (
@@ -27,12 +29,12 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
                 padding: '8px 4px',
                 background: 'none',
                 border: 'none',
-                borderBottom: active ? '2px solid #2b1d0e' : '2px solid transparent',
+                borderBottom: active ? `2px solid ${c.ink}` : '2px solid transparent',
                 fontFamily: 'var(--theme-font-mono)',
                 fontSize: 10,
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
-                color: active ? '#2b1d0e' : '#6b5838',
+                color: active ? c.ink : c.inkMid,
                 fontWeight: active ? 700 : 400,
                 cursor: 'pointer',
                 marginBottom: -1,
@@ -63,9 +65,9 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
                 padding: '7px 6px',
                 borderRadius: 20,
                 border: 'none',
-                background: active ? 'rgba(245,166,35,0.85)' : 'rgba(28,20,16,0.06)',
+                background: active ? c.tabActiveBg : 'rgba(28,20,16,0.06)',
                 backdropFilter: 'blur(8px)',
-                color: active ? '#1c1410' : '#6b5843',
+                color: active ? c.tabActiveColor : c.tabInactiveColor,
                 fontSize: 12,
                 fontWeight: active ? 700 : 400,
                 cursor: 'pointer',
@@ -97,8 +99,8 @@ export default function MyHiveTabStrip({ activeTab, onTabChange, theme = 'a' }) 
               padding: '6px 4px',
               borderRadius: 8,
               border: 'none',
-              background: active ? '#3d1f00' : 'rgba(255,255,255,0.35)',
-              color: active ? '#f5a623' : '#92400e',
+              background: active ? c.tabActiveBg : 'rgba(255,255,255,0.35)',
+              color: active ? c.tabActiveColor : c.tabInactiveColor,
               fontSize: 11,
               fontWeight: active ? 700 : 500,
               cursor: 'pointer',

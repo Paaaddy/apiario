@@ -3,7 +3,10 @@
  * Each segment is ≥44px for mobile tap targets.
  * Tap the same value again to deselect (returns null).
  */
+import { themeColors } from '../utils/themeTokens'
+
 export default function InspectionScaleInput({ value, onChange, theme = 'a', labelId }) {
+  const c = themeColors(theme)
   return (
     <div style={{ display: 'flex', gap: 8 }} role="group" aria-labelledby={labelId}>
       {[1, 2, 3, 4, 5].map((n) => {
@@ -21,15 +24,11 @@ export default function InspectionScaleInput({ value, onChange, theme = 'a', lab
               borderRadius: theme === 'b' ? 4 : '50%',
               border: selected
                 ? 'none'
-                : `2px solid ${theme === 'c' ? 'rgba(255,255,255,0.3)' : '#d6a84e'}`,
+                : `2px solid ${c.scaleBorder}`,
               background: selected
-                ? theme === 'b'
-                  ? '#6f7f56'
-                  : theme === 'c'
-                  ? 'rgba(245,166,35,0.7)'
-                  : '#f5a623'
+                ? c.scaleActiveBg
                 : 'transparent',
-              color: selected ? '#fff' : theme === 'c' ? 'rgba(255,255,255,0.5)' : '#92400e',
+              color: selected ? '#fff' : c.scaleColor,
               fontWeight: 700,
               fontSize: 15,
               cursor: 'pointer',

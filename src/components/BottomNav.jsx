@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
+import { themeColors } from '../utils/themeTokens'
 
 function SproutIcon({ active }) {
   const c = active ? '#2b1d0e' : '#98876b'
@@ -53,6 +54,7 @@ function ClipboardIcon({ active }) {
 const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
+  const c = themeColors(theme)
 
   const TABS = useMemo(() => [
     { key: 'season',   label: t(s.nav_season),   emoji: '📅', Icon: SproutIcon },
@@ -91,7 +93,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
                   background: isActive ? '#fff' : 'transparent',
                   borderRadius: 999,
                   border: 'none',
-                  color: isActive ? '#1c1410' : 'rgba(255,255,255,0.9)',
+                  color: isActive ? c.navActiveColor : c.navInactiveColor,
                   fontSize: 12.5,
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -149,7 +151,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
                   top: -11,
                   width: 24,
                   height: 3,
-                  background: '#2b1d0e',
+                  background: c.ink,
                   borderRadius: 2,
                 }} />
               )}
@@ -159,7 +161,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
                 fontSize: 10.5,
                 letterSpacing: '1.5px',
                 textTransform: 'uppercase',
-                color: isActive ? '#2b1d0e' : '#98876b',
+                color: isActive ? c.ink : c.inkLight,
                 fontWeight: isActive ? 700 : 400,
               }}>{label}</span>
             </button>
@@ -181,14 +183,14 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
             onClick={() => onTabChange(key)}
             aria-current={isActive ? 'page' : undefined}
             className="flex-1 flex flex-col items-center py-2 gap-0.5 text-xs font-medium transition-colors"
-            style={{ color: isActive ? '#3d1f00' : '#6b7280', minHeight: 44 }}
+            style={{ color: isActive ? c.navActiveColor : c.navInactiveColor, minHeight: 44 }}
           >
             <div style={{ position: 'relative', width: 40, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {isActive && (
                 <div aria-hidden="true" style={{
                   position: 'absolute',
                   inset: 0,
-                  background: '#f5a623',
+                  background: c.navHex,
                   clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
                 }} />
               )}

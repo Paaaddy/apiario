@@ -10,6 +10,7 @@ import LanguageToggle from '../components/LanguageToggle'
 import { useWakeLock } from '../hooks/useWakeLock'
 import { haptics } from '../utils/haptics'
 import HexWatermark from '../components/HexWatermark'
+import { themeColors } from '../utils/themeTokens'
 
 if (import.meta.env.DEV) {
   validateDiagnosisTree()
@@ -26,6 +27,7 @@ function routeFromInspection(inspection) {
 export default function DiagnoseScreen({ inspections = [] }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
+  const c = themeColors(theme)
   const [currentNodeId, setCurrentNodeId] = useState('root')
   const [history, setHistory] = useState([])
 
@@ -57,9 +59,9 @@ export default function DiagnoseScreen({ inspections = [] }) {
   if (theme === 'c') {
     if (node.type === 'outcome') {
       return (
-        <div style={{ minHeight: '100%', background: '#1c1410', position: 'relative' }}>
+        <div style={{ minHeight: '100%', background: c.diagnoseBg, position: 'relative' }}>
           <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 20%, rgba(245,166,35,0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(232,123,160,0.13) 0%, transparent 60%)', pointerEvents: 'none' }} />
-          <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1c1410', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: c.diagnoseBg, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <h1 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 22, fontWeight: 700, color: '#fff' }}>🔎 {t(s.diagnose_title)}</h1>
             <LanguageToggle />
           </div>
@@ -71,9 +73,9 @@ export default function DiagnoseScreen({ inspections = [] }) {
     }
 
     return (
-      <div style={{ minHeight: '100%', background: '#1c1410', position: 'relative' }}>
+      <div style={{ minHeight: '100%', background: c.diagnoseBg, position: 'relative' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 20%, rgba(245,166,35,0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(232,123,160,0.13) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#1c1410', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: c.diagnoseBg, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', fontSize: 11, color: '#fff', letterSpacing: 1, textTransform: 'uppercase', fontWeight: 600 }}>
             🔎 {t(s.diagnose_step)} {stepLabel}/06
           </div>
@@ -81,7 +83,7 @@ export default function DiagnoseScreen({ inspections = [] }) {
         </div>
         <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={6} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} style={{ position: 'relative', padding: '18px 22px 0', display: 'flex', gap: 5 }}>
           {Array.from({ length: 6 }, (_, i) => (
-            <div aria-hidden="true" key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i < stepNumber ? '#f5a623' : 'rgba(255,255,255,0.12)' }} />
+            <div aria-hidden="true" key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i < stepNumber ? c.accent : 'rgba(255,255,255,0.12)' }} />
           ))}
         </div>
         <div style={{ position: 'relative', padding: '22px 24px 12px' }}>
@@ -94,7 +96,7 @@ export default function DiagnoseScreen({ inspections = [] }) {
             <button
               type="button"
               onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
-              style={{ width: '100%', textAlign: 'left', padding: '14px 18px', borderRadius: 16, background: 'rgba(245,166,35,0.15)', border: '1px solid rgba(245,166,35,0.4)', color: '#f5a623', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+              style={{ width: '100%', textAlign: 'left', padding: '14px 18px', borderRadius: 16, background: 'rgba(245,166,35,0.15)', border: '1px solid rgba(245,166,35,0.4)', color: c.accent, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
             >
               🔍 {t(s.diagnose_from_inspection)}
             </button>
@@ -106,12 +108,12 @@ export default function DiagnoseScreen({ inspections = [] }) {
               style={{ width: '100%', textAlign: 'left', padding: '18px 20px', borderRadius: 20, background: '#fff', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.25)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}
             >
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: '#6b5843', letterSpacing: 1, marginBottom: 4 }}>
+                <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: c.inkMid, letterSpacing: 1, marginBottom: 4 }}>
                   {String(i + 1).padStart(2, '0')}
                 </div>
-                <span style={{ fontFamily: '"Playfair Display", serif', fontSize: 18, color: '#1c1410', lineHeight: 1.2 }}>{t(option.label)}</span>
+                <span style={{ fontFamily: '"Playfair Display", serif', fontSize: 18, color: c.ink, lineHeight: 1.2 }}>{t(option.label)}</span>
               </div>
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#1c1410', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: '#fff', fontSize: 16 }}>›</div>
+              <div style={{ width: 36, height: 36, borderRadius: '50%', background: c.diagnoseBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: '#fff', fontSize: 16 }}>›</div>
             </button>
           ))}
           <button onClick={handleReset}
@@ -127,15 +129,15 @@ export default function DiagnoseScreen({ inspections = [] }) {
   if (theme === 'b') {
     if (node.type === 'outcome') {
       return (
-        <div style={{ minHeight: '100%', background: '#f4ecd8' }}>
-          <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890' }}>
+        <div style={{ minHeight: '100%', background: c.bg }}>
+          <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: c.bg, borderBottom: `1px solid ${c.rule}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: '#6b5838' }}>
+              <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: c.inkMid }}>
                 {t(s.diagnose_title)}
               </p>
               <LanguageToggle />
             </div>
-            <h1 style={{ margin: '12px 0 0', fontFamily: 'var(--theme-font-head)', fontSize: 32, fontWeight: 400, color: '#2b1d0e', letterSpacing: -0.3 }}>
+            <h1 style={{ margin: '12px 0 0', fontFamily: 'var(--theme-font-head)', fontSize: 32, fontWeight: 400, color: c.ink, letterSpacing: -0.3 }}>
               🔎 {t(s.diagnose_title)}
             </h1>
           </div>
@@ -145,23 +147,23 @@ export default function DiagnoseScreen({ inspections = [] }) {
     }
 
     return (
-      <div style={{ minHeight: '100%', background: '#f4ecd8' }}>
-        <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890' }}>
+      <div style={{ minHeight: '100%', background: c.bg }}>
+        <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: c.bg, borderBottom: `1px solid ${c.rule}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: '#6b5838' }}>
+            <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: c.inkMid }}>
               {t(s.diagnose_title)} · {t(s.diagnose_step)} {stepLabel}/06
             </p>
             <LanguageToggle />
           </div>
           <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={6} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} style={{ display: 'flex', gap: 5, marginTop: 14 }}>
             {Array.from({ length: 6 }, (_, i) => (
-              <div aria-hidden="true" key={i} style={{ flex: 1, height: 2, background: i < stepNumber ? '#2b1d0e' : '#c8b890' }} />
+              <div aria-hidden="true" key={i} style={{ flex: 1, height: 2, background: i < stepNumber ? c.ink : c.rule }} />
             ))}
           </div>
-          <h1 style={{ margin: '18px 0 4px', fontFamily: 'var(--theme-font-head)', fontSize: 26, fontWeight: 400, color: '#2b1d0e', lineHeight: 1.2 }}>
+          <h1 style={{ margin: '18px 0 4px', fontFamily: 'var(--theme-font-head)', fontSize: 26, fontWeight: 400, color: c.ink, lineHeight: 1.2 }}>
             {t(node.question)}
           </h1>
-          <p style={{ margin: '4px 0 0', fontSize: 12, color: '#98876b', fontStyle: 'italic', fontFamily: 'var(--theme-font-head)' }}>
+          <p style={{ margin: '4px 0 0', fontSize: 12, color: c.inkLight, fontStyle: 'italic', fontFamily: 'var(--theme-font-head)' }}>
             {t(s.diagnose_step)} {stepNumber}
           </p>
         </div>
@@ -170,7 +172,7 @@ export default function DiagnoseScreen({ inspections = [] }) {
             <button
               type="button"
               onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
-              style={{ width: '100%', textAlign: 'left', marginBottom: 12, padding: '12px 14px', background: '#f4ecd8', border: '1px solid #c8b890', borderRadius: 4, fontFamily: 'var(--theme-font-head)', fontSize: 14, color: '#2b1d0e', cursor: 'pointer' }}
+              style={{ width: '100%', textAlign: 'left', marginBottom: 12, padding: '12px 14px', background: c.bg, border: `1px solid ${c.rule}`, borderRadius: 4, fontFamily: 'var(--theme-font-head)', fontSize: 14, color: c.ink, cursor: 'pointer' }}
             >
               🔍 {t(s.diagnose_from_inspection)}
             </button>
@@ -184,17 +186,17 @@ export default function DiagnoseScreen({ inspections = [] }) {
               onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option.next)}
               style={{ padding: '16px 4px', borderBottom: '1px solid rgba(200,184,144,0.4)', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }}
             >
-              <span style={{ fontFamily: 'var(--theme-font-mono)', fontSize: 10, color: '#98876b', width: 22, flexShrink: 0 }}>
+              <span style={{ fontFamily: 'var(--theme-font-mono)', fontSize: 10, color: c.inkLight, width: 22, flexShrink: 0 }}>
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span style={{ flex: 1, fontFamily: 'var(--theme-font-head)', fontSize: 17, color: '#2b1d0e', lineHeight: 1.3 }}>{t(option.label)}</span>
-              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#98876b" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <span style={{ flex: 1, fontFamily: 'var(--theme-font-head)', fontSize: 17, color: c.ink, lineHeight: 1.3 }}>{t(option.label)}</span>
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={c.inkLight} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 6l6 6-6 6"/>
               </svg>
             </div>
           ))}
           <button onClick={handleReset}
-            style={{ marginTop: 20, background: 'none', border: '1px solid #c8b890', borderRadius: 2, color: '#6b5838', padding: '8px 14px', fontSize: 11, letterSpacing: '1.5px', fontFamily: 'var(--theme-font-mono)', textTransform: 'uppercase', cursor: 'pointer' }}>
+            style={{ marginTop: 20, background: 'none', border: `1px solid ${c.rule}`, borderRadius: 2, color: c.inkMid, padding: '8px 14px', fontSize: 11, letterSpacing: '1.5px', fontFamily: 'var(--theme-font-mono)', textTransform: 'uppercase', cursor: 'pointer' }}>
             ↺ {t(s.diagnose_restart)}
           </button>
         </div>
