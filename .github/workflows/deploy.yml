@@ -63,7 +63,11 @@ jobs:
       # footer that were showing up as warnings in CI. --prefer-offline
       # is harmless when the npm cache is cold and speeds up the step
       # when it is warm.
-      - run: npm ci --no-audit --no-fund --prefer-offline
+      - run: npm ci --no-fund --prefer-offline
+
+      # Audit gate: fail on high/critical vulnerabilities in production deps.
+      # Runs after install but before tests so CI fails fast on supply-chain issues.
+      - run: npm audit --omit=dev --audit-level=high
 
       # Tests gate the deploy. Without this, a compromised dependency that
       # builds cleanly would auto-merge via dependabot-automerge.yml and
