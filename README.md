@@ -31,7 +31,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 | Fonts | @fontsource (self-hosted, precached) |
 | State | React context + localStorage |
 | Voice | Web Speech API |
-| Tests | Vitest + Testing Library (253 tests) |
+| Tests | Vitest + Testing Library (273 tests) |
 | Deploy | GitHub Actions → GitHub Pages |
 
 ---
@@ -42,7 +42,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 npm install
 npm run dev              # http://localhost:5173
 npm run dev -- --host    # expose on local network
-npm run test:run         # run all tests (253 tests, 33 suites)
+npm run test:run         # run all tests (273 tests, 36 suites)
 npm run build            # production build
 npm run lint             # ESLint
 ```

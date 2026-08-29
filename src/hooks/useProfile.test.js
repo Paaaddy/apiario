@@ -181,6 +181,15 @@ describe('useProfile', () => {
       expect(buildSeededColonies(0)).toEqual([])
       expect(buildSeededColonies(null)).toEqual([])
     })
+
+    it('appends ids past the highest existing suffix, avoiding collisions on gaps', () => {
+      const existing = [{ id: 'col-1', name: 'A', createdAt: '2026-01-01', notes: '' }, { id: 'col-3', name: 'B', createdAt: '2026-01-01', notes: '' }]
+      const colonies = buildSeededColonies(5, existing)
+      expect(colonies).toHaveLength(5)
+      const ids = colonies.map((c) => c.id)
+      expect(ids).toEqual(['col-1', 'col-3', 'col-4', 'col-5', 'col-6'])
+      expect(colonies[4]).toMatchObject({ id: 'col-6', name: 'Hive 6' })
+    })
   })
 
   describe('onboarding colony seeding', () => {
