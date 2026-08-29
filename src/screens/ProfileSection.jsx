@@ -118,6 +118,27 @@ function DataBackupSection({ theme }) {
   )
 }
 
+function PrivacyDisclosure() {
+  const { t } = useLanguage()
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <h3 style={{ fontFamily: 'var(--theme-font-head, serif)', fontSize: 12, fontWeight: 600, color: 'var(--theme-ink-mid, #92400e)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8, marginTop: 0 }}>
+        {t(s.privacy_title)}
+      </h3>
+      <p style={{ margin: '0 0 8px', fontSize: 12.5, color: 'var(--theme-ink-mid, #92400e)', lineHeight: 1.4 }}>
+        {t(s.privacy_body)}
+      </p>
+      <p style={{ margin: '0 0 8px', fontSize: 12.5, color: 'var(--theme-ink-mid, #92400e)', lineHeight: 1.4 }}>
+        {t(s.privacy_delete_warning)}
+      </p>
+      <p style={{ margin: 0, fontSize: 12.5, color: 'var(--theme-ink-mid, #92400e)', lineHeight: 1.4 }}>
+        {t(s.privacy_export_pointer)}
+      </p>
+    </div>
+  )
+}
+
 export default function ProfileSection({ profile, onUpdate }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
@@ -169,6 +190,7 @@ export default function ProfileSection({ profile, onUpdate }) {
         theme={theme}
       />
       <DataBackupSection theme={theme} />
+      <PrivacyDisclosure />
     </div>
   )
 }

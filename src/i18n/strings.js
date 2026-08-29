@@ -76,6 +76,12 @@ export const strings = {
   data_import_error_format:     { de: 'Keine Apiario-Sicherung.',         en: 'Not an Apiario backup file.'      },
   data_import_error_unexpected: { de: 'Beim Import ist etwas schiefgelaufen.', en: 'Something went wrong during import.' },
 
+  // Privacy disclosure
+  privacy_title:            { de: 'Datenschutz',                       en: 'Your data'                       },
+  privacy_body:             { de: 'Alle deine Daten – Profil, Völker, Kontrollen und Verlauf – werden ausschließlich auf diesem Gerät gespeichert (localStorage). Es werden keine Daten an einen Server gesendet; es gibt kein Cloud-Backup.', en: 'All your data – profile, colonies, inspections and history – is stored exclusively on this device (localStorage). No data is ever sent to a server; there is no cloud backup.' },
+  privacy_delete_warning:   { de: 'Wenn du die App löschst oder die Browserdaten dieser Seite entfernst, gehen deine Daten unwiderruflich verloren.', en: 'If you delete the app or clear this site\u2019s browser data, your data will be lost permanently.' },
+  privacy_export_pointer:   { de: 'Nutze die „Datensicherung"-Funktion oben, um deine Daten regelmäßig als Datei zu exportieren.', en: 'Use the "Data & backup" section above to regularly export your data as a file.' },
+
   // Diagnosis
   diagnose_title:      { de: 'Diagnose',                       en: 'Diagnosis'                    },
   diagnose_step:       { de: 'Schritt',                        en: 'Step'                         },
