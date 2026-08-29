@@ -26,6 +26,22 @@ function nextColonyId(existing) {
   return `col-${max + 1}`
 }
 
+export function buildSeededColonies(count, existing = []) {
+  const remaining = Math.max(0, Number(count) || 0) - (existing ?? []).length
+  if (remaining <= 0) return existing ?? []
+  const createdAt = today()
+  const start = (existing ?? []).length
+  return [
+    ...(existing ?? []),
+    ...Array.from({ length: remaining }, (_, i) => ({
+      id: `col-${start + i + 1}`,
+      name: `Hive ${start + i + 1}`,
+      createdAt,
+      notes: '',
+    })),
+  ]
+}
+
 function saveProfile(state) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)) } catch {}
 }
@@ -46,14 +62,7 @@ function migrate(profile) {
 
   // v1 → v2: add a `colonies` array, seeded from `hiveCount` if present.
   if (v < 2) {
-    const count = Math.max(0, Number(p.hiveCount) || 0)
-    const createdAt = today()
-    p.colonies = Array.from({ length: count }, (_, i) => ({
-      id: `col-${i + 1}`,
-      name: `Hive ${i + 1}`,
-      createdAt,
-      notes: '',
-    }))
+    p.colonies = buildSeededColonies(p.hiveCount)
     p.schemaVersion = 2
     v = 2
   }
