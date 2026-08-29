@@ -74,8 +74,6 @@
 
 * **core:** memoize inspection lookups, harden input limits ([53011ec](https://github.com/Paaaddy/apiario/commit/53011ec0ed495fa066755dd363a3b187be980d47))
 
-## [2.1.4](https://github.com/Paaaddy/apiario/compare/v2.1.3...v2.1.4) (2026-05-15)
-
 ### Performance
 
 * Precompute sorted byColony Map in useInspections — O(n) once instead of O(n log n) per lookup
@@ -116,14 +114,6 @@
 
 * add Inspect nav tab, fix theme parity across all three themes ([b9b44a8](https://github.com/Paaaddy/apiario/commit/b9b44a8e9714c620d998a6780508fa553776c6a5))
 
-
-### Bug Fixes
-
-* fix InspectionCard theme C contrast — use dark-on-light colors to match light background ([f82ef16](https://github.com/Paaaddy/apiario/commit/f82ef16843b612143888903b5f66af2359f37e72))
-* pre-landing review fixes — extract shared getButtonStyle, fix theme C contrast in InspectionTab ([ce21479](https://github.com/Paaaddy/apiario/commit/ce21479b4eb818250fb723ebe363f5912a638249))
-
-## [2.1.0] - 2026-05-04
-
 ### Added
 
 * **Inspect tab** — a dedicated top-level tab for inspections, accessible directly from the bottom navigation. Previously, inspections were only reachable through My Hive → Inspections.
@@ -140,6 +130,11 @@
 
 * Theme C contrast: add-inspection button was white text on near-white background — now uses readable dark-on-light styling.
 * InspectionCard text was white-on-transparent in theme C on a light background — now consistent with InspectionTab.
+
+### Bug Fixes
+
+* fix InspectionCard theme C contrast — use dark-on-light colors to match light background ([f82ef16](https://github.com/Paaaddy/apiario/commit/f82ef16843b612143888903b5f66af2359f37e72))
+* pre-landing review fixes — extract shared getButtonStyle, fix theme C contrast in InspectionTab ([ce21479](https://github.com/Paaaddy/apiario/commit/ce21479b4eb818250fb723ebe363f5912a638249))
 
 ### For contributors
 

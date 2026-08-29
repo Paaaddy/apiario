@@ -32,6 +32,7 @@ Single-page, tab-based. `ThemeProvider` wraps everything, then `LanguageProvider
 - **Profile** (`useProfile`): localStorage under `apiario-profile`. Shape: `{ schemaVersion, hiveCount, climateZone, experience, onboardingDone, colonies[] }`. `schemaVersion` enables future migrations via `migrate()`. `experience` is a numeric level used to filter tasks. `colonies` is an array of `{ id, name, notes, createdAt }` objects managed via `addColony`, `updateColony`, `removeColony` helpers exposed by the hook.
 - **Locale** (`LanguageContext`): localStorage under `apiario-locale`. Defaults to `'de'`. `t()` resolves `{ de, en }` bilingual objects or passes plain strings through unchanged.
 - **Theme** (`ThemeContext`): localStorage under `apiario-theme`. Values: `'a'` (Honeycomb, default), `'b'` (Field Notebook), `'c'` (Seasonal Light). Sets `data-theme` attribute on `<html>` for CSS variable cascade. `useTheme()` returns `{ theme, setTheme }`.
+- **Context split convention**: each context is split into a primitive module (`src/context/*-context.js`, exports the raw `createContext(...)` only) and a provider module (`src/context/*Context.jsx`, exports the `*Provider` component). This keeps the provider file component-only, satisfying `react-refresh/only-export-components` and preserving Fast Refresh.
 - **Task log** (`useTaskLog`): localStorage under `apiario-log`. Two entry types: `task` (from season checkbox) and `custom` (free text). Capped at 500 entries. Exposes `completedTaskIds` Set for O(1) checkbox state lookup.
 - **Season** (`useSeason`): pure derivation from current date + profile. Reads `src/data/seasons.json`, filters tasks by `minExperience`.
 - **Inspections** (`useInspections`): localStorage under `apiario-inspections`. Shape: `{ id, colonyId, date, queenStatus, varroa, broodPattern, notes, createdAt }`. Exposes `addInspection`, `updateInspection`, `removeInspection`, `removeInspectionsByColonyId` (cascade-delete, call before `removeColony`), `getColonyInspections` (sorted newest-first), `getLatestInspection`.
@@ -46,7 +47,7 @@ All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "
 
 ### Screen structure
 - `SeasonScreen` — sticky header (theme A/B) or full-bleed seasonal hero (theme C), task cards with checkboxes
-- `DiagnoseScreen` — branching wizard; runs `validateDiagnosisTree()` on mount in dev; dark background in theme C; `routeFromInspection()` maps latest inspection fields to a starting node (queenless / varroa-suspect / sick-brood)
+- `DiagnoseScreen` — branching wizard; runs `validateDiagnosisTree()` at module scope in dev (`if (import.meta.env.DEV)` in `src/screens/DiagnoseScreen.jsx`); dark background in theme C; `routeFromInspection()` maps latest inspection fields to a starting node (queenless / varroa-suspect / sick-brood)
 - `InspectScreen` — top-level tab for all inspections across colonies, grouped by colony; uses `InspectionTab` internally
 - `MyHiveScreen` — four-tab layout via `MyHiveTabStrip` (Colonies | Inspections | Log | Profile); tab strip lives in the sticky header of each theme branch
 - `ColoniesSection` — named colony list with add / edit / delete; shows "last inspected" label per colony; "+ Inspect" shortcut opens `InspectionForm` overlay
@@ -126,4 +127,4 @@ CI gates: the `build` job runs `npm run test:run` then `npm run build -- --base 
 
 This repo uses [gstack](https://github.com/paaaddy/gstack) skills for planning, review, QA, and shipping. If the harness you're running under supports it, skill commands such as `/investigate` (root-cause debugging), `/qa` (systematic QA + fix loop), `/review` (pre-landing diff review), and `/ship` (version bump + changelog + PR) may be available. Invoke a skill with `/<skill-name>`; otherwise treat these as optional — the app itself is fully testable with the npm scripts above.
 
-See also `CONTEXT.md` and `docs/adr/` at the repo root for domain context, and `docs/agents/issue-tracker.md` for GitHub Issues workflows via the `gh` CLI.
+If present, `CONTEXT.md` and `docs/adr/` at repo root hold domain context, and `docs/agents/issue-tracker.md` covers GitHub Issues workflows via the `gh` CLI.
