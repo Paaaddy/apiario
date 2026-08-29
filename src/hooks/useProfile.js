@@ -16,14 +16,35 @@ function today() {
   return new Date().toISOString().split('T')[0]
 }
 
-function nextColonyId(existing) {
+function nextColonyNumericId(existing) {
   // Monotonically increasing numeric suffix, independent of array order.
   let max = 0
   for (const c of existing) {
     const m = /^col-(\d+)$/.exec(c.id ?? '')
     if (m) max = Math.max(max, parseInt(m[1], 10))
   }
-  return `col-${max + 1}`
+  return max
+}
+
+function nextColonyId(existing) {
+  return `col-${nextColonyNumericId(existing) + 1}`
+}
+
+export function buildSeededColonies(count, existing = []) {
+  const existingColonies = existing ?? []
+  const remaining = Math.max(0, Number(count) || 0) - existingColonies.length
+  if (remaining <= 0) return existingColonies
+  const createdAt = today()
+  const start = nextColonyNumericId(existingColonies)
+  return [
+    ...existingColonies,
+    ...Array.from({ length: remaining }, (_, i) => ({
+      id: `col-${start + i + 1}`,
+      name: `Hive ${start + i + 1}`,
+      createdAt,
+      notes: '',
+    })),
+  ]
 }
 
 function saveProfile(state) {
@@ -46,14 +67,7 @@ function migrate(profile) {
 
   // v1 → v2: add a `colonies` array, seeded from `hiveCount` if present.
   if (v < 2) {
-    const count = Math.max(0, Number(p.hiveCount) || 0)
-    const createdAt = today()
-    p.colonies = Array.from({ length: count }, (_, i) => ({
-      id: `col-${i + 1}`,
-      name: `Hive ${i + 1}`,
-      createdAt,
-      notes: '',
-    }))
+    p.colonies = buildSeededColonies(p.hiveCount)
     p.schemaVersion = 2
     v = 2
   }

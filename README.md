@@ -24,14 +24,14 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 
 | Concern | Choice |
 |---|---|
-| Framework | React 19 + Vite 7 |
+| Framework | React 19 + Vite 8 |
 | Styling | Tailwind CSS 3 |
 | Offline | vite-plugin-pwa + Workbox |
 | Onboarding | @onboardjs/react |
 | Fonts | @fontsource (self-hosted, precached) |
 | State | React context + localStorage |
 | Voice | Web Speech API |
-| Tests | Vitest + Testing Library (231 tests) |
+| Tests | Vitest + Testing Library (273 tests) |
 | Deploy | GitHub Actions → GitHub Pages |
 
 ---
@@ -42,7 +42,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance a
 npm install
 npm run dev              # http://localhost:5173
 npm run dev -- --host    # expose on local network
-npm run test:run         # run all tests (231 tests, 30 suites)
+npm run test:run         # run all tests (273 tests, 36 suites)
 npm run build            # production build
 npm run lint             # ESLint
 ```
@@ -69,4 +69,4 @@ See [CLAUDE.md](CLAUDE.md) for a full description of the app architecture, data 
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE) for the full text.

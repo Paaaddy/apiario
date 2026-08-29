@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect, useMemo, lazy, Suspense } fro
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
-import { useProfile } from './hooks/useProfile'
+import { useProfile, buildSeededColonies } from './hooks/useProfile'
 import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
 import { useInspections } from './hooks/useInspections'
@@ -135,7 +135,13 @@ function AppContent() {
       <div className="flex flex-col h-full bg-cream">
         <Suspense fallback={<div className="flex-1" />}>
           <Onboarding
-            onComplete={(answers) => updateProfile({ ...answers, onboardingDone: true })}
+            onComplete={(answers) => {
+              const updates = { ...answers, onboardingDone: true }
+              if ((profile.colonies ?? []).length === 0 && Number(answers.hiveCount) > 0) {
+                updates.colonies = buildSeededColonies(answers.hiveCount)
+              }
+              updateProfile(updates)
+            }}
             pwaInstall={pwaInstall}
           />
         </Suspense>

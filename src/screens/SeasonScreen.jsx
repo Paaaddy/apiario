@@ -3,12 +3,18 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { useSeason } from '../hooks/useSeason'
 import { strings as s } from '../i18n/strings'
+import { validateSeasonsTree } from '../utils/validateSeasons'
 import TaskCard from '../components/TaskCard'
 import HexWatermark from '../components/HexWatermark'
 import LanguageToggle from '../components/LanguageToggle'
 import SeasonHeader from '../components/SeasonHeader'
 import { addWeeks, isSameIsoWeek } from '../utils/season'
 import { haptics } from '../utils/haptics'
+import { themeColors } from '../utils/themeTokens'
+
+if (import.meta.env.DEV) {
+  validateSeasonsTree()
+}
 
 function formatDayMonth(date, locale) {
   if (!date) return ''
@@ -54,14 +60,15 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
 
   // ── Theme C: Seasonal Light ─────────────────────────────────────
   if (theme === 'c') {
+    const c = themeColors(theme)
     return (
-      <div style={{ position: 'relative', minHeight: '100%', background: '#faf6ee' }}>
+      <div style={{ position: 'relative', minHeight: '100%', background: c.bg }}>
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 14px 120px' }}>
           {tasks.length === 0 ? (
-            <p style={{ textAlign: 'center', color: '#6b5843', padding: '2rem 0', fontFamily: '"Playfair Display", serif', fontSize: 18 }}>{t(s.season_nothing)}</p>
+            <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: '"Playfair Display", serif', fontSize: 18 }}>{t(s.season_nothing)}</p>
           ) : (
-            <div style={{ background: 'rgba(255,251,240,0.72)', backdropFilter: 'blur(18px) saturate(140%)', WebkitBackdropFilter: 'blur(18px) saturate(140%)', borderRadius: 22, border: '1px solid rgba(255,255,255,0.6)', boxShadow: '0 2px 4px rgba(61,31,0,0.06), 0 12px 36px rgba(61,31,0,0.10)', overflow: 'hidden' }}>
+            <div style={{ background: c.cardBg, backdropFilter: 'blur(18px) saturate(140%)', WebkitBackdropFilter: 'blur(18px) saturate(140%)', borderRadius: 22, border: '1px solid rgba(255,255,255,0.6)', boxShadow: '0 2px 4px rgba(61,31,0,0.06), 0 12px 36px rgba(61,31,0,0.10)', overflow: 'hidden' }}>
               {tasks.map((task) => {
                 const logEntry = logByTaskId.get(task.id)
                 return (
@@ -83,12 +90,13 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
 
   // ── Theme B: Field Notebook ──────────────────────────────────────
   if (theme === 'b') {
+    const c = themeColors(theme)
     return (
-      <div style={{ minHeight: '100%', background: '#f4ecd8' }}>
+      <div style={{ minHeight: '100%', background: c.bg }}>
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 24px 120px' }}>
           {tasks.length === 0 ? (
-            <p style={{ textAlign: 'center', color: '#6b5838', padding: '2rem 0', fontFamily: 'var(--theme-font-head)', fontSize: 18, fontStyle: 'italic' }}>{t(s.season_nothing)}</p>
+            <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: 'var(--theme-font-head)', fontSize: 18, fontStyle: 'italic' }}>{t(s.season_nothing)}</p>
           ) : (
             tasks.map((task) => {
               const logEntry = logByTaskId.get(task.id)
@@ -98,11 +106,11 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
             })
           )}
           {nextLockedSecret && (
-            <div style={{ marginTop: 16, padding: '12px', border: '1px dashed #c8b890', color: '#6b5838', textAlign: 'center', fontSize: 13, fontFamily: 'var(--theme-font-head)', fontStyle: 'italic' }}>
+            <div style={{ marginTop: 16, padding: '12px', border: `1px dashed ${c.rule}`, color: c.inkMid, textAlign: 'center', fontSize: 13, fontFamily: 'var(--theme-font-head)', fontStyle: 'italic' }}>
               🔒 {t(s.secret_locked_teaser).replace('{n}', String(Math.max(0, (nextLockedSecret.unlockAt ?? 0) - completedCount)))}
             </div>
           )}
-          <div style={{ marginTop: 20, padding: '12px 0', textAlign: 'center', fontFamily: 'var(--theme-font-mono)', fontSize: 10, letterSpacing: '1.5px', color: '#98876b', textTransform: 'uppercase' }}>
+          <div style={{ marginTop: 20, padding: '12px 0', textAlign: 'center', fontFamily: 'var(--theme-font-mono)', fontSize: 10, letterSpacing: '1.5px', color: c.inkLight, textTransform: 'uppercase' }}>
             — {locale === 'de' ? 'Ende der Woche' : 'end of week'} —
           </div>
         </div>

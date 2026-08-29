@@ -4,6 +4,7 @@ import { strings as s } from '../i18n/strings'
 import InspectionTab from './InspectionTab'
 import LanguageToggle from '../components/LanguageToggle'
 import HexWatermark from '../components/HexWatermark'
+import { themeColors } from '../utils/themeTokens'
 
 export default function InspectScreen({
   colonies = [],
@@ -26,16 +27,17 @@ export default function InspectScreen({
   )
 
   if (theme === 'b') {
+    const c = themeColors(theme)
     return (
-      <div style={{ minHeight: '100%', background: '#f4ecd8' }}>
-        <div style={{ padding: '42px 24px 0', position: 'sticky', top: 0, zIndex: 20, background: '#f4ecd8', borderBottom: '1px solid #c8b890' }}>
+      <div style={{ minHeight: '100%', background: c.bg }}>
+        <div style={{ padding: '42px 24px 0', position: 'sticky', top: 0, zIndex: 20, background: c.bg, borderBottom: `1px solid ${c.rule}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: '#6b5838' }}>
+            <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: c.inkMid }}>
               {t(s.nav_inspect)}
             </p>
             <LanguageToggle />
           </div>
-          <h1 style={{ margin: '12px 0 16px', fontFamily: 'var(--theme-font-head)', fontSize: 38, fontWeight: 400, color: '#2b1d0e', letterSpacing: -0.3, lineHeight: 1 }}>
+          <h1 style={{ margin: '12px 0 16px', fontFamily: 'var(--theme-font-head)', fontSize: 38, fontWeight: 400, color: c.ink, letterSpacing: -0.3, lineHeight: 1 }}>
             📋 <span style={{ fontStyle: 'italic' }}>{t(s.nav_inspect)}.</span>
           </h1>
         </div>
@@ -47,17 +49,18 @@ export default function InspectScreen({
   }
 
   if (theme === 'c') {
+    const c = themeColors(theme)
     return (
-      <div style={{ minHeight: '100%', background: '#faf6ee', position: 'relative' }}>
+      <div style={{ minHeight: '100%', background: c.bg, position: 'relative' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 180, background: 'linear-gradient(180deg, rgba(245,166,35,0.35) 0%, transparent 100%)', pointerEvents: 'none' }} />
         <div style={{ position: 'sticky', top: 0, zIndex: 20, background: 'rgba(250,246,238,0.95)', backdropFilter: 'blur(8px)', padding: '42px 22px 16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: '#1c1410' }}>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: c.ink }}>
               {t(s.nav_inspect)}
             </span>
             <LanguageToggle />
           </div>
-          <h1 style={{ margin: '10px 0 0', fontFamily: '"Playfair Display", serif', fontSize: 48, lineHeight: 0.95, fontWeight: 700, color: '#1c1410', letterSpacing: -1 }}>
+          <h1 style={{ margin: '10px 0 0', fontFamily: '"Playfair Display", serif', fontSize: 48, lineHeight: 0.95, fontWeight: 700, color: c.ink, letterSpacing: -1 }}>
             📋 <span style={{ fontStyle: 'italic', fontWeight: 400 }}>{t(s.nav_inspect)}.</span>
           </h1>
         </div>

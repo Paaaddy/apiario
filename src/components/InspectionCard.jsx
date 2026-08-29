@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
+import { themeColors } from '../utils/themeTokens'
 
 const QUEEN_EMOJI = { seen: '👑', eggs: '🥚', larvae: '🐛', not_seen: '❓' }
 
@@ -30,11 +31,11 @@ export default function InspectionCard({ inspection, colonyName, onEdit, onDelet
   const { theme } = useTheme()
   const [expanded, setExpanded] = useState(false)
 
-  const isDark = theme === 'c'
-  const bg     = isDark ? 'rgba(28,20,16,0.06)' : theme === 'b' ? '#fff9f0' : '#fff'
-  const ink    = isDark ? '#1c1410'  : theme === 'b' ? '#2b1d0e' : '#3d1f00'
-  const inkMid = isDark ? '#6b5843' : theme === 'b' ? '#6b5838' : '#92400e'
-  const border = isDark ? 'rgba(28,20,16,0.12)' : theme === 'b' ? '#c8b890' : '#f0e0b8'
+  const c      = themeColors(theme)
+  const bg     = c.inspectionCardBg
+  const ink    = c.ink
+  const inkMid = c.inkMid
+  const border = c.cardBorder
 
   const queenEmoji = QUEEN_EMOJI[inspection.queenStatus] ?? '❓'
 

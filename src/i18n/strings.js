@@ -64,6 +64,24 @@ export const strings = {
   exp_1:            { de: '1–3 Saisons',                      en: '1–3 seasons'                   },
   exp_2:            { de: 'Erfahren (4+ Jahre)',              en: 'Experienced (4+ years)'        },
 
+  // Data backup / export-import
+  data_title:       { de: 'Datensicherung',                          en: 'Data & backup'                  },
+  data_hint:        { de: 'Exportiere deine Daten als Backup oder stelle sie aus einer Datei wieder her.', en: 'Export your data as a backup or restore it from a file.' },
+  data_export:      { de: 'Export als JSON',                        en: 'Export as JSON'                 },
+  data_import:      { de: 'Import aus Datei',                       en: 'Import from file'               },
+  data_exported:    { de: 'Exportiert',                             en: 'Exported'                       },
+  data_imported:    { de: 'Importiert',                             en: 'Imported'                       },
+  data_import_reload: { de: 'Daten geladen. App wird neu geladen …', en: 'Data loaded. Reloading app…'   },
+  data_import_error_parse:      { de: 'Keine gültige JSON-Datei.',        en: 'Not a valid JSON file.'           },
+  data_import_error_format:     { de: 'Keine Apiario-Sicherung.',         en: 'Not an Apiario backup file.'      },
+  data_import_error_unexpected: { de: 'Beim Import ist etwas schiefgelaufen.', en: 'Something went wrong during import.' },
+
+  // Privacy disclosure
+  privacy_title:            { de: 'Datenschutz',                       en: 'Your data'                       },
+  privacy_body:             { de: 'Alle deine Daten – Profil, Völker, Kontrollen und Verlauf – werden ausschließlich auf diesem Gerät gespeichert (localStorage). Es werden keine Daten an einen Server gesendet; es gibt kein Cloud-Backup.', en: 'All your data – profile, colonies, inspections and history – is stored exclusively on this device (localStorage). No data is ever sent to a server; there is no cloud backup.' },
+  privacy_delete_warning:   { de: 'Wenn du die App löschst oder die Browserdaten dieser Seite entfernst, gehen deine Daten unwiderruflich verloren.', en: 'If you delete the app or clear this site\u2019s browser data, your data will be lost permanently.' },
+  privacy_export_pointer:   { de: 'Nutze die „Datensicherung"-Funktion oben, um deine Daten regelmäßig als Datei zu exportieren.', en: 'Use the "Data & backup" section above to regularly export your data as a file.' },
+
   // Diagnosis
   diagnose_title:      { de: 'Diagnose',                       en: 'Diagnosis'                    },
   diagnose_step:       { de: 'Schritt',                        en: 'Step'                         },
