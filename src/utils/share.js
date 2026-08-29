@@ -49,6 +49,3 @@ export async function shareOrCopy({ title, text, url }) {
 
   return { status: 'unsupported' }
 }
-
-export const isWebShareSupported =
-  typeof navigator !== 'undefined' && typeof navigator.share === 'function'

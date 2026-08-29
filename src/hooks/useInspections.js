@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-import { groupByColony, latestOverall } from '../utils/inspections'
+import { groupByColony } from '../utils/inspections'
 
 const STORAGE_KEY = 'apiario-inspections'
 const MAX_PER_COLONY = 500
@@ -77,13 +77,6 @@ export function useInspections() {
     [byColony]
   )
 
-  const getLatestOverall = useCallback(
-    () => latestOverall(inspections),
-    [inspections]
-  )
-
-  const inspectionCount = inspections.length
-
   return {
     inspections,
     addInspection,
@@ -92,7 +85,5 @@ export function useInspections() {
     removeInspectionsByColonyId,
     getColonyInspections,
     getLatestInspection,
-    getLatestOverall,
-    inspectionCount,
   }
 }
