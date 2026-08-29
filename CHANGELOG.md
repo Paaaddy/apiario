@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.11](https://github.com/Paaaddy/apiario/compare/v2.1.10...v2.1.11) (2026-08-29)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group with 5 updates ([#86](https://github.com/Paaaddy/apiario/issues/86)) ([7952867](https://github.com/Paaaddy/apiario/commit/79528677e3a2046f30a4ef952eb809d602673cc3))
+
 ## [2.1.10](https://github.com/Paaaddy/apiario/compare/v2.1.9...v2.1.10) (2026-08-18)
 
 
