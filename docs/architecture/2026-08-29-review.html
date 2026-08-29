@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Architecture review — apiario</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+    </script>
+    <style>
+      :root {
+        --surface: #f7f6f3;
+        --surface-card: #ffffff;
+        --surface-card-alt: #f4f2ee;
+        --ink: #1c1a17;
+        --ink-soft: #716d64;
+        --ink-faint: #9c988d;
+        --border: #e1ded5;
+        --code-bg: #ece9e2;
+        --deep-start: #14131c;
+        --deep-end: #262440;
+        --deep-border: #3a375a;
+
+        --strong-bg: rgba(16,163,110,.12);
+        --strong-fg: #0f7a52;
+        --explore-bg: rgba(190,130,15,.14);
+        --explore-fg: #92620a;
+        --spec-bg: rgba(113,109,100,.14);
+        --spec-fg: #57534a;
+        --tag-bg: rgba(113,109,100,.10);
+        --tag-fg: #716d64;
+        --leak: #c8351f;
+        --warn-bg: #fbf0dd;
+        --warn-border: #e3c281;
+        --warn-fg: #6b4c10;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --surface: #161511;
+          --surface-card: #1e1d19;
+          --surface-card-alt: #26241f;
+          --ink: #f1efe9;
+          --ink-soft: #a8a396;
+          --ink-faint: #7b776b;
+          --border: #37342c;
+          --code-bg: #2b2924;
+          --deep-start: #0b0a11;
+          --deep-end: #1e1c33;
+          --deep-border: #4a4770;
+
+          --strong-bg: rgba(52,211,153,.13);
+          --strong-fg: #4ade95;
+          --explore-bg: rgba(245,187,71,.14);
+          --explore-fg: #f0b94a;
+          --spec-bg: rgba(168,163,150,.12);
+          --spec-fg: #c9c5b9;
+          --tag-bg: rgba(168,163,150,.12);
+          --tag-fg: #a8a396;
+          --leak: #f0553d;
+          --warn-bg: #2e2712;
+          --warn-border: #6b551f;
+          --warn-fg: #e8c467;
+        }
+      }
+      :root[data-theme="dark"] {
+        --surface: #161511;
+        --surface-card: #1e1d19;
+        --surface-card-alt: #26241f;
+        --ink: #f1efe9;
+        --ink-soft: #a8a396;
+        --ink-faint: #7b776b;
+        --border: #37342c;
+        --code-bg: #2b2924;
+        --deep-start: #0b0a11;
+        --deep-end: #1e1c33;
+        --deep-border: #4a4770;
+
+        --strong-bg: rgba(52,211,153,.13);
+        --strong-fg: #4ade95;
+        --explore-bg: rgba(245,187,71,.14);
+        --explore-fg: #f0b94a;
+        --spec-bg: rgba(168,163,150,.12);
+        --spec-fg: #c9c5b9;
+        --tag-bg: rgba(168,163,150,.12);
+        --tag-fg: #a8a396;
+        --leak: #f0553d;
+        --warn-bg: #2e2712;
+        --warn-border: #6b551f;
+        --warn-fg: #e8c467;
+      }
+
+      body { background: var(--surface); color: var(--ink); font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+      .font-display { font-family: 'Newsreader', ui-serif, Georgia, serif; font-optical-sizing: auto; text-wrap: balance; }
+      .mono-label { font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .surface-card { background: var(--surface-card); border-color: var(--border); }
+      .surface-card-alt { background: var(--surface-card-alt); border-color: var(--border); }
+      .ink { color: var(--ink); }
+      .ink-soft { color: var(--ink-soft); }
+      .ink-faint { color: var(--ink-faint); }
+      .border-token { border-color: var(--border); }
+      .code-chip { background: var(--code-bg); color: var(--ink); }
+      .box-module { border: 2px solid var(--ink-faint); background: var(--surface-card-alt); color: var(--ink-soft); }
+      .box-module-dash { border: 2px dashed var(--ink-faint); color: var(--ink-soft); }
+      .box-leak { border: 2px solid var(--leak); background: color-mix(in srgb, var(--leak) 10%, transparent); color: var(--leak); }
+      .box-deep { background: linear-gradient(135deg, var(--deep-start), var(--deep-end)); border: 1px solid var(--deep-border); color: #f1efe9; }
+      .box-warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-fg); }
+      .badge { font-size: .7rem; font-weight: 600; padding: .25rem .6rem; border-radius: 999px; }
+      .badge-strong { background: var(--strong-bg); color: var(--strong-fg); }
+      .badge-explore { background: var(--explore-bg); color: var(--explore-fg); }
+      .badge-spec { background: var(--spec-bg); color: var(--spec-fg); }
+      .badge-tag { background: var(--tag-bg); color: var(--tag-fg); }
+      .recommend-card { background: var(--strong-bg); border: 2px solid var(--strong-fg); }
+      .recommend-eyebrow { color: var(--strong-fg); }
+      a.rec-link { color: var(--strong-fg); text-decoration: underline; text-underline-offset: 3px; }
+      .legend-swatch-module { border: 2px solid var(--ink-faint); }
+      .legend-swatch-seam { border-top: 2px dashed var(--ink-faint); }
+      .legend-swatch-leak { border-top: 2px solid var(--leak); }
+      .legend-swatch-deep { background: linear-gradient(135deg, var(--deep-start), var(--deep-end)); }
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+    </style>
+  </head>
+  <body>
+    <main class="max-w-5xl mx-auto px-6 py-12 space-y-14">
+
+      <header class="space-y-4 border-b pb-8 border-token">
+        <h1 class="font-display text-3xl font-medium">Architecture review — apiario</h1>
+        <p class="text-sm ink-soft">2026-08-29 · scope: git-history hotspots (DiagnoseScreen, App.jsx shell, inspections cluster)</p>
+        <div class="flex flex-wrap gap-6 text-xs uppercase tracking-wider ink-soft pt-2">
+          <div class="flex items-center gap-2"><span class="inline-block w-6 h-4 legend-swatch-module"></span> module</div>
+          <div class="flex items-center gap-2"><span class="inline-block w-6 legend-swatch-seam"></span> seam</div>
+          <div class="flex items-center gap-2"><span class="inline-block w-6 legend-swatch-leak"></span> leakage</div>
+          <div class="flex items-center gap-2"><span class="inline-block w-6 h-4 legend-swatch-deep"></span> deep module</div>
+        </div>
+      </header>
+
+      <section id="candidates" class="space-y-14">
+
+        <!-- CANDIDATE 1 -->
+        <article id="c1" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="font-display text-xl font-medium">1. Collapse three "latest inspection" reimplementations</h2>
+            <span class="badge badge-strong">Strong</span>
+            <span class="badge badge-tag">in-process</span>
+          </div>
+          <p class="font-mono text-sm ink-soft mono-label">src/hooks/useInspections.js · src/screens/ColoniesSection.jsx · src/screens/DiagnoseScreen.jsx</p>
+
+          <div class="grid grid-cols-2 gap-6">
+            <div class="rounded-lg border surface-card p-4 h-80 flex flex-col">
+              <p class="text-xs uppercase tracking-wider ink-faint mb-3">Before</p>
+              <div class="relative flex-1">
+                <div class="absolute top-2 left-2 w-40 rounded px-2 py-3 text-xs mono-label box-module">useInspections<br/><span class="ink-faint">getLatestInspection()</span></div>
+                <div class="absolute top-24 left-2 w-40 rounded px-2 py-3 text-xs mono-label box-leak">ColoniesSection<br/><span>reimplements sort</span></div>
+                <div class="absolute top-[11.5rem] left-2 w-40 rounded px-2 py-3 text-xs mono-label box-leak">DiagnoseScreen<br/><span>reimplements sort</span></div>
+                <p class="absolute bottom-0 text-xs ink-faint">3 algorithms, 1 fact — deletion test: delete the hook's version, nothing breaks.</p>
+              </div>
+            </div>
+            <div class="rounded-lg border surface-card p-4 h-80 flex flex-col">
+              <p class="text-xs uppercase tracking-wider ink-faint mb-3">After</p>
+              <div class="relative flex-1">
+                <div class="absolute top-8 left-2 w-44 h-24 box-deep rounded px-3 py-4 text-xs mono-label">useInspections<br/><span class="opacity-70">latestByColony · getLatestOverall()</span></div>
+                <div class="absolute top-2 right-0 w-32 rounded px-2 py-2 text-xs mono-label text-center box-module-dash">ColoniesSection</div>
+                <div class="absolute top-16 right-0 w-32 rounded px-2 py-2 text-xs mono-label text-center box-module-dash">DiagnoseScreen</div>
+                <p class="absolute bottom-0 text-xs ink-faint">One deep module. Two thin callers cross the same seam.</p>
+              </div>
+            </div>
+          </div>
+
+          <p><span class="font-semibold">Problem:</span> the hook's interface doesn't cover the aggregations callers need, so two callers route around it instead of through it.</p>
+          <p><span class="font-semibold">Solution:</span> widen the hook's interface with <code class="mono-label text-sm code-chip px-1 rounded">latestByColony</code> and <code class="mono-label text-sm code-chip px-1 rounded">getLatestOverall()</code>; delete the two local reimplementations.</p>
+          <ul class="list-disc list-inside text-sm space-y-1 ink-soft">
+            <li>Locality: one sort algorithm, fixed once</li>
+            <li>Leverage: memoized aggregation reused, not recomputed</li>
+            <li>"Latest" becomes one testable pure function</li>
+          </ul>
+        </article>
+
+        <!-- CANDIDATE 2 -->
+        <article id="c2" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="font-display text-xl font-medium">2. Give voice-command dispatch its own seam</h2>
+            <span class="badge badge-strong">Strong</span>
+            <span class="badge badge-tag">ports &amp; adapters</span>
+          </div>
+          <p class="font-mono text-sm ink-soft mono-label">src/App.jsx (VOICE_CONFIG, matchCommand, handleVoiceActivate)</p>
+
+          <div class="grid grid-cols-2 gap-6">
+            <div class="rounded-lg border surface-card p-4 h-80 flex flex-col items-center justify-center gap-1">
+              <p class="text-xs uppercase tracking-wider ink-faint mb-2 self-start">Before — mass diagram</p>
+              <div class="w-48 h-14 rounded flex items-center justify-center text-xs mono-label box-leak">interface = all of App.jsx</div>
+              <div class="w-48 h-40 rounded flex items-center justify-center text-xs mono-label box-module text-center">implementation<br/>(dispatch fused inside)</div>
+              <p class="text-xs ink-faint text-center">Interface almost as tall as implementation — shallow.</p>
+            </div>
+            <div class="rounded-lg border surface-card p-4 h-80 flex flex-col items-center justify-center gap-1">
+              <p class="text-xs uppercase tracking-wider ink-faint mb-2 self-start">After — mass diagram</p>
+              <div class="w-48 h-6 rounded flex items-center justify-center text-xs mono-label" style="border:2px solid var(--strong-fg); color: var(--strong-fg); background: var(--strong-bg);">dispatchVoiceCommand()</div>
+              <div class="w-48 h-48 box-deep rounded flex items-center justify-center text-xs mono-label text-center">VOICE_CONFIG +<br/>matchCommand +<br/>action map</div>
+              <p class="text-xs ink-faint text-center">Short interface, tall implementation — deep.</p>
+            </div>
+          </div>
+
+          <p><span class="font-semibold">Problem:</span> command table + dispatch switch are fused into the app shell's closure — no seam to test "say 'stop', voice mode ends" without mounting the whole tree and mocking SpeechRecognition.</p>
+          <p><span class="font-semibold">Solution:</span> extract <code class="mono-label text-sm code-chip px-1 rounded">dispatchVoiceCommand(transcript, locale, actions)</code> — actions passed in, not hardcoded.</p>
+          <ul class="list-disc list-inside text-sm space-y-1 ink-soft">
+            <li>Testable with strings in, action-name out — no DOM</li>
+            <li>Locality: new command fixed in one small module</li>
+            <li>App.jsx shrinks to wiring only</li>
+          </ul>
+        </article>
+
+        <!-- CANDIDATE 3 -->
+        <article id="c3" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="font-display text-xl font-medium">3. Move inspection→node routing to the diagnosis-tree module</h2>
+            <span class="badge badge-explore">Worth exploring</span>
+            <span class="badge badge-tag">in-process</span>
+          </div>
+          <p class="font-mono text-sm ink-soft mono-label">src/screens/DiagnoseScreen.jsx (routeFromInspection) · src/utils/validateDiagnosisTree.js · src/data/diagnosis.json</p>
+
+          <div class="grid grid-cols-2 gap-6">
+            <div class="rounded-lg border surface-card p-4 h-72">
+              <p class="text-xs uppercase tracking-wider ink-faint mb-3">Before — cross-section</p>
+              <div class="h-10 flex items-center px-2 text-xs mono-label mb-1 rounded-sm" style="border-left:4px solid var(--leak); background: color-mix(in srgb, var(--leak) 8%, transparent);">DiagnoseScreen: theme A render</div>
+              <div class="h-10 flex items-center px-2 text-xs mono-label mb-1 rounded-sm" style="border-left:4px solid var(--leak); background: color-mix(in srgb, var(--leak) 8%, transparent);">DiagnoseScreen: theme B render</div>
+              <div class="h-10 flex items-center px-2 text-xs mono-label mb-1 rounded-sm" style="border-left:4px solid var(--leak); background: color-mix(in srgb, var(--leak) 8%, transparent);">DiagnoseScreen: theme C render</div>
+              <div class="h-10 flex items-center px-2 text-xs mono-label rounded-sm" style="border-left:4px solid var(--explore-fg); background: var(--explore-bg);">routeFromInspection() — node-ID literals, no test</div>
+            </div>
+            <div class="rounded-lg border surface-card p-4 h-72">
+              <p class="text-xs uppercase tracking-wider ink-faint mb-3">After — cross-section</p>
+              <div class="h-16 flex items-center px-2 text-xs mono-label mb-2 rounded-sm box-module-dash" style="border-left-width:4px; border-left-style:solid;">DiagnoseScreen — render only</div>
+              <div class="h-16 box-deep rounded flex items-center px-2 text-xs mono-label">diagnosisTree module — validate() + route()</div>
+              <p class="text-xs ink-faint pt-2">Node-ID changes and their routing consequences edited in one file.</p>
+            </div>
+          </div>
+
+          <p><span class="font-semibold">Problem:</span> routing rule (queenless / varroa-suspect / sick-brood) lives in the UI screen, split from the tree it routes into — node-ID renames require grepping two files.</p>
+          <p><span class="font-semibold">Solution:</span> move <code class="mono-label text-sm code-chip px-1 rounded">routeFromInspection</code> next to <code class="mono-label text-sm code-chip px-1 rounded">validateDiagnosisTree</code>.</p>
+          <ul class="list-disc list-inside text-sm space-y-1 ink-soft">
+            <li>Locality: tree + routing edited together</li>
+            <li>Five one-line unit tests instead of zero</li>
+          </ul>
+        </article>
+
+        <!-- CANDIDATE 4 -->
+        <article id="c4" class="space-y-5">
+          <div class="flex items-center gap-3 flex-wrap">
+            <h2 class="font-display text-xl font-medium">4. Route themes A/C through the existing CSS-variable seam</h2>
+            <span class="badge badge-spec">Speculative</span>
+            <span class="badge badge-tag">local-substitutable</span>
+          </div>
+          <p class="font-mono text-sm ink-soft mono-label">src/screens/DiagnoseScreen.jsx · SeasonScreen.jsx · BottomNav.jsx (theme branches)</p>
+          <div class="rounded-lg border surface-card p-4">
+            <pre class="mermaid">
+flowchart LR
+  A[Theme A branch] -.leak.-> H[hardcoded hex/px]
+  C[Theme C branch] -.leak.-> H
+  B[Theme B branch] --> V[--theme-* CSS vars]
+  V --> Tokens[data-theme attribute]
+  classDef leak stroke:#c8351f,stroke-width:2px;
+  class A,C,H leak
+            </pre>
+          </div>
+          <p><span class="font-semibold">Problem:</span> a seam already exists (<code class="mono-label text-sm code-chip px-1 rounded">--theme-*</code> vars); two of three theme adapters bypass it with inline hex, duplicated per node-type branch.</p>
+          <p><span class="font-semibold">Solution:</span> route theme A/C's per-node tokens through the same CSS variables theme B already uses.</p>
+          <ul class="list-disc list-inside text-sm space-y-1 ink-soft">
+            <li>Locality: one CSS edit instead of per-screen inline edits</li>
+            <li>Leverage: new screens inherit theme C for free</li>
+          </ul>
+          <div class="text-sm rounded px-3 py-2 box-warn">No ADR names this seam as intentional yet — worth a domain-modeling pass before touching render code, since the pattern is systemic, not local to one file.</div>
+        </article>
+
+      </section>
+
+      <section id="top-recommendation" class="rounded-lg p-6 space-y-2 recommend-card">
+        <p class="text-xs uppercase tracking-wider recommend-eyebrow">Top recommendation</p>
+        <h2 class="font-display text-xl font-medium"><a href="#c1" class="rec-link">Candidate 1 — collapse the latest-inspection reimplementations</a></h2>
+        <p class="text-sm ink-soft">Smallest, safest cut — pure logic move, no rendering risk — and it's the one with a real correctness angle: three divergent sort/compare implementations for the same fact silently disagree the moment only one gets edited. Establishes "hook owns aggregation, screens consume," a pattern this codebase is otherwise missing.</p>
+      </section>
+
+    </main>
+  </body>
+</html>
