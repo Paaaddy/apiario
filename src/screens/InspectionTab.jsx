@@ -4,6 +4,7 @@ import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import InspectionCard from '../components/InspectionCard'
 import InspectionForm from '../components/InspectionForm'
+import { themeColors } from '../utils/themeTokens'
 
 const MAX_VISIBLE = 5
 
@@ -20,11 +21,11 @@ export default function InspectionTab({
   const [editTarget, setEditTarget]     = useState(null)
   const [expandedColonies, setExpanded] = useState({})
 
-  const isDark    = theme === 'c'
-  const inkMid    = isDark ? '#6b5843' : theme === 'b' ? '#6b5838' : '#92400e'
-  const ink       = isDark ? '#1c1410' : theme === 'b' ? '#2b1d0e' : '#3d1f00'
-  const addBtnBg  = isDark ? '#1c1410' : theme === 'b' ? '#2b1d0e' : '#f5a623'
-  const addBtnClr = isDark ? '#faf6ee' : theme === 'b' ? '#f4ecd8' : '#3d1f00'
+  const c         = themeColors(theme)
+  const inkMid    = c.inkMid
+  const ink       = c.ink
+  const addBtnBg  = c.addBtnBg
+  const addBtnClr = c.addBtnClr
 
   const colonyMap = useMemo(
     () => Object.fromEntries(colonies.map((c) => [c.id, c.name])),

@@ -4,6 +4,7 @@ import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import RiskNote from './RiskNote'
 import { formatShortDate } from '../utils/format'
+import { themeColors } from '../utils/themeTokens'
 
 const URGENCY_STYLES = {
   urgent:    { key: 'urgency_urgent',    border: 'border-red-400',  badge: 'bg-red-100 text-red-700',     color: '#c23b22' },
@@ -15,11 +16,12 @@ const URGENCY_STYLES = {
 const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate = null, onToggle, inGlassContainer = false }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
+  const c = themeColors(theme)
   const style = URGENCY_STYLES[task.urgency] ?? URGENCY_STYLES.routine
   const isSecret = task.secret === true
 
   if (theme === 'b') {
-    const dotColor = isChecked ? '#6f7f56' : style.color
+    const dotColor = isChecked ? c.done : style.color
     return (
       <div style={{ padding: '14px 0', borderBottom: '1px solid rgba(200,184,144,0.4)', display: 'flex', gap: 14 }}>
         <div style={{ width: 22, flexShrink: 0, paddingTop: 4 }}>
@@ -29,8 +31,8 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
               aria-label={isChecked ? 'Uncheck task' : 'Check task'}
               style={{
                 width: 18, height: 18, borderRadius: '50%',
-                border: `1.5px solid ${isChecked ? '#6f7f56' : '#98876b'}`,
-                background: isChecked ? '#6f7f56' : 'transparent',
+                border: `1.5px solid ${isChecked ? c.done : c.inkLight}`,
+                background: isChecked ? c.done : 'transparent',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', padding: 0,
               }}
@@ -40,8 +42,8 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
           ) : (
             <div style={{
               width: 18, height: 18, borderRadius: '50%',
-              border: `1.5px solid ${isChecked ? '#6f7f56' : '#98876b'}`,
-              background: isChecked ? '#6f7f56' : 'transparent',
+              border: `1.5px solid ${isChecked ? c.done : c.inkLight}`,
+              background: isChecked ? c.done : 'transparent',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
               {isChecked && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/></svg>}
@@ -51,15 +53,15 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 3 }}>
             {!isChecked && <span style={{ width: 6, height: 6, borderRadius: '50%', background: dotColor, display: 'inline-block', flexShrink: 0 }} />}
-            <span style={{ fontFamily: 'var(--theme-font-mono)', fontSize: 9.5, letterSpacing: '1.5px', textTransform: 'uppercase', color: isChecked ? '#6f7f56' : dotColor, fontWeight: 600 }}>
+            <span style={{ fontFamily: 'var(--theme-font-mono)', fontSize: 9.5, letterSpacing: '1.5px', textTransform: 'uppercase', color: isChecked ? c.done : dotColor, fontWeight: 600 }}>
               {isChecked ? `${t(s.done_badge)}${checkedDate ? ` · ${formatShortDate(checkedDate)}` : ''}` : t(s[style.key])}
             </span>
           </div>
-          <h3 style={{ margin: 0, fontFamily: 'var(--theme-font-head)', fontSize: 19, fontWeight: 500, lineHeight: 1.2, color: isChecked ? '#98876b' : '#2b1d0e', textDecoration: isChecked ? 'line-through' : 'none', fontStyle: isChecked ? 'italic' : 'normal' }}>
+          <h3 style={{ margin: 0, fontFamily: 'var(--theme-font-head)', fontSize: 19, fontWeight: 500, lineHeight: 1.2, color: isChecked ? c.inkLight : c.ink, textDecoration: isChecked ? 'line-through' : 'none', fontStyle: isChecked ? 'italic' : 'normal' }}>
             {t(task.name)}
           </h3>
           {!isChecked && (
-            <p style={{ margin: '6px 0 0', fontSize: 13, lineHeight: 1.55, color: '#6b5838', fontFamily: 'var(--theme-font-head)' }}>
+            <p style={{ margin: '6px 0 0', fontSize: 13, lineHeight: 1.55, color: c.inkMid, fontFamily: 'var(--theme-font-head)' }}>
               {t(task.why)}
             </p>
           )}
@@ -69,19 +71,19 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
   }
 
   if (theme === 'c') {
-    const urgencyColor = isChecked ? '#7a9b50' : (task.urgency === 'urgent' ? '#c23b22' : task.urgency === 'important' ? '#d4800a' : '#6b5843')
+    const urgencyColor = isChecked ? c.done : (task.urgency === 'urgent' ? '#c23b22' : task.urgency === 'important' ? c.accentDark : c.inkMid)
     return (
       <div style={{ padding: '12px 12px', borderBottom: '1px solid rgba(28,20,16,0.07)', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
         {onToggle ? (
           <button
             onClick={onToggle}
             aria-label={isChecked ? 'Uncheck task' : 'Check task'}
-            style={{ marginTop: 2, flexShrink: 0, width: 22, height: 22, borderRadius: '50%', background: isChecked ? '#7a9b50' : 'transparent', border: isChecked ? 'none' : '1.5px solid rgba(107,88,67,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
+            style={{ marginTop: 2, flexShrink: 0, width: 22, height: 22, borderRadius: '50%', background: isChecked ? c.done : 'transparent', border: isChecked ? 'none' : '1.5px solid rgba(107,88,67,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
           >
             {isChecked && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg>}
           </button>
         ) : (
-          <div style={{ marginTop: 2, flexShrink: 0, width: 22, height: 22, borderRadius: '50%', background: isChecked ? '#7a9b50' : 'transparent', border: isChecked ? 'none' : '1.5px solid rgba(107,88,67,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ marginTop: 2, flexShrink: 0, width: 22, height: 22, borderRadius: '50%', background: isChecked ? c.done : 'transparent', border: isChecked ? 'none' : '1.5px solid rgba(107,88,67,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {isChecked && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg>}
           </div>
         )}
@@ -92,10 +94,10 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
               {isChecked ? `${t(s.done_badge)}${checkedDate ? ` · ${formatShortDate(checkedDate)}` : ''}` : t(s[style.key])}
             </span>
           </div>
-          <h3 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 20, fontWeight: 400, lineHeight: 1.15, color: isChecked ? 'rgba(28,20,16,0.35)' : '#1c1410', textDecoration: isChecked ? 'line-through' : 'none' }}>
+          <h3 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 20, fontWeight: 400, lineHeight: 1.15, color: isChecked ? 'rgba(28,20,16,0.35)' : c.ink, textDecoration: isChecked ? 'line-through' : 'none' }}>
             {t(task.name)}
           </h3>
-          {!isChecked && <p style={{ margin: '4px 0 0', fontSize: 12.5, color: '#6b5843', lineHeight: 1.45 }}>{t(task.why)}</p>}
+          {!isChecked && <p style={{ margin: '4px 0 0', fontSize: 12.5, color: c.inkMid, lineHeight: 1.45 }}>{t(task.why)}</p>}
         </div>
       </div>
     )

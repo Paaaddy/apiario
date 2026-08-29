@@ -3,6 +3,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import InspectionScaleInput from './InspectionScaleInput'
+import { themeColors } from '../utils/themeTokens'
 
 function today() {
   return new Date().toISOString().split('T')[0]
@@ -78,11 +79,12 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
   const canSave   = date && colonyId && queenStatus
 
   const isDark   = theme === 'c'
-  const bg       = isDark ? '#1c1410' : theme === 'b' ? '#f4ecd8' : '#fff'
-  const ink      = isDark ? '#fff'    : theme === 'b' ? '#2b1d0e' : '#3d1f00'
-  const inkMid   = isDark ? 'rgba(255,255,255,0.6)' : theme === 'b' ? '#6b5838' : '#92400e'
-  const border   = isDark ? 'rgba(255,255,255,0.15)' : theme === 'b' ? '#c8b890' : '#e9d5a1'
-  const inputBg  = isDark ? 'rgba(255,255,255,0.07)' : '#fff'
+  const c        = themeColors(theme)
+  const bg       = c.formBg
+  const ink      = c.formInk
+  const inkMid   = c.formInkMid
+  const border   = c.border
+  const inputBg  = c.formInputBg
   const headFont = theme === 'b' ? 'var(--theme-font-head)' : '"Playfair Display", serif'
 
   function handleSave() {
@@ -166,9 +168,9 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
                   style={{
                     padding: '8px 14px',
                     borderRadius: 24,
-                    border: `2px solid ${active ? '#f5a623' : border}`,
-                    background: active ? (isDark ? 'rgba(245,166,35,0.25)' : '#fef3c7') : 'transparent',
-                    color: active ? (isDark ? '#f5a623' : '#92400e') : inkMid,
+                    border: `2px solid ${active ? c.accent : border}`,
+                    background: active ? c.queenActiveBg : 'transparent',
+                    color: active ? c.queenActiveColor : inkMid,
                     fontSize: 14,
                     fontWeight: active ? 700 : 400,
                     cursor: 'pointer',
@@ -212,9 +214,9 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
                     flex: 1,
                     padding: '10px 6px',
                     borderRadius: 10,
-                    border: `2px solid ${active ? '#f5a623' : border}`,
-                    background: active ? (isDark ? 'rgba(245,166,35,0.2)' : '#fef3c7') : 'transparent',
-                    color: active ? (isDark ? '#f5a623' : '#92400e') : inkMid,
+                    border: `2px solid ${active ? c.accent : border}`,
+                    background: active ? c.temperActiveBg : 'transparent',
+                    color: active ? c.queenActiveColor : inkMid,
                     fontSize: 13,
                     fontWeight: active ? 700 : 400,
                     cursor: 'pointer',
