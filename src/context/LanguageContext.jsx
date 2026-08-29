@@ -1,4 +1,5 @@
-import { createContext, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
+import { LanguageContext } from './language-context'
 
 const STORAGE_KEY = 'apiario-locale'
 
@@ -9,12 +10,6 @@ function loadLocale() {
     return 'de'
   }
 }
-
-export const LanguageContext = createContext({
-  locale: 'de',
-  setLocale: () => {},
-  t: (v) => (typeof v === 'string' ? v : v?.de ?? ''),
-})
 
 export function LanguageProvider({ children }) {
   const [locale, setLocaleState] = useState(loadLocale)

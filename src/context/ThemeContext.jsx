@@ -1,12 +1,11 @@
-import { createContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { ThemeContext } from './theme-context'
 
 const VALID_THEMES = ['a', 'b', 'c']
 
 function sanitizeTheme(raw) {
   return VALID_THEMES.includes(raw) ? raw : 'a'
 }
-
-export const ThemeContext = createContext({ theme: 'a', setTheme: () => {} })
 
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(
