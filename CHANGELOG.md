@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/Paaaddy/apiario/compare/v2.1.11...v2.2.0) (2026-08-29)
+
+
+### Features
+
+* multi-agent remediation from CTO review (7 workstreams) ([#89](https://github.com/Paaaddy/apiario/issues/89)) ([eda352b](https://github.com/Paaaddy/apiario/commit/eda352b842481ba07f8c2c2bd62dcd45984e6c9e))
+
 ## [2.1.11](https://github.com/Paaaddy/apiario/compare/v2.1.10...v2.1.11) (2026-08-29)
 
 
