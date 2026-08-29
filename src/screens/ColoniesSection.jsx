@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import InspectionForm from '../components/InspectionForm'
+import { latestByColony } from '../utils/inspections'
 
 function daysSince(dateStr) {
   const d = new Date(dateStr)
@@ -27,14 +28,7 @@ export default function ColoniesSection({
 }) {
   const { t } = useLanguage()
 
-  const latestByColony = useMemo(() => {
-    const map = new Map()
-    for (const i of inspections) {
-      const prev = map.get(i.colonyId)
-      if (!prev || i.date > prev.date) map.set(i.colonyId, i)
-    }
-    return map
-  }, [inspections])
+  const latestByColonyMap = useMemo(() => latestByColony(inspections), [inspections])
 
   const [isAdding, setIsAdding] = useState(false)
   const [draftName, setDraftName] = useState('')
@@ -156,7 +150,7 @@ export default function ColoniesSection({
                     </p>
                   )}
                   <p className="mt-1 text-xs text-brown-mid/60">
-                    {t(s.insp_last_inspected)}: {lastInspectedLabel(latestByColony.get(colony.id), t)}
+                    {t(s.insp_last_inspected)}: {lastInspectedLabel(latestByColonyMap.get(colony.id), t)}
                   </p>
                   {colony.createdAt && (
                     <p className="mt-0.5 text-xs text-brown-mid/40">

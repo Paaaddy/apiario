@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
+import { groupByColony, latestOverall } from '../utils/inspections'
 
 const STORAGE_KEY = 'apiario-inspections'
 const MAX_PER_COLONY = 500
@@ -64,18 +65,7 @@ export function useInspections() {
     })
   }, [])
 
-  const byColony = useMemo(() => {
-    const map = new Map()
-    for (const e of inspections) {
-      const arr = map.get(e.colonyId)
-      if (arr) arr.push(e)
-      else map.set(e.colonyId, [e])
-    }
-    for (const arr of map.values()) {
-      arr.sort((a, b) => b.date.localeCompare(a.date))
-    }
-    return map
-  }, [inspections])
+  const byColony = useMemo(() => groupByColony(inspections), [inspections])
 
   const getColonyInspections = useCallback(
     (colonyId) => byColony.get(colonyId) ?? [],
@@ -85,6 +75,11 @@ export function useInspections() {
   const getLatestInspection = useCallback(
     (colonyId) => byColony.get(colonyId)?.[0] ?? null,
     [byColony]
+  )
+
+  const getLatestOverall = useCallback(
+    () => latestOverall(inspections),
+    [inspections]
   )
 
   const inspectionCount = inspections.length
@@ -97,6 +92,7 @@ export function useInspections() {
     removeInspectionsByColonyId,
     getColonyInspections,
     getLatestInspection,
+    getLatestOverall,
     inspectionCount,
   }
 }

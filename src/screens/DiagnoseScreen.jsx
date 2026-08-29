@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { validateDiagnosisTree } from '../utils/validateDiagnosis'
+import { latestOverall } from '../utils/inspections'
 import { strings as s } from '../i18n/strings'
 import diagnosisData from '../data/diagnosis.json'
 import DiagnosisResult from '../components/DiagnosisResult'
@@ -28,12 +29,7 @@ export default function DiagnoseScreen({ inspections = [] }) {
   const [currentNodeId, setCurrentNodeId] = useState('root')
   const [history, setHistory] = useState([])
 
-  const latestInspection = useMemo(() =>
-    inspections.length > 0
-      ? [...inspections].sort((a, b) => b.date.localeCompare(a.date))[0]
-      : null,
-    [inspections]
-  )
+  const latestInspection = useMemo(() => latestOverall(inspections), [inspections])
   const prefilledNodeId = useMemo(() => routeFromInspection(latestInspection), [latestInspection])
 
   useWakeLock(true)

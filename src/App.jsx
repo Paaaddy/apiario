@@ -12,6 +12,7 @@ import { useSeason } from './hooks/useSeason'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
+import { VOICE_CONFIG, dispatchVoiceCommand } from './utils/voiceCommands'
 import ErrorBoundary from './components/ErrorBoundary'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
@@ -31,63 +32,6 @@ const VALID_TABS = ['season', 'diagnose', 'inspect', 'myhive']
 function initialTab() {
   const q = new URLSearchParams(window.location.search).get('tab')
   return VALID_TABS.includes(q) ? q : 'season'
-}
-
-const VOICE_CONFIG = {
-  de: {
-    lang: 'de-DE',
-    greeting:
-      'Freisprechmodus aktiv. Sage: Diagnose, Saison, Stock, weiter oder stop.',
-    bye: 'Freisprechmodus beendet.',
-    commands: {
-      stop:     ['stop', 'stopp', 'beenden', 'ende', 'aus'],
-      diagnose: ['diagnose', 'diagnostizieren', 'problem'],
-      season:   ['saison', 'woche', 'aufgaben'],
-      myhive:   ['mein stock', 'stock', 'profil', 'verlauf'],
-      next:     ['weiter', 'nächste', 'nächster'],
-      repeat:   ['nochmal', 'wiederholen', 'wiederhole', 'lesen', 'lies'],
-    },
-    speech: {
-      openDiagnose: 'Diagnose wird geöffnet.',
-      openSeason:   'Saison wird geöffnet.',
-      openMyHive:   'Mein Stock wird geöffnet.',
-      next:         'Weiter.',
-      repeat:       'Wiederhole.',
-      unknown:      'Nicht verstanden. Versuche: Diagnose, Saison oder Stock.',
-    },
-  },
-  en: {
-    lang: 'en-GB',
-    greeting:
-      'Hands-free mode active. Say: diagnose, season, my hive, next, or stop.',
-    bye: 'Hands-free mode ended.',
-    commands: {
-      stop:     ['stop', 'exit', 'quit', 'end'],
-      diagnose: ['diagnose', 'diagnosis', 'problem'],
-      season:   ['season', 'tasks', 'week'],
-      myhive:   ['my hive', 'hive', 'profile', 'log', 'history'],
-      next:     ['next', 'forward'],
-      repeat:   ['read', 'repeat', 'again'],
-    },
-    speech: {
-      openDiagnose: 'Opening diagnose.',
-      openSeason:   'Opening season.',
-      openMyHive:   'Opening my hive.',
-      next:         'Next.',
-      repeat:       'Repeating.',
-      unknown:      "Didn't catch that. Try diagnose, season, or my hive.",
-    },
-  },
-}
-
-function matchCommand(transcript, commandMap) {
-  const lower = (transcript ?? '').toLowerCase()
-  for (const [action, phrases] of Object.entries(commandMap)) {
-    for (const phrase of phrases) {
-      if (lower.includes(phrase)) return action
-    }
-  }
-  return null
 }
 
 function AppContent() {
@@ -160,32 +104,12 @@ function AppContent() {
     startListening(
       (transcript) => {
         setLastCommand(transcript)
-        const action = matchCommand(transcript, config.commands)
-        switch (action) {
-          case 'stop':
-            speak(config.bye, { lang: config.lang })
-            handleVoiceStopRef.current()
-            break
-          case 'diagnose':
-            speak(config.speech.openDiagnose, { lang: config.lang })
-            setActiveTab('diagnose')
-            break
-          case 'season':
-            speak(config.speech.openSeason, { lang: config.lang })
-            setActiveTab('season')
-            break
-          case 'myhive':
-            speak(config.speech.openMyHive, { lang: config.lang })
-            setActiveTab('myhive')
-            break
-          case 'next':
-            speak(config.speech.next, { lang: config.lang })
-            break
-          case 'repeat':
-            speak(config.speech.repeat, { lang: config.lang })
-            break
-          default:
-            speak(config.speech.unknown, { lang: config.lang })
+        const { action, spokenText } = dispatchVoiceCommand(transcript, locale)
+        speak(spokenText, { lang: config.lang })
+        if (action === 'stop') {
+          handleVoiceStopRef.current()
+        } else if (action) {
+          setActiveTab(action)
         }
       },
       (error) => {
