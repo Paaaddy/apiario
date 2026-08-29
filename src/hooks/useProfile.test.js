@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useProfile } from './useProfile'
+import { useProfile, buildSeededColonies } from './useProfile'
 
 const STORAGE_KEY = 'apiario-profile'
 
@@ -166,5 +166,36 @@ describe('useProfile', () => {
     const { result } = renderHook(() => useProfile())
     act(() => result.current.addColony('   '))
     expect(result.current.profile.colonies[0].name).toBe('Hive 1')
+  })
+
+  describe('buildSeededColonies', () => {
+    it('seeds N colonies with the expected shape', () => {
+      const colonies = buildSeededColonies(5)
+      expect(colonies).toHaveLength(5)
+      expect(colonies[0]).toMatchObject({ id: 'col-1', name: 'Hive 1', notes: '' })
+      expect(colonies[0].createdAt).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(colonies[4]).toMatchObject({ id: 'col-5', name: 'Hive 5' })
+    })
+
+    it('returns an empty array when count is 0 or null', () => {
+      expect(buildSeededColonies(0)).toEqual([])
+      expect(buildSeededColonies(null)).toEqual([])
+    })
+  })
+
+  describe('onboarding colony seeding', () => {
+    it('seeds colonies from hiveCount when colonies is empty on completion', () => {
+      const { result } = renderHook(() => useProfile())
+      act(() => {
+        result.current.updateProfile({
+          ...result.current.profile,
+          onboardingDone: true,
+          hiveCount: 5,
+          colonies: buildSeededColonies(5),
+        })
+      })
+      expect(result.current.profile.colonies).toHaveLength(5)
+      expect(result.current.profile.colonies[4]).toMatchObject({ id: 'col-5', name: 'Hive 5' })
+    })
   })
 })
