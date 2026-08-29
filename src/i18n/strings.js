@@ -64,6 +64,18 @@ export const strings = {
   exp_1:            { de: '1–3 Saisons',                      en: '1–3 seasons'                   },
   exp_2:            { de: 'Erfahren (4+ Jahre)',              en: 'Experienced (4+ years)'        },
 
+  // Data backup / export-import
+  data_title:       { de: 'Datensicherung',                          en: 'Data & backup'                  },
+  data_hint:        { de: 'Exportiere deine Daten als Backup oder stelle sie aus einer Datei wieder her.', en: 'Export your data as a backup or restore it from a file.' },
+  data_export:      { de: 'Export als JSON',                        en: 'Export as JSON'                 },
+  data_import:      { de: 'Import aus Datei',                       en: 'Import from file'               },
+  data_exported:    { de: 'Exportiert',                             en: 'Exported'                       },
+  data_imported:    { de: 'Importiert',                             en: 'Imported'                       },
+  data_import_reload: { de: 'Daten geladen. App wird neu geladen …', en: 'Data loaded. Reloading app…'   },
+  data_import_error_parse:      { de: 'Keine gültige JSON-Datei.',        en: 'Not a valid JSON file.'           },
+  data_import_error_format:     { de: 'Keine Apiario-Sicherung.',         en: 'Not an Apiario backup file.'      },
+  data_import_error_unexpected: { de: 'Beim Import ist etwas schiefgelaufen.', en: 'Something went wrong during import.' },
+
   // Diagnosis
   diagnose_title:      { de: 'Diagnose',                       en: 'Diagnosis'                    },
   diagnose_step:       { de: 'Schritt',                        en: 'Step'                         },
