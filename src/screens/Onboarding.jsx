@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { OnboardingProvider, useOnboarding } from '@onboardjs/react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
@@ -189,101 +189,118 @@ function OnboardingUI() {
 
 // ── Main export ───────────────────────────────────────────────────────────────
 
+// The steps array is created once and kept stable across renders:
+// OnboardingProvider re-initialises if the array reference changes, so it must
+// not be recreated on every render. It's held in lazy `useState` (runs once).
+// `onAnswer`/`onFinish` are plain callbacks that close over refs but only read
+// them when invoked (at user-action time), so they never read a ref during
+// render — satisfying `react-hooks/refs`.
+function buildSteps(onAnswer, onFinish) {
+  return [
+    {
+      id: 'welcome',
+      type: 'CUSTOM_COMPONENT',
+      payload: { componentKey: 'welcome' },
+      nextStep: 'features',
+    },
+    {
+      id: 'features',
+      type: 'CUSTOM_COMPONENT',
+      payload: { componentKey: 'features' },
+      nextStep: 'hiveCount',
+    },
+    {
+      id: 'hiveCount',
+      type: 'CUSTOM_COMPONENT',
+      payload: {
+        componentKey: 'question',
+        answerKey: 'hiveCount',
+        question: s.onboarding_q_hives,
+        dots: [true, false, false],
+        options: [
+          { label: s.hive_1,  value: 1  },
+          { label: s.hive_2,  value: 2  },
+          { label: s.hive_5,  value: 5  },
+          { label: s.hive_10, value: 10 },
+        ],
+        onAnswer,
+      },
+      nextStep: 'climateZone',
+    },
+    {
+      id: 'climateZone',
+      type: 'CUSTOM_COMPONENT',
+      payload: {
+        componentKey: 'question',
+        answerKey: 'climateZone',
+        question: s.onboarding_q_zone,
+        dots: [true, true, false],
+        options: [
+          { label: s.zone_northern,      value: 'northern'      },
+          { label: s.zone_central,       value: 'central'       },
+          { label: s.zone_mediterranean, value: 'mediterranean' },
+          { label: s.zone_other,         value: 'other'         },
+        ],
+        onAnswer,
+      },
+      nextStep: 'experience',
+    },
+    {
+      id: 'experience',
+      type: 'CUSTOM_COMPONENT',
+      payload: {
+        componentKey: 'question',
+        answerKey: 'experience',
+        question: s.onboarding_q_exp,
+        dots: [true, true, true],
+        options: [
+          { label: s.exp_0, value: 0 },
+          { label: s.exp_1, value: 1 },
+          { label: s.exp_2, value: 2 },
+        ],
+        onAnswer,
+      },
+      nextStep: 'complete',
+    },
+    {
+      id: 'complete',
+      type: 'CUSTOM_COMPONENT',
+      payload: {
+        componentKey: 'complete',
+        onFinish,
+      },
+      nextStep: null,
+    },
+  ]
+}
+
 export default function Onboarding({ onComplete }) {
   const answersRef = useRef({})
 
-  // Stable ref so the steps array (created once) can call the latest onComplete
+  // Stable ref so the steps array (created once) can call the latest onComplete.
+  // Kept fresh in an effect (not during render) per `react-hooks/refs`; the
+  // `complete` step only runs after the user reaches it, long after mount.
   const onCompleteRef = useRef(onComplete)
-  onCompleteRef.current = onComplete
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+  }, [onComplete])
 
-  // Steps are created once on first render and stored in a ref to keep them
-  // stable (OnboardingProvider re-initialises if the steps array reference changes).
-  const stepsRef = useRef(null)
-  if (!stepsRef.current) {
-    const onAnswer = (key, value) => {
-      answersRef.current = { ...answersRef.current, [key]: value }
-    }
-
-    stepsRef.current = [
-      {
-        id: 'welcome',
-        type: 'CUSTOM_COMPONENT',
-        payload: { componentKey: 'welcome' },
-        nextStep: 'features',
-      },
-      {
-        id: 'features',
-        type: 'CUSTOM_COMPONENT',
-        payload: { componentKey: 'features' },
-        nextStep: 'hiveCount',
-      },
-      {
-        id: 'hiveCount',
-        type: 'CUSTOM_COMPONENT',
-        payload: {
-          componentKey: 'question',
-          answerKey: 'hiveCount',
-          question: s.onboarding_q_hives,
-          dots: [true, false, false],
-          options: [
-            { label: s.hive_1,  value: 1  },
-            { label: s.hive_2,  value: 2  },
-            { label: s.hive_5,  value: 5  },
-            { label: s.hive_10, value: 10 },
-          ],
-          onAnswer,
-        },
-        nextStep: 'climateZone',
-      },
-      {
-        id: 'climateZone',
-        type: 'CUSTOM_COMPONENT',
-        payload: {
-          componentKey: 'question',
-          answerKey: 'climateZone',
-          question: s.onboarding_q_zone,
-          dots: [true, true, false],
-          options: [
-            { label: s.zone_northern,      value: 'northern'      },
-            { label: s.zone_central,       value: 'central'       },
-            { label: s.zone_mediterranean, value: 'mediterranean' },
-            { label: s.zone_other,         value: 'other'         },
-          ],
-          onAnswer,
-        },
-        nextStep: 'experience',
-      },
-      {
-        id: 'experience',
-        type: 'CUSTOM_COMPONENT',
-        payload: {
-          componentKey: 'question',
-          answerKey: 'experience',
-          question: s.onboarding_q_exp,
-          dots: [true, true, true],
-          options: [
-            { label: s.exp_0, value: 0 },
-            { label: s.exp_1, value: 1 },
-            { label: s.exp_2, value: 2 },
-          ],
-          onAnswer,
-        },
-        nextStep: 'complete',
-      },
-      {
-        id: 'complete',
-        type: 'CUSTOM_COMPONENT',
-        payload: {
-          componentKey: 'complete',
-          onFinish: () => onCompleteRef.current(answersRef.current),
-        },
-        nextStep: null,
-      },
-    ]
+  const onAnswer = (key, value) => {
+    answersRef.current = { ...answersRef.current, [key]: value }
   }
+  const onFinish = () => onCompleteRef.current(answersRef.current)
+
+  // Created once via lazy initializer so the steps array reference stays stable
+  // across renders (OnboardingProvider re-initialises if the reference changes).
+  // `onAnswer`/`onFinish` capture refs but only READ them when OnboardJS invokes
+  // them on a user action (never during render); the analyzer can't see that
+  // they're stored for later, so it conservatively flags passing them into the
+  // render-phase initializer. The refs are never dereferenced while rendering.
+  // eslint-disable-next-line react-hooks/refs
+  const [steps] = useState(() => buildSteps(onAnswer, onFinish))
 
   return (
-    <OnboardingProvider steps={stepsRef.current} componentRegistry={COMPONENT_REGISTRY}>
+    <OnboardingProvider steps={steps} componentRegistry={COMPONENT_REGISTRY}>
       <OnboardingUI />
     </OnboardingProvider>
   )

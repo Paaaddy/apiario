@@ -21,6 +21,20 @@ const TEMPERAMENT_OPTIONS = [
   { value: 'defensive', key: 'insp_temperament_defensive' },
 ]
 
+function SectionLabel({ text, color, mono }) {
+  return (
+    <p style={{ margin: '20px 0 10px', fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color, fontFamily: mono ? 'var(--theme-font-mono)' : undefined }}>
+      {text}
+    </p>
+  )
+}
+
+function FieldLabel({ text, htmlFor, id, color }) {
+  const style = { margin: '0 0 6px', fontSize: 13, fontWeight: 600, color, display: 'block' }
+  if (htmlFor) return <label htmlFor={htmlFor} style={style}>{text}</label>
+  return <p id={id} style={style}>{text}</p>
+}
+
 export default function InspectionForm({ colonies = [], initial = null, onSave, onClose }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
@@ -88,20 +102,6 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
     onClose()
   }
 
-  function SectionLabel({ text }) {
-    return (
-      <p style={{ margin: '20px 0 10px', fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: inkMid, fontFamily: theme === 'b' ? 'var(--theme-font-mono)' : undefined }}>
-        {text}
-      </p>
-    )
-  }
-
-  function FieldLabel({ text, htmlFor, id }) {
-    const style = { margin: '0 0 6px', fontSize: 13, fontWeight: 600, color: ink, display: 'block' }
-    if (htmlFor) return <label htmlFor={htmlFor} style={style}>{text}</label>
-    return <p id={id} style={style}>{text}</p>
-  }
-
   return (
     <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="insp-form-title" style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', flexDirection: 'column', background: bg }}>
       {/* sticky header */}
@@ -118,10 +118,10 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
       <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px 120px' }}>
 
         {/* ─ Section 1: Date & colony ─ */}
-        <SectionLabel text={t(s.insp_section_when)} />
+        <SectionLabel text={t(s.insp_section_when)} color={inkMid} mono={theme === 'b'} />
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_date_label)} htmlFor="insp-date" />
+          <FieldLabel text={t(s.insp_date_label)} htmlFor="insp-date" color={ink} />
           <input
             id="insp-date"
             type="date"
@@ -132,7 +132,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_colony_label)} htmlFor="insp-colony" />
+          <FieldLabel text={t(s.insp_colony_label)} htmlFor="insp-colony" color={ink} />
           {colonies.length === 0 ? (
             <p style={{ color: inkMid, fontSize: 13 }}>{t(s.colonies_empty)}</p>
           ) : (
@@ -150,10 +150,10 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         {/* ─ Section 2: Health ─ */}
-        <SectionLabel text={t(s.insp_section_health)} />
+        <SectionLabel text={t(s.insp_section_health)} color={inkMid} mono={theme === 'b'} />
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_queen_label)} id="insp-queen-lbl" />
+          <FieldLabel text={t(s.insp_queen_label)} id="insp-queen-lbl" color={ink} />
           <div role="group" aria-labelledby="insp-queen-lbl" style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {QUEEN_OPTIONS.map((opt) => {
               const active = queenStatus === opt.value
@@ -183,22 +183,22 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_brood_label)} id="insp-brood-lbl" />
+          <FieldLabel text={t(s.insp_brood_label)} id="insp-brood-lbl" color={ink} />
           <InspectionScaleInput value={broodPattern} onChange={setBrood} theme={theme} labelId="insp-brood-lbl" />
         </div>
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_stores_label)} id="insp-stores-lbl" />
+          <FieldLabel text={t(s.insp_stores_label)} id="insp-stores-lbl" color={ink} />
           <InspectionScaleInput value={honeyStores} onChange={setStores} theme={theme} labelId="insp-stores-lbl" />
         </div>
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_population_label)} id="insp-pop-lbl" />
+          <FieldLabel text={t(s.insp_population_label)} id="insp-pop-lbl" color={ink} />
           <InspectionScaleInput value={population} onChange={setPop} theme={theme} labelId="insp-pop-lbl" />
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_temperament_label)} id="insp-temper-lbl" />
+          <FieldLabel text={t(s.insp_temperament_label)} id="insp-temper-lbl" color={ink} />
           <div role="group" aria-labelledby="insp-temper-lbl" style={{ display: 'flex', gap: 8 }}>
             {TEMPERAMENT_OPTIONS.map((opt) => {
               const active = temperament === opt.value
@@ -229,11 +229,11 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         {/* ─ Section 3: Treatment ─ */}
-        <SectionLabel text={t(s.insp_section_treatment)} />
+        <SectionLabel text={t(s.insp_section_treatment)} color={inkMid} mono={theme === 'b'} />
 
         <div style={{ marginBottom: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <FieldLabel text={t(s.insp_varroa_label)} />
+            <FieldLabel text={t(s.insp_varroa_label)} color={ink} />
             <label style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto', color: inkMid, fontSize: 13, cursor: 'pointer' }}>
               <input
                 type="checkbox"
@@ -258,7 +258,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_treatment_label)} htmlFor="insp-treatment" />
+          <FieldLabel text={t(s.insp_treatment_label)} htmlFor="insp-treatment" color={ink} />
           <input
             id="insp-treatment"
             type="text"
@@ -271,7 +271,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_notes_label)} htmlFor="insp-notes" />
+          <FieldLabel text={t(s.insp_notes_label)} htmlFor="insp-notes" color={ink} />
           <textarea
             id="insp-notes"
             maxLength={1000}

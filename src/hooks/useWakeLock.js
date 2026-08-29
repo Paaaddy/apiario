@@ -50,6 +50,14 @@ export function useWakeLock(enabled) {
 
   useEffect(() => {
     if (!enabled || !isSupported) return
+    // State updates inside `acquire`/`release` all run after an `await` (or a
+    // DOM event), i.e. asynchronously — not synchronously in this effect — so
+    // they never re-render within the same commit. The new `set-state-in-effect`
+    // rule can't prove that through the async call boundary, so it flags the
+    // call. We keep the async structure: these are legitimate one-time wake-lock
+    // status transitions and must not run synchronously (the lock is acquired
+    // asynchronously by the browser).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     acquire()
     const onVisible = () => {
       if (document.visibilityState === 'visible' && !sentinelRef.current) {

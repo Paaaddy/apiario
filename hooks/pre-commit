@@ -1,0 +1,63 @@
+#!/usr/bin/env sh
+# Pre-commit hook: run linter and tests and block the commit on failure.
+#
+# Shared across harnesses (Claude, Codex, Cursor, ...) via core.hooksPath.
+# POSIX-compatible shell; no extra dependencies required.
+
+set -u
+
+# Where are we running from? Git runs hooks with cwd set to the repo's
+# top-level directory, but we resolve defensively regardless.
+if [ -z "${GIT_DIR:-}" ]; then
+  ROOT="$(pwd)"
+else
+  ROOT="$(pwd)"
+fi
+
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$ROOT")
+
+FAILED=0
+
+# Guard: if node/npm (or the test runner binary) isn't installed, warn but do
+# NOT block. A fresh clone without node_modules still needs to be able to commit.
+if ! command -v npm >/dev/null 2>&1 || ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit: 'npm'/'node' not found — skipping lint + tests (install dependencies and run 'npm run lint' / 'npm run test:run' separately)."
+  exit 0
+fi
+
+if [ ! -x "$REPO_ROOT/node_modules/.bin/vitest" ] && [ ! -x "$REPO_ROOT/node_modules/.bin/eslint" ]; then
+  echo "pre-commit: node_modules not installed — skipping lint + tests (run 'npm install' then 'npm run lint' / 'npm run test:run')."
+  exit 0
+fi
+
+echo "pre-commit: running linter..."
+# shellcheck disable=SC2086
+if ! npm run lint >/dev/null 2>&1; then
+  echo ""
+  echo "pre-commit: LINT FAILED — fixing the errors above before committing."
+  echo "  Run 'npm run lint' to see the details."
+  echo ""
+  FAILED=1
+else
+  echo "pre-commit: lint passed."
+fi
+
+echo "pre-commit: running tests (CI mode)..."
+# shellcheck disable=SC2086
+if ! npm run test:run >/dev/null 2>&1; then
+  echo ""
+  echo "pre-commit: TESTS FAILED — fix the failing tests before committing."
+  echo "  Run 'npm run test:run' to see the details."
+  echo ""
+  FAILED=1
+else
+  echo "pre-commit: tests passed."
+fi
+
+if [ "$FAILED" -ne 0 ]; then
+  echo "pre-commit: BLOCKING commit — lint and/or tests failed."
+  exit 1
+fi
+
+echo "pre-commit: lint + tests OK."
+exit 0

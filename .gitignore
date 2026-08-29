@@ -1,5 +1,7 @@
 node_modules/
 dist/
 .superpowers/
-.claude/
+# Keep the personal/local settings layer out of version control, but allow
+# the shared .claude/settings.json (safe permission allow-list) to be committed.
+.claude/settings.local.json
 .gstack/

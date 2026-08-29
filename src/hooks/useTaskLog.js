@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { haptics } from '../utils/haptics'
 
 const STORAGE_KEY = 'apiario-log'
@@ -32,7 +32,15 @@ export function useTaskLog() {
   // callback on every log change. This is what lets us decide
   // "is this a check or an uncheck?" *before* we fire the haptic.
   const logRef = useRef(log)
-  logRef.current = log
+
+  // Mirror `log` into a ref after commit so the event-handler path below
+  // can read the latest log synchronously without re-binding on every
+  // change. Updating in an effect (not during render) satisfies the
+  // `react-hooks/refs` rule; handlers run after commit, so they always
+  // see the freshest value.
+  useEffect(() => {
+    logRef.current = log
+  }, [log])
 
   const completedTaskIds = useMemo(
     () => new Set(log.filter((e) => e.type === 'task').map((e) => e.taskId)),
