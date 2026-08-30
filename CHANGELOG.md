@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/Paaaddy/apiario/compare/v2.2.0...v2.3.0) (2026-08-30)
+
+
+### Features
+
+* declutter profile page, add data protection + backup import to onboarding ([c6fda68](https://github.com/Paaaddy/apiario/commit/c6fda6849bf0c13d79783734db02c090ad9f6b55))
+
 ## [2.2.0](https://github.com/Paaaddy/apiario/compare/v2.1.11...v2.2.0) (2026-08-29)
 
 
