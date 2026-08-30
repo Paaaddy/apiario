@@ -106,6 +106,8 @@ export const strings = {
   onboarding_feature_season_desc:  { de: 'Saisonale Aufgaben für deine Völker',     en: 'Seasonal tasks for your colonies'           },
   onboarding_feature_diagnose_desc:{ de: 'Symptome prüfen und Diagnose stellen',    en: 'Check symptoms and get a diagnosis'         },
   onboarding_feature_myhive_desc:  { de: 'Verlauf führen und Profil anpassen',      en: 'Track your history and update your profile' },
+  onboarding_privacy_step_body:    { de: 'Deine Daten – Profil, Völker und Verlauf – werden ausschließlich auf diesem Gerät gespeichert. Es gibt keine Konten und kein Cloud-Backup.', en: 'Your data – profile, colonies and history – is stored only on this device. There are no accounts and no cloud backup.' },
+  onboarding_privacy_import_prompt:{ de: 'Hast du bereits ein Backup? Importiere es jetzt.', en: 'Already have a backup? Import it now.' },
 
 
   // PWA install hint

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { OnboardingProvider, useOnboarding } from '@onboardjs/react'
 import { useLanguage } from '../hooks/useLanguage'
+import { useDataPort } from '../hooks/useDataPort'
 import { strings as s } from '../i18n/strings'
 import LanguageToggle from '../components/LanguageToggle'
 import HexWatermark from '../components/HexWatermark'
@@ -71,6 +72,85 @@ function FeaturesStep() {
             </div>
           </div>
         ))}
+      </div>
+      <div className="px-6 pt-6 pb-10">
+        <button
+          onClick={() => next()}
+          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-sm active:opacity-80 transition-opacity"
+        >
+          {t(s.onboarding_continue)}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Step: Privacy & Import ────────────────────────────────────────────────────
+
+function PrivacyStep() {
+  const { t } = useLanguage()
+  const { next } = useOnboarding()
+  const { importData } = useDataPort()
+  const fileInputRef = useRef(null)
+  const [status, setStatus] = useState(null)
+
+  async function handleFileChange(e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    const result = await importData(file)
+    if (result.ok) {
+      setStatus({ kind: 'success', message: t(s.data_import_reload) })
+      window.location.reload()
+    } else {
+      const errorKey =
+        result.error === 'parse'
+          ? s.data_import_error_parse
+          : result.error === 'format'
+            ? s.data_import_error_format
+            : s.data_import_error_unexpected
+      setStatus({ kind: 'error', message: t(errorKey) })
+    }
+  }
+
+  return (
+    <div className="min-h-full bg-cream flex flex-col">
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+        <HexWatermark />
+        <div className="relative flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="text-5xl mb-3">🍯</div>
+            <h1 className="font-serif text-3xl font-bold text-brown">{t(s.onboarding_title)}</h1>
+          </div>
+          <LanguageToggle />
+        </div>
+      </div>
+      <div className="px-6 pt-6 flex flex-col gap-4">
+        <div className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-sm">
+          <h2 className="font-semibold text-brown mb-2">{t(s.privacy_title)}</h2>
+          <p className="text-sm text-brown-mid">{t(s.onboarding_privacy_step_body)}</p>
+        </div>
+        <div className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-sm">
+          <p className="text-sm text-brown-mid mb-3">{t(s.onboarding_privacy_import_prompt)}</p>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full text-left bg-honey text-brown font-medium py-2 px-3 rounded-lg active:opacity-80 transition-opacity text-sm"
+          >
+            {t(s.data_import)}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+          {status && (
+            <p style={{ margin: '8px 0 0', fontSize: 13, fontWeight: 600, color: status.kind === 'error' ? '#d33' : '#92400e' }}>
+              {status.message}
+            </p>
+          )}
+        </div>
       </div>
       <div className="px-6 pt-6 pb-10">
         <button
@@ -175,6 +255,7 @@ function CompleteStep({ payload }) {
 const COMPONENT_REGISTRY = {
   welcome:  WelcomeStep,
   features: FeaturesStep,
+  privacy:  PrivacyStep,
   question: QuestionStep,
   complete: CompleteStep,
 }
@@ -207,6 +288,12 @@ function buildSteps(onAnswer, onFinish) {
       id: 'features',
       type: 'CUSTOM_COMPONENT',
       payload: { componentKey: 'features' },
+      nextStep: 'privacy',
+    },
+    {
+      id: 'privacy',
+      type: 'CUSTOM_COMPONENT',
+      payload: { componentKey: 'privacy' },
       nextStep: 'hiveCount',
     },
     {

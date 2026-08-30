@@ -5,6 +5,23 @@ import { LanguageProvider } from '../context/LanguageContext'
 import Onboarding from './Onboarding'
 import { strings as s } from '../i18n/strings'
 
+function makeFile(text) {
+  return new File([text], 'backup.json', { type: 'application/json' })
+}
+
+function validPayload() {
+  return JSON.stringify({
+    format: 'apiario-backup',
+    schemaVersion: 2,
+    exportedAt: '2026-01-01T00:00:00.000Z',
+    data: {
+      profile: { hiveCount: 2, colonies: [{ id: 'col-1', name: 'A' }] },
+      inspections: [{ id: 'i1' }],
+      log: [{ id: 'l1' }],
+    },
+  })
+}
+
 beforeEach(() => { localStorage.setItem('apiario-locale', 'en') })
 afterEach(() => { localStorage.clear() })
 
@@ -12,10 +29,15 @@ function wrap(ui) {
   return render(<LanguageProvider>{ui}</LanguageProvider>)
 }
 
-// Helper: advance past welcome and features screens to reach the questions
+// Helper: advance past welcome, features, and privacy screens to reach the questions
 async function advanceToQuestions(user) {
   await user.click(screen.getByRole('button', { name: "Let's go" }))
-  await user.click(screen.getByRole('button', { name: 'Continue' }))
+  // Click Continue on features screen
+  const continueButtons = screen.getAllByRole('button', { name: 'Continue' })
+  await user.click(continueButtons[0])
+  // Click Continue on privacy screen
+  const continueButtons2 = screen.getAllByRole('button', { name: 'Continue' })
+  await user.click(continueButtons2[0])
 }
 
 describe('has required strings', () => {
@@ -55,7 +77,45 @@ describe('Onboarding flow', () => {
     })
   })
 
-  it('advances to hive count question after Continue on features', async () => {
+  it('advances to privacy screen after Continue on features', async () => {
+    const user = userEvent.setup()
+    wrap(<Onboarding onComplete={() => {}} />)
+    await waitFor(() => screen.getByText("Let's go"))
+    await user.click(screen.getByText("Let's go"))
+    await waitFor(() => screen.getByText('Season'))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await waitFor(() => {
+      expect(screen.getByText(/stored only on this device/i)).toBeInTheDocument()
+    })
+  })
+
+  it('shows privacy step body and import prompt', async () => {
+    const user = userEvent.setup()
+    wrap(<Onboarding onComplete={() => {}} />)
+    await waitFor(() => screen.getByText("Let's go"))
+    await user.click(screen.getByText("Let's go"))
+    await waitFor(() => screen.getByText('Season'))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await waitFor(() => {
+      expect(screen.getByText(/stored only on this device/i)).toBeInTheDocument()
+      expect(screen.getByText(/Already have a backup/i)).toBeInTheDocument()
+    })
+  })
+
+  it('has import button on privacy step', async () => {
+    const user = userEvent.setup()
+    wrap(<Onboarding onComplete={() => {}} />)
+    await waitFor(() => screen.getByText("Let's go"))
+    await user.click(screen.getByText("Let's go"))
+    await waitFor(() => screen.getByText('Season'))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await waitFor(() => {
+      const importBtn = screen.getByRole('button', { name: /Import from file/i })
+      expect(importBtn).toBeInTheDocument()
+    })
+  })
+
+  it('advances to hive count question after Continue on privacy (without importing)', async () => {
     const user = userEvent.setup()
     wrap(<Onboarding onComplete={() => {}} />)
     await waitFor(() => screen.getByText("Let's go"))
@@ -125,6 +185,65 @@ describe('Onboarding flow', () => {
       hiveCount: 1,
       climateZone: 'central',
       experience: 0,
+    })
+  })
+})
+
+describe('Privacy step - import functionality', () => {
+  it('shows error message on invalid JSON import', async () => {
+    const user = userEvent.setup()
+    wrap(<Onboarding onComplete={() => {}} />)
+    await waitFor(() => screen.getByText("Let's go"))
+    await user.click(screen.getByText("Let's go"))
+    await waitFor(() => screen.getByText('Season'))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await waitFor(() => screen.getByText(/Already have a backup/i))
+
+    const importBtn = screen.getByRole('button', { name: /Import from file/i })
+    const fileInput = importBtn.parentElement.querySelector('input[type="file"]')
+
+    await user.upload(fileInput, makeFile('{{{ not json'))
+
+    await waitFor(() => {
+      expect(screen.getByText(/Not a valid JSON file/i)).toBeInTheDocument()
+    })
+  })
+
+  it('shows error message on wrong format file', async () => {
+    const user = userEvent.setup()
+    wrap(<Onboarding onComplete={() => {}} />)
+    await waitFor(() => screen.getByText("Let's go"))
+    await user.click(screen.getByText("Let's go"))
+    await waitFor(() => screen.getByText('Season'))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await waitFor(() => screen.getByText(/Already have a backup/i))
+
+    const importBtn = screen.getByRole('button', { name: /Import from file/i })
+    const fileInput = importBtn.parentElement.querySelector('input[type="file"]')
+
+    await user.upload(fileInput, makeFile(JSON.stringify({ format: 'nope', data: {} })))
+
+    await waitFor(() => {
+      expect(screen.getByText(/Not an Apiario backup file/i)).toBeInTheDocument()
+    })
+  })
+
+  it('shows success message on successful import', async () => {
+    const user = userEvent.setup()
+    wrap(<Onboarding onComplete={() => {}} />)
+    await waitFor(() => screen.getByText("Let's go"))
+    await user.click(screen.getByText("Let's go"))
+    await waitFor(() => screen.getByText('Season'))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await waitFor(() => screen.getByText(/Already have a backup/i))
+
+    const importBtn = screen.getByRole('button', { name: /Import from file/i })
+    const fileInput = importBtn.parentElement.querySelector('input[type="file"]')
+
+    await user.upload(fileInput, makeFile(validPayload()))
+
+    await waitFor(() => {
+      expect(screen.getByText(/Reloading app/i)).toBeInTheDocument()
     })
   })
 })
