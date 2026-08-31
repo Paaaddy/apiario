@@ -25,6 +25,7 @@ export default function ColoniesSection({
   onRemove,
   inspections = [],
   onAddInspection,
+  onSelectColony,
 }) {
   const { t } = useLanguage()
 
@@ -137,7 +138,8 @@ export default function ColoniesSection({
           ) : (
             <li
               key={colony.id}
-              className="bg-white border border-amber-100 rounded-xl p-3 shadow-sm"
+              onClick={() => onSelectColony(colony.id)}
+              className="bg-white border border-amber-100 rounded-xl p-3 shadow-sm cursor-pointer hover:border-honey transition-colors"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
@@ -159,29 +161,38 @@ export default function ColoniesSection({
                   )}
                 </div>
                 <div className="flex flex-col gap-1 shrink-0 items-end">
-                  {onAddInspection && (
-                    <button
-                      type="button"
-                      onClick={() => setInspectColonyId(colony.id)}
-                      className="text-xs font-semibold text-honey bg-brown rounded-lg px-2 py-1"
-                    >
-                      {t(s.insp_add_button)}
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => beginEdit(colony)}
-                    className="text-xs text-brown-mid underline"
-                  >
-                    {t(s.colonies_edit)}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRemove(colony.id)}
-                    className="text-xs text-red-600 underline"
-                  >
-                    {t(s.colonies_delete)}
-                  </button>
+                   {onAddInspection && (
+                     <button
+                       type="button"
+                       onClick={(e) => {
+                         e.stopPropagation()
+                         setInspectColonyId(colony.id)
+                       }}
+                       className="text-xs font-semibold text-honey bg-brown rounded-lg px-2 py-1"
+                     >
+                       {t(s.insp_add_button)}
+                     </button>
+                   )}
+                   <button
+                     type="button"
+                     onClick={(e) => {
+                       e.stopPropagation()
+                       beginEdit(colony)
+                     }}
+                     className="text-xs text-brown-mid underline"
+                   >
+                     {t(s.colonies_edit)}
+                   </button>
+                   <button
+                     type="button"
+                     onClick={(e) => {
+                       e.stopPropagation()
+                       handleRemove(colony.id)
+                     }}
+                     className="text-xs text-red-600 underline"
+                   >
+                     {t(s.colonies_delete)}
+                   </button>
                 </div>
               </div>
             </li>

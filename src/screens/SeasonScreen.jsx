@@ -16,6 +16,39 @@ if (import.meta.env.DEV) {
   validateSeasonsTree()
 }
 
+function WinterStoreBanner({ guidance, theme }) {
+  const { t } = useLanguage()
+  if (!guidance) return null
+  const c = themeColors(theme)
+
+  const commonStyles = {
+    marginBottom: 12,
+    borderRadius: 16,
+    padding: '14px 16px',
+    border: `1px solid ${c.border}`,
+    background: c.cardBg,
+  }
+
+  return (
+    <div style={commonStyles}>
+      <p style={{ fontFamily: '"Playfair Display", serif', fontSize: 15, fontWeight: 700, color: c.ink, marginBottom: 4 }}>
+        {t(guidance.titleString)}
+      </p>
+      <p style={{ fontSize: 13, color: c.inkMid, marginBottom: 6 }}>
+        {t(guidance.subtitleString)}
+      </p>
+      <p style={{ fontSize: 14, fontWeight: 600, color: c.ink, marginBottom: guidance.beginnerTipString ? 6 : 0 }}>
+        {t(guidance.kgString)}
+      </p>
+      {guidance.beginnerTipString && (
+        <p style={{ fontSize: 12, color: c.inkMid, fontStyle: 'italic', marginTop: 4 }}>
+          💡 {t(guidance.beginnerTipString)}
+        </p>
+      )}
+    </div>
+  )
+}
+
 function formatDayMonth(date, locale) {
   if (!date) return ''
   const loc = locale === 'de' ? 'de-DE' : 'en-GB'
@@ -37,7 +70,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   const today = useMemo(() => new Date(), [])
   const viewingToday = isSameIsoWeek(selectedDate, today)
 
-  const { label, icon, week, weekRange, tasks, nextLockedSecret } = useSeason(
+  const { label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
     profile,
     completedCount,
     selectedDate
@@ -83,6 +116,12 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
               {t(s.secret_locked_teaser).replace('{n}', String(Math.max(0, (nextLockedSecret.unlockAt ?? 0) - completedCount)))}
             </div>
           )}
+          {climateShiftLabel && (
+            <p style={{ marginTop: 12, textAlign: 'center', fontSize: 12, color: c.inkMid, fontStyle: 'italic' }}>
+              🌍 {t(s[climateShiftLabel])}
+            </p>
+          )}
+          <WinterStoreBanner guidance={winterStoreGuidance} theme={theme} />
         </div>
       </div>
     )
@@ -110,6 +149,12 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
               🔒 {t(s.secret_locked_teaser).replace('{n}', String(Math.max(0, (nextLockedSecret.unlockAt ?? 0) - completedCount)))}
             </div>
           )}
+          {climateShiftLabel && (
+            <p style={{ marginTop: 12, textAlign: 'center', fontSize: 12, color: c.inkMid, fontStyle: 'italic', fontFamily: 'var(--theme-font-head)' }}>
+              🌍 {t(s[climateShiftLabel])}
+            </p>
+          )}
+          <WinterStoreBanner guidance={winterStoreGuidance} theme={theme} />
           <div style={{ marginTop: 20, padding: '12px 0', textAlign: 'center', fontFamily: 'var(--theme-font-mono)', fontSize: 10, letterSpacing: '1.5px', color: c.inkLight, textTransform: 'uppercase' }}>
             — {locale === 'de' ? 'Ende der Woche' : 'end of week'} —
           </div>
@@ -177,6 +222,12 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
             {t(s.secret_locked_teaser).replace('{n}', String(Math.max(0, (nextLockedSecret.unlockAt ?? 0) - completedCount)))}
           </div>
         )}
+        {climateShiftLabel && (
+          <p className="mt-2 text-center text-xs italic text-brown-mid">
+            🌍 {t(s[climateShiftLabel])}
+          </p>
+        )}
+        <WinterStoreBanner guidance={winterStoreGuidance} theme={theme} />
       </div>
     </div>
   )
