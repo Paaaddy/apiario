@@ -6,6 +6,7 @@ import LanguageToggle from '../components/LanguageToggle'
 import LogSection from './LogSection'
 import ProfileSection from './ProfileSection'
 import ColoniesSection from './ColoniesSection'
+import ColonyDetail from './ColonyDetail'
 import InspectionTab from './InspectionTab'
 import MyHiveTabStrip from '../components/MyHiveTabStrip'
 import PwaInstallHint from '../components/PwaInstallHint'
@@ -30,12 +31,23 @@ export default function MyHiveScreen({
   const { t } = useLanguage()
   const { theme } = useTheme()
   const [activeTab, setActiveTab] = useState('colonies')
+  const [selectedColonyId, setSelectedColonyId] = useState(null)
 
   const colonies = profile?.colonies ?? []
+  const selectedColony = colonies.find(c => c.id === selectedColonyId)
 
   function renderTabContent() {
     switch (activeTab) {
       case 'colonies':
+        if (selectedColonyId) {
+          return (
+            <ColonyDetail 
+              colony={selectedColony} 
+              inspections={inspections} 
+              onBack={() => setSelectedColonyId(null)} 
+            />
+          )
+        }
         return (
           <>
             <div style={{ marginBottom: 16 }}>
@@ -48,25 +60,35 @@ export default function MyHiveScreen({
               onRemove={onRemoveColony}
               inspections={inspections}
               onAddInspection={onAddInspection}
+              onSelectColony={setSelectedColonyId}
             />
           </>
         )
       case 'inspections':
         return (
-          <InspectionTab
-            colonies={colonies}
-            inspections={inspections}
-            onAdd={onAddInspection}
-            onUpdate={onUpdateInspection}
-            onDelete={onDeleteInspection}
+          <InspectionTab 
+            inspections={inspections} 
+            colonies={colonies} 
+            onAdd={onAddInspection} 
+            onUpdate={onUpdateInspection} 
+            onDelete={onDeleteInspection} 
           />
         )
       case 'log':
-        return <LogSection log={log} onAddEntry={onAddEntry} onDeleteEntry={onDeleteEntry} />
+        return (
+          <LogSection 
+            log={log} 
+            onAdd={onAddEntry} 
+            onDelete={onDeleteEntry} 
+          />
+        )
       case 'profile':
-        return <ProfileSection profile={profile} onUpdate={onUpdate} />
-      default:
-        return null
+        return (
+          <ProfileSection 
+            profile={profile} 
+            onUpdate={onUpdate} 
+          />
+        )
     }
   }
 

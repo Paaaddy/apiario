@@ -66,6 +66,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
   const [date, setDate]                   = useState(initial?.date ?? today())
   const [colonyId, setColonyId]           = useState(initial?.colonyId ?? (colonies[0]?.id ?? ''))
   const [queenStatus, setQueenStatus]     = useState(initial?.queenStatus ?? null)
+  const [queenYear, setQueenYear]         = useState(initial?.queenYear ?? '')
   const [broodPattern, setBrood]          = useState(initial?.broodPattern ?? null)
   const [honeyStores, setStores]          = useState(initial?.honeyStores ?? null)
   const [population, setPop]              = useState(initial?.population ?? null)
@@ -73,6 +74,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
   const [varroaChecked, setVarroaChecked] = useState(initial?.varroa != null)
   const [varroa, setVarroa]               = useState(initial?.varroa ?? '')
   const [treatment, setTreatment]         = useState(initial?.treatment ?? '')
+  const [harvest, setHarvest]             = useState(initial?.harvest ?? '')
   const [notes, setNotes]                 = useState(initial?.notes ?? '')
 
   const isEditing = Boolean(initial)
@@ -93,12 +95,14 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
       colonyId,
       date,
       queenStatus,
+      queenYear: queenYear.trim() || null,
       broodPattern,
       honeyStores,
       population,
       temperament,
       varroa: varroaChecked ? (varroa === '' ? null : (/^\d+(\.\d{1,2})?$/.test(varroa.trim()) ? Number(varroa) : null)) : null,
       treatment: treatment.trim() || null,
+      harvest: harvest.trim() ? Number(harvest) : null,
       notes: notes.trim() || null,
     })
     onClose()
@@ -182,6 +186,35 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
               )
             })}
           </div>
+        </div>
+
+        <div style={{ marginBottom: 14 }}>
+          <FieldLabel text={t(s.insp_queen_year_label)} htmlFor="insp-queen-year" color={ink} />
+          <input
+            id="insp-queen-year"
+            type="number"
+            min="1900"
+            max={new Date().getFullYear()}
+            value={queenYear}
+            onChange={(e) => setQueenYear(e.target.value)}
+            placeholder={t(s.insp_queen_year_placeholder)}
+            style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 14 }}>
+          <FieldLabel text={t(s.insp_harvest_label)} htmlFor="insp-harvest" color={ink} />
+          <input
+            id="insp-harvest"
+            type="number"
+            min="0"
+            max="100"
+            step="0.1"
+            value={harvest}
+            onChange={(e) => setHarvest(e.target.value)}
+            placeholder={t(s.insp_harvest_placeholder)}
+            style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
+          />
         </div>
 
         <div style={{ marginBottom: 18 }}>

@@ -51,6 +51,18 @@ function ClipboardIcon({ active }) {
   )
 }
 
+function BookIcon({ active }) {
+  const c = active ? '#2b1d0e' : '#98876b'
+  const w = active ? 2 : 1.5
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+      <path d="M6.5 17H20"/>
+      <path d="M6.5 17A2.5 2.5 0 0 1 9 14.5H20"/>
+    </svg>
+  )
+}
+
 const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
@@ -60,6 +72,7 @@ const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
     { key: 'season',   label: t(s.nav_season),   emoji: '📅', Icon: SproutIcon },
     { key: 'diagnose', label: t(s.nav_diagnose),  emoji: '🔎', Icon: MagnifyIcon },
     { key: 'inspect',  label: t(s.nav_inspect),   emoji: '📋', Icon: ClipboardIcon },
+    { key: 'learn',    label: t(s.nav_learn),     emoji: '📚', Icon: BookIcon },
     { key: 'myhive',   label: t(s.nav_myhive),    emoji: '🐝', Icon: HiveIcon },
   ], [t])
 

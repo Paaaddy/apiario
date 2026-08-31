@@ -1,0 +1,97 @@
+[
+  {
+    "id": "f1",
+    "difficulty": "beginner",
+    "tags": ["varroa", "parasites", "health"],
+    "content": {
+      "de": {
+        "title": "Varroa-Milben Schwellenwerte",
+        "summary": "Die Varroa-Milbe ist die weltweit größte parasitäre Bedrohung für Honigbienen. Imker schätzen den Befall in 'Milben pro 100 Bienen' und behandeln erst, wenn ein Schwellenwert überschritten wird.",
+        "details": "Ein Schwellenwert von 3 Milben pro 100 Bienen gilt in der Hauptwachstumsphase (Mai-Oktober) als Behandlungsgrenze. Im Februar (vor dem Honigfluss) wird bereits ein Wert von 1 Milbe pro 100 Bienen empfohlen, da die Populationen schnell wachsen.",
+        "source": "Mississippi State Univ. Extension P4049"
+      },
+      "en": {
+        "title": "Varroa Mite Thresholds",
+        "summary": "Varroa is the #1 parasite threat to honey bees worldwide. Beekeepers estimate infestation levels as 'mites per 100 bees' and treat only when that number crosses a threshold.",
+        "details": "A threshold of 3 mites per 100 bees is used for the main growing season (May-October). In February (pre-honey-flow), a threshold of 1 mite per 100 bees is recommended, because populations grow quickly and would otherwise exceed damage levels by the honey flow.",
+        "source": "Mississippi State Univ. Extension P4049"
+      }
+    }
+  },
+  {
+    "id": "f2",
+    "difficulty": "intermediate",
+    "tags": ["varroa", "health", "monitoring"],
+    "content": {
+      "de": {
+        "title": "Alkoholwasche vs. Sichtprüfung",
+        "summary": "Das bloße Anschauen der Bienen reicht nicht aus, um Varroa-Befall zu erkennen.",
+        "details": "Eine quantitative Zählung (Alkoholwasche oder Zuckerrollmethode) ist weitaus zuverlässiger als eine reine Sichtprüfung, da Milben oft im Brutnest bleiben und nicht auf den Bienen sichtbar sind.",
+        "source": "Consensus (Univ. Extension Services)"
+      },
+      "en": {
+        "title": "Alcohol Wash vs. Visual Inspection",
+        "summary": "Looking at the bees is not enough to detect Varroa infestation.",
+        "details": "A quantitative count (alcohol wash or sugar roll) is far more reliable than just looking, as mites often stay in the brood nest and are not visible on the adult bees.",
+        "source": "Consensus (Univ. Extension Services)"
+      }
+    }
+  },
+  {
+    "id": "f3",
+    "difficulty": "beginner",
+    "tags": ["disease", "afb", "health"],
+    "content": {
+      "de": {
+        "title": "Amerikanische Faulbrut (AFB)",
+        "summary": "Die Amerikanische Faulbrut ist die schädlichste und am strengsten regulierte Bruttkrankheit.",
+        "details": "AFB-Sporen sind extrem langlebig und können jahrzehntelang (oft 40+ Jahre) in getrockneten Sporen auf Waben und Ausrüstung überleben. Sie sind resistent gegen Hitze und viele Desinfektionsmittel.",
+        "source": "USDA APHIS / FAO"
+      },
+      "en": {
+        "title": "American Foulbrood (AFB)",
+        "summary": "American Foulbrood is the most damaging and most regulated honey-bee brood disease.",
+        "details": "AFB spores are famously long-lived and can survive for decades (commonly stated as 40+ years) in dried spores on comb and equipment, remaining resistant to heat and disinfectants.",
+        "source": "USDA APHIS / FAO"
+      }
+    }
+  },
+  {
+    "id": "f4",
+    "difficulty": "intermediate",
+    "tags": ["disease", "afb", "diagnostics"],
+    "content": {
+      "de": {
+        "title": "Der Fadenprobe-Test (AFB)",
+        "summary": "Ein klassischer Feldtest zur Erkennung von AFB.",
+        "details": "Bei der Fadenprobe wird ein Zahnstocher in eine zersetzte Larve eingeführt und langsam zurückgezogen. Wenn sich eine lange, elastische 'Kordel' aus bakterieller Masse zieht, ist dies ein positives Signal für AFB.",
+        "source": "USDA APHIS / University Lab Protocols"
+      },
+      "en": {
+        "title": "The Ropiness Test (AFB)",
+        "summary": "The classic field test for detecting AFB.",
+        "details": "A toothpick is inserted into a decomposing larva and slowly withdrawn. If a long, elastic 'rope' of bacterial mass stretches, it is a positive signal for AFB.",
+        "source": "USDA APHIS / University Lab Protocols"
+      }
+    }
+  },
+  {
+    "id": "f5",
+    "difficulty": "beginner",
+    "tags": ["honey", "harvest", "quality"],
+    "content": {
+      "de": {
+        "title": "Feuchtigkeitsgehalt von Honig",
+        "summary": "Bienen reifen Honig, indem sie Wasser verdampfen, bis er unter den Punkt sinkt, an dem Hefen ihn gären lassen können.",
+        "details": "Honig über etwa 18-18.6% Feuchtigkeit riskiert die Gärung. Imker ernten meist verdeckelten Honig (der bereits unter ~18% liegt) oder nutzen ein Refraktometer.",
+        "source": "National Honey Board / USDA AMS"
+      },
+      "en": {
+        "title": "Honey Moisture Content",
+        "summary": "Bees ripen honey by evaporating water below the point where yeast can ferment it.",
+        "details": "Honey above roughly 18-18.6% moisture risks fermentation. Beekeepers harvest capped honey (which is already below ~18%) or use a refractometer to verify.",
+        "source": "National Honey Board / USDA AMS"
+      }
+    }
+  }
+]

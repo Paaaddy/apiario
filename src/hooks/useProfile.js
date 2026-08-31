@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 
 const STORAGE_KEY = 'apiario-profile'
-const SCHEMA_VERSION = 2
+const SCHEMA_VERSION = 3
 
 const DEFAULT_PROFILE = {
   schemaVersion: SCHEMA_VERSION,
@@ -43,6 +43,8 @@ export function buildSeededColonies(count, existing = []) {
       name: `Hive ${start + i + 1}`,
       createdAt,
       notes: '',
+      queenIntroducedAt: null,
+      harvestLog: [],
     })),
   ]
 }
@@ -70,6 +72,19 @@ function migrate(profile) {
     p.colonies = buildSeededColonies(p.hiveCount)
     p.schemaVersion = 2
     v = 2
+  }
+
+  // v2 → v3: add queenIntroducedAt and harvestLog to each colony.
+  if (v < 3) {
+    if (p.colonies && Array.isArray(p.colonies)) {
+      p.colonies = p.colonies.map((c) => ({
+        ...c,
+        queenIntroducedAt: c.queenIntroducedAt ?? null,
+        harvestLog: c.harvestLog ?? [],
+      }))
+    }
+    p.schemaVersion = 3
+    v = 3
   }
 
   return p
@@ -112,6 +127,8 @@ export function useProfile() {
         name: (name ?? '').trim() || `Hive ${existing.length + 1}`,
         createdAt: today(),
         notes,
+        queenIntroducedAt: null,
+        harvestLog: [],
       }
       const next = { ...prev, colonies: [...existing, colony] }
       saveProfile(next)

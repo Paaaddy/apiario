@@ -26,9 +26,10 @@ const SeasonScreen  = lazy(() => import('./screens/SeasonScreen'))
 const DiagnoseScreen = lazy(() => import('./screens/DiagnoseScreen'))
 const InspectScreen = lazy(() => import('./screens/InspectScreen'))
 const MyHiveScreen  = lazy(() => import('./screens/MyHiveScreen'))
+const LearnScreen   = lazy(() => import('./screens/LearnScreen'))
 
 const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
-const VALID_TABS = ['season', 'diagnose', 'inspect', 'myhive']
+const VALID_TABS = ['season', 'diagnose', 'inspect', 'learn', 'myhive']
 function initialTab() {
   const q = new URLSearchParams(window.location.search).get('tab')
   return VALID_TABS.includes(q) ? q : 'season'
@@ -171,6 +172,7 @@ function AppContent() {
               onDelete={removeInspection}
             />
           )}
+          {activeTab === 'learn' && <LearnScreen />}
           {activeTab === 'myhive' && (
             <MyHiveScreen
               profile={profile}

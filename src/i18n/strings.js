@@ -126,6 +126,10 @@ export const strings = {
   voice_cmd_diagnose_desc: { de: 'zum Diagnose-Tab wechseln', en: 'go to diagnose tab'       },
   voice_cmd_season:        { de: '"saison"',                  en: '"season"'                 },
   voice_cmd_season_desc:   { de: 'zum Wochen-Tab wechseln',   en: 'go to season / week tab'  },
+  voice_cmd_inspect:       { de: '"kontrolle"',               en: '"inspect"'                },
+  voice_cmd_inspect_desc:  { de: 'zu den Kontrollen wechseln', en: 'go to inspections'       },
+  voice_cmd_learn:         { de: '"lernen"',                  en: '"learn"'                  },
+  voice_cmd_learn_desc:    { de: 'zur Wissensbibliothek',     en: 'go to knowledge library'  },
   voice_cmd_myhive:        { de: '"stock"',                   en: '"my hive"'                },
   voice_cmd_myhive_desc:   { de: 'Profil, Verlauf und Völker', en: 'profile, log and colonies' },
   voice_cmd_next:          { de: '"weiter"',                  en: '"next"'                   },
@@ -166,7 +170,21 @@ export const strings = {
   tab_log:         { de: 'Verlauf',    en: 'Log'         },
   tab_profile:     { de: 'Profil',     en: 'Profile'     },
 
-  // Inspection form
+  // Guide/Learn tab
+  nav_learn:      { de: 'Lernen',     en: 'Learn'      },
+  learn_title:    { de: 'Wissensbibliothek', en: 'Knowledge Library' },
+  learn_subtitle: { de: 'Kurates Bienenwissen aus seriösen Quellen', en: 'Curated bee knowledge from trusted sources' },
+  learn_search:   { de: 'Suchen…',    en: 'Search…'    },
+  learn_category: { de: 'Kategorie',  en: 'Category'   },
+  learn_difficulty: { de: 'Schwierigkeit', en: 'Difficulty' },
+  learn_tags:     { de: 'Stichworte', en: 'Tags'       },
+  learn_source:   { de: 'Quelle',     en: 'Source'     },
+  learn_no_results: { de: 'Keine Einträge gefunden.', en: 'No entries found.' },
+  learn_difficulty_beginner: { de: 'Einsteiger', en: 'Beginner' },
+  learn_difficulty_intermediate: { de: 'Fortgeschritten', en: 'Intermediate' },
+  learn_difficulty_advanced: { de: 'Experte', en: 'Advanced' },
+
+// Inspection form
   insp_title_add:             { de: 'Neue Kontrolle',              en: 'New inspection'           },
   insp_title_edit:            { de: 'Kontrolle bearbeiten',        en: 'Edit inspection'          },
   insp_section_when:          { de: 'Datum & Volk',                en: 'Date & colony'            },
@@ -180,19 +198,33 @@ export const strings = {
   insp_queen_eggs:            { de: 'Eier',                        en: 'Eggs'                     },
   insp_queen_larvae:          { de: 'Maden',                       en: 'Larvae'                   },
   insp_queen_not_seen:        { de: 'Nicht gesehen',               en: 'Not seen'                 },
+  insp_queen_year_label:      { de: 'Königin eingeführt',          en: 'Queen introduced'         },
+  insp_queen_year_placeholder:{ de: 'Jahr eingeben (z.B. 2024)',   en: 'Enter year (e.g. 2024)'   },
+  insp_harvest_label:         { de: 'Honigernte',                  en: 'Honey harvest'            },
+  insp_harvest_placeholder:   { de: 'Kg eingeben (z.B. 15.5)',     en: 'Enter kg (e.g. 15.5)'     },
   insp_brood_label:           { de: 'Brutstimmung',                en: 'Brood pattern'            },
-  insp_stores_label:          { de: 'Honigvorrat',                 en: 'Honey stores'             },
+  insp_brood_none:            { de: 'Keine',                         en: 'None'                     },
+  insp_brood_scattered:       { de: 'Zerstreut',                    en: 'Scattered'                },
+  insp_brood_patchy:          { de: 'Fleckenhaft',                  en: 'Patchy'                   },
+  insp_brood_solid:           { de: 'Stetig',                        en: 'Solid'                    },
+  insp_honeystores_label:     { de: 'Honigvorräte',                en: 'Honey stores'             },
+  insp_honeystores_empty:     { de: 'Leer',                        en: 'Empty'                    },
+  insp_honeystores_quarter:   { de: 'Viertel',                     en: 'Quarter'                  },
+  insp_honeystores_half:      { de: 'Halb',                        en: 'Half'                     },
+  insp_honeystores_threequarters: { de: 'Dreiviertel',             en: 'Three quarters'         },
+  insp_honeystores_full:      { de: 'Voll',                        en: 'Full'                     },
   insp_population_label:      { de: 'Volksstärke',                 en: 'Population'               },
-  insp_temperament_label:     { de: 'Temperament',                 en: 'Temperament'              },
-  insp_temperament_calm:      { de: 'Ruhig',                       en: 'Calm'                     },
-  insp_temperament_normal:    { de: 'Normal',                      en: 'Normal'                   },
-  insp_temperament_defensive: { de: 'Nervös',                      en: 'Defensive'                },
-  insp_varroa_label:          { de: 'Varroa (pro 100 Bienen)',     en: 'Varroa (per 100 bees)'    },
-  insp_varroa_not_tested:     { de: 'Nicht getestet',              en: 'Not tested'               },
+  insp_population_very_low:   { de: 'Sehr gering',                 en: 'Very low'                 },
+  insp_population_low:        { de: 'Gering',                      en: 'Low'                      },
+  insp_population_normal:     { de: 'Normal',                      en: 'Normal'                   },
+  insp_population_high:       { de: 'Hoch',                        en: 'High'                     },
+  insp_population_very_high:  { de: 'Sehr hoch',                   en: 'Very high'                },
   insp_treatment_label:       { de: 'Behandlung',                  en: 'Treatment'                },
-  insp_treatment_placeholder: { de: 'z. B. Oxalsäure 4 g',        en: 'e.g. Oxalic acid 4g'      },
-  insp_notes_label:           { de: 'Notizen',                     en: 'Notes'                    },
-  insp_notes_placeholder:     { de: 'Was ist sonst aufgefallen?',  en: 'Anything else observed?'  },
+  insp_treatment_none:        { de: 'Keine Behandlung',            en: 'None'                     },
+  insp_treatment_varroa:      { de: 'Varroa-Behandlung',           en: 'Varroa treatment'         },
+  insp_treatment_feeding:     { de: 'Füttern',                     en: 'Feeding'                  },
+  insp_treatment_queen:       { de: 'Wechsel Königin',             en: 'Queen replacement'        },
+  insp_treatment_other:       { de: 'Sonstige',                    en: 'Other'                    },
   insp_save:                  { de: 'Speichern',                   en: 'Save'                     },
   insp_cancel:                { de: 'Abbrechen',                   en: 'Cancel'                   },
   insp_delete:                { de: 'Löschen',                     en: 'Delete'                   },
@@ -212,4 +244,80 @@ export const strings = {
 
   // Diagnose pre-fill
   diagnose_from_inspection: { de: 'Von letzter Kontrolle starten', en: 'Start from last inspection' },
+
+  // Climate hints
+  climate_winter_hint: {
+    de: 'Lass 25–30 kg Honig als Wintervorrat zurück.',
+    en: 'Leave 25–30 kg honey for winter.',
+  },
+  climate_winter_hint_central: {
+    de: 'Lass 20–25 kg Honig als Wintervorrat zurück.',
+    en: 'Leave 20–25 kg honey for winter.',
+  },
+  climate_winter_hint_mediterranean: {
+    de: 'Lass 15–20 kg Honig als Wintervorrat zurück.',
+    en: 'Leave 15–20 kg honey for winter.',
+  },
+  climate_winter_hint_other: {
+    de: 'Lass 15–20 kg Honig als Wintervorrat zurück.',
+    en: 'Leave 15–20 kg honey for winter.',
+  },
+  climate_spring_advance: {
+    de: 'Frühjahr: Aufgaben 2 Wochen vorgezogen.',
+    en: 'Spring: tasks shifted 2 weeks earlier.',
+  },
+  climate_autumn_delay: {
+    de: 'Herbst: Aufgaben 2 Wochen verschoben.',
+    en: 'Autumn: tasks shifted 2 weeks later.',
+  },
+  climate_spring_delay: {
+    de: 'Frühjahr: Aufgaben 2 Wochen verschoben.',
+    en: 'Spring: tasks shifted 2 weeks later.',
+  },
+  climate_autumn_advance: {
+    de: 'Herbst: Aufgaben 2 Wochen vorgezogen.',
+    en: 'Autumn: tasks shifted 2 weeks earlier.',
+  },
+
+  // Winter store guidance banner
+  winter_store_title: {
+    de: '❄️ Wintervorräte prüfen',
+    en: '❄️ Check winter stores',
+  },
+  winter_store_subtitle: {
+    de: 'Überprüfe das Gewicht — Bienen verbrauchen Vorräte im Winter.',
+    en: 'Heft the hive — bees consume stores through winter.',
+  },
+  winter_store_kg_northern: {
+    de: 'Ziel: 18–22 kg Honigvorrat pro Volk.',
+    en: 'Target: 18–22 kg honey stores per colony.',
+  },
+  winter_store_kg_central: {
+    de: 'Ziel: 15–20 kg Honigvorrat pro Volk.',
+    en: 'Target: 15–20 kg honey stores per colony.',
+  },
+  winter_store_kg_mediterranean: {
+    de: 'Ziel: 12–16 kg Honigvorrat pro Volk.',
+    en: 'Target: 12–16 kg honey stores per colony.',
+  },
+  winter_store_kg_other: {
+    de: 'Ziel: 12–15 kg Honigvorrat pro Volk.',
+    en: 'Target: 12–15 kg honey stores per colony.',
+  },
+  winter_store_beginner_tip_northern: {
+    de: 'Als Anfänger: Lagere lieber etwas mehr ein (20–22 kg) und frage einen lokalen Imker nach deiner spezifischen Gegend.',
+    en: 'As a beginner: err on the higher side (20–22 kg) and ask a local beekeeper for advice specific to your area.',
+  },
+  winter_store_beginner_tip_central: {
+    de: 'Als Anfänger: Lagere lieber etwas mehr ein (18–20 kg) und frage einen lokalen Imker nach deiner spezifischen Gegend.',
+    en: 'As a beginner: err on the higher side (18–20 kg) and ask a local beekeeper for advice specific to your area.',
+  },
+  winter_store_beginner_tip_mediterranean: {
+    de: 'Als Anfänger: Lagere lieber etwas mehr ein (14–16 kg) und frage einen lokalen Imker nach deiner spezifischen Gegend.',
+    en: 'As a beginner: err on the higher side (14–16 kg) and ask a local beekeeper for advice specific to your area.',
+  },
+  winter_store_beginner_tip_other: {
+    de: 'Als Anfänger: Lagere lieber etwas mehr ein (13–15 kg) und frage einen lokalen Imker nach deiner spezifischen Gegend.',
+    en: 'As a beginner: err on the higher side (13–15 kg) and ask a local beekeeper for advice specific to your area.',
+  },
 }

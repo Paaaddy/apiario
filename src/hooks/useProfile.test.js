@@ -12,7 +12,7 @@ describe('useProfile', () => {
   it('returns default profile when localStorage is empty', () => {
     const { result } = renderHook(() => useProfile())
     expect(result.current.profile).toEqual({
-      schemaVersion: 2,
+      schemaVersion: 3,
       hiveCount: null,
       climateZone: null,
       experience: null,
@@ -21,14 +21,14 @@ describe('useProfile', () => {
     })
   })
 
-  it('loads an existing v2 profile from localStorage unchanged', () => {
+  it('loads an existing v3 profile from localStorage unchanged', () => {
     const saved = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       hiveCount: 2,
       climateZone: 'central',
       experience: 1,
       onboardingDone: true,
-      colonies: [{ id: 'col-1', name: 'Apple tree', createdAt: '2026-03-01', notes: '' }],
+      colonies: [{ id: 'col-1', name: 'Apple tree', createdAt: '2026-03-01', notes: '', queenIntroducedAt: null, harvestLog: [] }],
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(saved))
     const { result } = renderHook(() => useProfile())
@@ -39,16 +39,20 @@ describe('useProfile', () => {
     const legacy = { hiveCount: 2, climateZone: 'northern', experience: 0, onboardingDone: true }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
     const { result } = renderHook(() => useProfile())
-    expect(result.current.profile.schemaVersion).toBe(2)
+    expect(result.current.profile.schemaVersion).toBe(3)
     expect(result.current.profile.hiveCount).toBe(2)
     expect(result.current.profile.colonies).toHaveLength(2)
     expect(result.current.profile.colonies[0]).toMatchObject({
       id: 'col-1',
       name: 'Hive 1',
+      queenIntroducedAt: null,
+      harvestLog: [],
     })
     expect(result.current.profile.colonies[1]).toMatchObject({
       id: 'col-2',
       name: 'Hive 2',
+      queenIntroducedAt: null,
+      harvestLog: [],
     })
   })
 
@@ -56,7 +60,7 @@ describe('useProfile', () => {
     const v1 = { schemaVersion: 1, hiveCount: 3, climateZone: 'central', experience: 0, onboardingDone: true }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(v1))
     const { result } = renderHook(() => useProfile())
-    expect(result.current.profile.schemaVersion).toBe(2)
+    expect(result.current.profile.schemaVersion).toBe(3)
     expect(result.current.profile.colonies).toHaveLength(3)
   })
 
@@ -64,7 +68,7 @@ describe('useProfile', () => {
     const v1 = { schemaVersion: 1, hiveCount: null, climateZone: null, experience: null, onboardingDone: false }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(v1))
     const { result } = renderHook(() => useProfile())
-    expect(result.current.profile.schemaVersion).toBe(2)
+    expect(result.current.profile.schemaVersion).toBe(3)
     expect(result.current.profile.colonies).toEqual([])
   })
 

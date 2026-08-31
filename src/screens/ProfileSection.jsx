@@ -204,6 +204,25 @@ export default function ProfileSection({ profile, onUpdate }) {
         onUpdate={onUpdate}
         theme={theme}
       />
+      {(() => {
+        const zone = profile.climateZone
+        const hintKey =
+          zone === 'northern' ? s.climate_winter_hint :
+          zone === 'central' ? s.climate_winter_hint_central :
+          zone === 'mediterranean' ? s.climate_winter_hint_mediterranean :
+          s.climate_winter_hint_other
+        return (
+          <p style={{
+            margin: '-8px 0 24px',
+            fontSize: 12.5,
+            color: 'var(--theme-ink-mid, #92400e)',
+            lineHeight: 1.4,
+            fontStyle: 'italic',
+          }}>
+            {t(hintKey)}
+          </p>
+        )
+      })()}
       <OptionGroup
         title={t(s.experience_title)}
         options={EXPERIENCE_OPTIONS}
