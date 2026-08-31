@@ -1,9 +1,10 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import { themeColors } from '../utils/themeTokens'
 import InspectionCard from '../components/InspectionCard'
+import InspectionForm from '../components/InspectionForm'
 
 const SPARKLINE_CONFIGS = [
   { key: 'varroa',      label: { de: 'Varroa / 100 Bienen', en: 'Varroa / 100 bees' }, min: 0, max: 10, lowerBetter: true },
@@ -55,15 +56,21 @@ function SparklineCard({ label, data, min, max, strokeColor, lowerBetter, border
   )
 }
 
-export default function ColonyDetail({ colony, inspections, onBack }) {
+export default function ColonyDetail({ colony, inspections, colonies = [], onBack, onUpdateInspection, onDeleteInspection }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
-  
+  const [editTarget, setEditTarget] = useState(null)
+
   const c = themeColors(theme)
   const bg = c.formBg
   const ink = c.formInk
   const inkMid = c.formInkMid
   const border = c.border
+
+  function handleSaveEdit(data) {
+    onUpdateInspection?.(editTarget.id, data)
+    setEditTarget(null)
+  }
 
   const colonyInspections = useMemo(() => {
     return inspections
@@ -130,12 +137,12 @@ export default function ColonyDetail({ colony, inspections, onBack }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {colonyInspections.length > 0 ? (
             colonyInspections.map(insp => (
-              <InspectionCard 
-                key={insp.id} 
-                inspection={insp} 
+              <InspectionCard
+                key={insp.id}
+                inspection={insp}
                 colonyName={colony.name}
-                onEdit={() => {}}
-                onDelete={() => {}} 
+                onEdit={setEditTarget}
+                onDelete={onDeleteInspection}
               />
             ))
           ) : (
@@ -143,6 +150,15 @@ export default function ColonyDetail({ colony, inspections, onBack }) {
           )}
         </div>
       </div>
+
+      {editTarget && (
+        <InspectionForm
+          colonies={colonies}
+          initial={editTarget}
+          onSave={handleSaveEdit}
+          onClose={() => setEditTarget(null)}
+        />
+      )}
     </div>
   )
 }

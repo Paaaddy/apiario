@@ -72,9 +72,9 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
   const [population, setPop]              = useState(initial?.population ?? null)
   const [temperament, setTemper]          = useState(initial?.temperament ?? null)
   const [varroaChecked, setVarroaChecked] = useState(initial?.varroa != null)
-  const [varroa, setVarroa]               = useState(initial?.varroa ?? '')
+  const [varroa, setVarroa]               = useState(initial?.varroa != null ? String(initial.varroa) : '')
   const [treatment, setTreatment]         = useState(initial?.treatment ?? '')
-  const [harvest, setHarvest]             = useState(initial?.harvest ?? '')
+  const [harvest, setHarvest]             = useState(initial?.harvest != null ? String(initial.harvest) : '')
   const [notes, setNotes]                 = useState(initial?.notes ?? '')
 
   const isEditing = Boolean(initial)

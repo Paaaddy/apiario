@@ -241,6 +241,12 @@ export const strings = {
   insp_yesterday:      { de: 'Gestern',                            en: 'Yesterday'                },
   insp_show_all:       { de: 'Alle anzeigen',                      en: 'Show all'                 },
   insp_never:          { de: 'Noch nie kontrolliert',              en: 'Never inspected'          },
+  insp_history:        { de: 'Kontrollverlauf',                    en: 'Inspection history'       },
+  insp_no_history:     { de: 'Noch keine Kontrollen für dieses Volk.', en: 'No inspections for this colony yet.' },
+
+  // Colony detail
+  colony_total_harvest:      { de: 'Honigernte gesamt',            en: 'Total harvest'            },
+  colony_inspections_count:  { de: 'Kontrollen',                   en: 'Inspections'              },
 
   // Diagnose pre-fill
   diagnose_from_inspection: { de: 'Von letzter Kontrolle starten', en: 'Start from last inspection' },

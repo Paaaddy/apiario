@@ -41,10 +41,13 @@ export default function MyHiveScreen({
       case 'colonies':
         if (selectedColonyId) {
           return (
-            <ColonyDetail 
-              colony={selectedColony} 
-              inspections={inspections} 
-              onBack={() => setSelectedColonyId(null)} 
+            <ColonyDetail
+              colony={selectedColony}
+              inspections={inspections}
+              colonies={colonies}
+              onBack={() => setSelectedColonyId(null)}
+              onUpdateInspection={onUpdateInspection}
+              onDeleteInspection={onDeleteInspection}
             />
           )
         }
@@ -76,10 +79,10 @@ export default function MyHiveScreen({
         )
       case 'log':
         return (
-          <LogSection 
-            log={log} 
-            onAdd={onAddEntry} 
-            onDelete={onDeleteEntry} 
+          <LogSection
+            log={log}
+            onAddEntry={onAddEntry}
+            onDeleteEntry={onDeleteEntry}
           />
         )
       case 'profile':

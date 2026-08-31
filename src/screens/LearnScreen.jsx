@@ -18,6 +18,12 @@ export default function LearnScreen() {
   const border = c.border
   const accent = c.accent
 
+  const difficultyLabels = {
+    beginner: s.learn_difficulty_beginner,
+    intermediate: s.learn_difficulty_intermediate,
+    advanced: s.learn_difficulty_advanced,
+  }
+
   const filteredFacts = useMemo(() => {
     const q = search.toLowerCase()
     return knowledge.filter(f => {
@@ -36,7 +42,7 @@ export default function LearnScreen() {
         </h1>
         <input 
           type="text" 
-          placeholder={t(s.learn_search_placeholder) || 'Search...'} 
+          placeholder={t(s.learn_search)}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={{ width: '100%', padding: '12px', borderRadius: 12, border: `1px solid ${border}`, background: c.formInputBg, color: ink, fontSize: 16 }}
@@ -56,13 +62,16 @@ export default function LearnScreen() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 8 }}>
                   <h3 style={{ margin: 0, fontSize: 16, fontWeight: 600 }}>{content.title}</h3>
                   <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: accent, color: '#fff', fontWeight: 700, textTransform: 'uppercase' }}>
-                    {f.difficulty}
+                    {t(difficultyLabels[f.difficulty]) || f.difficulty}
                   </span>
                 </div>
                 <p style={{ margin: 0, fontSize: 14, color: inkMid, lineHeight: 1.4 }}>{content.summary}</p>
               </div>
             )
           })}
+          {filteredFacts.length === 0 && (
+            <p style={{ textAlign: 'center', color: inkMid, fontSize: 14, marginTop: 20 }}>{t(s.learn_no_results)}</p>
+          )}
         </div>
       </div>
 
@@ -77,7 +86,7 @@ export default function LearnScreen() {
               {selectedFact.content[locale || 'de'].details}
             </p>
             <div style={{ padding: '12px', background: c.formInputBg, borderRadius: 12, fontSize: 12, color: inkMid, fontStyle: 'italic' }}>
-              Source: {selectedFact.content[locale || 'de'].source}
+              {t(s.learn_source)}: {selectedFact.content[locale || 'de'].source}
             </div>
           </div>
         </div>
