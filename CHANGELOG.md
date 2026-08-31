@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/Paaaddy/apiario/compare/v2.3.0...v2.4.0) (2026-08-31)
+
+
+### Features
+
+* colony detail + harvest/queen tracking, learn library, climate-aware winter stores ([#92](https://github.com/Paaaddy/apiario/issues/92)) ([a08495c](https://github.com/Paaaddy/apiario/commit/a08495c3ceffafb7ff6b0972078a716d78c8e7ff))
+
+
+### Bug Fixes
+
+* post-merge review fixes for colony detail + learn library ([#94](https://github.com/Paaaddy/apiario/issues/94)) ([4fa305a](https://github.com/Paaaddy/apiario/commit/4fa305affe2743e255f97c6ff84939ecb817e438))
+
 ## [2.3.0](https://github.com/Paaaddy/apiario/compare/v2.2.0...v2.3.0) (2026-08-30)
 
 
