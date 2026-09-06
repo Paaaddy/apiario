@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.4.1](https://github.com/Paaaddy/apiario/compare/v2.4.0...v2.4.1) (2026-09-06)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump browserslist from 4.28.4 to 4.28.7 ([#97](https://github.com/Paaaddy/apiario/issues/97)) ([c700bce](https://github.com/Paaaddy/apiario/commit/c700bce3602a362b4fdd865dfebdb53031a2b3ef))
+* **deps-dev:** bump fast-uri from 3.1.5 to 3.1.7 ([#96](https://github.com/Paaaddy/apiario/issues/96)) ([b816c7c](https://github.com/Paaaddy/apiario/commit/b816c7c1451e212349a86811ddc3b5b7a43bfe01))
+* **deps-dev:** bump postcss-selector-parser from 6.1.2 to 6.1.4 ([#98](https://github.com/Paaaddy/apiario/issues/98)) ([a03645e](https://github.com/Paaaddy/apiario/commit/a03645e627fa6ec36fbfe11fbeb12610f72960c6))
+* **deps-dev:** bump the dev-dependencies group with 5 updates ([#95](https://github.com/Paaaddy/apiario/issues/95)) ([d7ca5bd](https://github.com/Paaaddy/apiario/commit/d7ca5bdd3476092bdeac5a94b1a6082f8f6b4560))
+
 ## [2.4.0](https://github.com/Paaaddy/apiario/compare/v2.3.0...v2.4.0) (2026-08-31)
 
 
