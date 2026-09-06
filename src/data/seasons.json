@@ -206,7 +206,7 @@
         "urgency": "routine",
         "minExperience": 1,
         "secret": true,
-        "unlockAt": 8,
+        "unlockAt": 6,
         "uniqueValue": { "de": "Die Entschlüsselung der Bienentanzsprache brachte Karl von Frisch 1973 den Nobelpreis für Physiologie oder Medizin ein. Die Dauer des Schwänzelns codiert die Entfernung (ca. 1 Sekunde = 1 km), die Richtung wird relativ zum Sonnenstand auf der senkrechten Wabe angegeben. Zehn Minuten Beobachtung geben dir eine direkte Verbindung zu einem Jahrhundert Bienenforschung.", "en": "Decoding the waggle dance earned Karl von Frisch the 1973 Nobel Prize in Physiology or Medicine. The waggle duration encodes distance (≈ 1 second = 1 km), and the direction is given relative to the sun on the vertical comb surface. Ten minutes of observation give you a direct line to a century of bee research." }
       }
     ]
@@ -295,15 +295,15 @@
         "urgency": "important",
         "minExperience": 0
       },
-      {
+{
         "id": "au-secret-01",
         "name": { "de": "Wabenhygiene: ein Drittel der Brutwaben erneuern", "en": "Comb rotation: replace a third of brood frames" },
-        "why": { "de": "Alte dunkle Brutwaben reichern Pestizidrückstände, Krankheitserreger und Schwermetalle an. Ersetze jedes Jahr etwa 33 % der Brutwaben durch frische Mittelwand — so bleibt das Wachs jung und die Krankheitslast niedrig.", "en": "Dark old brood comb accumulates pesticide residues, pathogens and heavy metals. Replace about 33% of your brood frames with fresh foundation each year — this keeps the wax cycle fresh and disease pressure low." },
-        "urgency": "routine",
+        "why": { "de": "Im Herbst solltest du etwa ein Drittel der ältesten Brutwaben gegen neue Mittewand austauschen. Alte Waben können Krankheitserreger, Pestizidrückstände und Schuppenwachs ansammeln.", "en": "In autumn you should replace about a third of the oldest brood comb with fresh foundation. Old comb can harbor disease spores, pesticide residues, and accumulated cocoons." },
+        "urgency": "important",
         "minExperience": 1,
         "secret": true,
-        "unlockAt": 12,
-        "uniqueValue": { "de": "Empfohlen vom LAVES (Niedersachsen), den USDA-ARS Bee Labs und der FAO („Good Beekeeping Practices\", 2020). Studien zeigen, dass drei Jahre alte Brutwaben bis zu 80 mg/kg Fluvalinat-Rückstände enthalten können und deutlich höhere Nosema-Sporenzahlen aufweisen als frische Waben. Eine überraschend große Mehrheit der Hobbyimker rotiert ihre Waben nie — obwohl es eine der wirkungsvollsten vorbeugenden Maßnahmen ist.", "en": "Recommended by the German LAVES bee health service, the USDA-ARS bee labs and the FAO Good Beekeeping Practices document (2020). Studies have found three-year-old brood comb carrying up to 80 mg/kg of fluvalinate residues and substantially higher Nosema spore counts than fresh comb. A surprisingly large majority of hobbyists never rotate comb at all — yet it's one of the highest-impact preventive steps in modern beekeeping." }
+        "unlockAt": 5,
+        "uniqueValue": { "de": "Alte Waben sind ein Hauptgrund für ungesunde Völker und erhöhten Varroa-Befall. Der regelmäßige Austausch verhindert den Aufbau von Krankheitskeimen und gibt den Bienen frischen Raum für gesunden Nachwuchs. Viele Imker tauschen im Herbst systematisch Waben aus, um den Krankheitsdruck niedrig zu halten.", "en": "Old comb is a leading cause of unhealthy colonies and elevated Varroa pressure. Regular replacement prevents pathogen buildup and gives bees clean space for healthy brood. Many beekeepers systematically rotate comb in autumn to keep disease pressure low." }
       }
     ]
   },
