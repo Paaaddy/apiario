@@ -1,8 +1,16 @@
 name: Dependabot Auto-merge
 
+# Reactive auto-merge: this workflow does not run on the PR itself, it runs
+# *after* the main CI workflow reports success. That ordering matters — a
+# `pull_request`-triggered job would either merge before CI finished or have
+# to rely on `--auto`, which merges immediately when no required check is
+# configured for the paths a given PR happens to touch.
 on:
-  pull_request:
-    branches: [master]
+  workflow_run:
+    # Must match the `name:` of deploy.yml exactly. Renaming that workflow
+    # silently disables this one.
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
 
 permissions:
   contents: write
@@ -11,18 +19,138 @@ permissions:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
-    steps:
-      - name: Fetch dependabot metadata
-        id: meta
-        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+    timeout-minutes: 5
+    # `pull_requests` is populated for same-repo branches, which is what
+    # Dependabot uses. Fork PRs come through with an empty array and are
+    # deliberately not handled here.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.pull_requests[0] != null
 
-      # Only auto-merge patch-level updates. Minor and major updates open
-      # the PR but require human review before merging — limits blast
-      # radius if a dependency gets compromised between releases.
-      - name: Enable auto-merge (patch updates only)
-        if: steps.meta.outputs.update-type == 'version-update:semver-patch'
-        run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
+      CI_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+
+    steps:
+      # workflow_run runs with a write token in the context of the base
+      # branch, so every fact about the PR has to be re-fetched rather than
+      # trusted from the event payload.
+      - name: Identify the pull request
+        id: pr
+        run: |
+          set -euo pipefail
+
+          author=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json author --jq '.author.login')
+          state=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json state --jq '.state')
+          head_sha=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json headRefOid --jq '.headRefOid')
+
+          echo "PR #${PR_NUMBER} author=${author} state=${state} head=${head_sha}"
+
+          {
+            echo "author=$author"
+            echo "state=$state"
+            echo "head_sha=$head_sha"
+          } >> "$GITHUB_OUTPUT"
+
+      # The CI run that woke us tested one specific commit. If the branch has
+      # moved since, that green tick says nothing about the current head, so
+      # stop and wait for the next CI run instead of merging untested code.
+      - name: Verify CI result still describes the current head
+        if: steps.pr.outputs.author == 'dependabot[bot]' && steps.pr.outputs.state == 'OPEN'
+        id: fresh
+        run: |
+          set -euo pipefail
+          if [ "$CI_HEAD_SHA" != "${{ steps.pr.outputs.head_sha }}" ]; then
+            echo "CI ran against $CI_HEAD_SHA but head is now ${{ steps.pr.outputs.head_sha }}; skipping."
+            echo "current=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Equivalent of dependabot/fetch-metadata, which cannot be used here:
+      # it reads `context.payload.pull_request` and refuses to run on
+      # workflow_run events. It parses the `updated-dependencies` YAML
+      # trailer that Dependabot writes into its own commit message, so we
+      # read the same trailer from the same source.
+      #
+      # Only verified commits authored by dependabot[bot] are considered, so
+      # an unsigned commit pushed onto the branch by someone else cannot
+      # supply the metadata that authorises the merge.
+      - name: Read Dependabot update metadata
+        if: steps.fresh.outputs.current == 'true'
+        id: meta
+        run: |
+          set -euo pipefail
+
+          message=$(gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate \
+            --jq '[.[]
+                   | select(.author.login == "dependabot[bot]")
+                   | select(.commit.verification.verified == true)]
+                  | last // {} | .commit.message // ""')
+
+          if [ -z "$message" ]; then
+            echo "No verified dependabot[bot] commit found on this PR; not merging."
+            echo "update-type=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Dependabot's trailer, delimited by `---` and `...`:
+          #   updated-dependencies:
+          #   - dependency-name: foo
+          #     dependency-type: direct:production
+          #     update-type: version-update:semver-patch
+          trailer=$(printf '%s\n' "$message" | sed -n '/^---$/,/^\.\.\.$/p')
+
+          update_types=$(printf '%s\n' "$trailer" | grep -o 'version-update:semver-[a-z]*' | sort -u || true)
+          dep_types=$(printf '%s\n' "$trailer" | sed -n 's/^[[:space:]]*dependency-type:[[:space:]]*//p' | sort -u || true)
+          group=$(printf '%s\n' "$message" | sed -n 's/^[[:space:]]*dependency-group:[[:space:]]*//p' | head -n1 || true)
+
+          # fetch-metadata's maxSemver(): highest severity across every
+          # dependency in the PR. For a grouped update this means one major
+          # bump anywhere in the group makes the whole PR read as major.
+          update_type=""
+          for candidate in version-update:semver-major version-update:semver-minor version-update:semver-patch; do
+            if printf '%s\n' "$update_types" | grep -qx "$candidate"; then
+              update_type="$candidate"
+              break
+            fi
+          done
+
+          # fetch-metadata's maxDependencyTypes(). Reported for the audit
+          # trail only — it does not gate the merge.
+          dep_type="unknown"
+          for candidate in direct:production direct:development indirect; do
+            if printf '%s\n' "$dep_types" | grep -qx "$candidate"; then
+              dep_type="$candidate"
+              break
+            fi
+          done
+
+          echo "update-type=${update_type}"
+          echo "dependency-type=${dep_type}"
+          echo "dependency-group=${group:-<none>}"
+
+          {
+            echo "update-type=$update_type"
+            echo "dependency-type=$dep_type"
+            echo "dependency-group=$group"
+          } >> "$GITHUB_OUTPUT"
+
+      # Patch and minor merge regardless of production/development type.
+      # Major bumps are left open on purpose for a human to look at.
+      - name: Auto-merge patch and minor updates
+        if: >-
+          steps.meta.outputs.update-type == 'version-update:semver-patch' ||
+          steps.meta.outputs.update-type == 'version-update:semver-minor'
+        run: |
+          set -euo pipefail
+          echo "Merging PR #${PR_NUMBER} (${{ steps.meta.outputs.update-type }})."
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch
+
+      - name: Leave major updates for review
+        if: steps.meta.outputs.update-type == 'version-update:semver-major'
+        run: |
+          echo "PR #${PR_NUMBER} is a major update; leaving it open for manual review."

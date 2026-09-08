@@ -116,6 +116,8 @@ GitHub Actions deploys to GitHub Pages on every push to `master`. Build uses `--
 
 CI gates: the `build` job runs `npm run test:run` then `npm run build -- --base /apiario/`, and is a required status check on pull requests targeting `master`. A pre-commit hook runs `npm run lint` + `npm run test:run` (gated via `git config core.hooksPath hooks`).
 
+Dependency automation: `dependabot-automerge.yml` squash-merges Dependabot patch and minor PRs reactively (on `workflow_run` after **Deploy to GitHub Pages** succeeds); major bumps and grouped updates containing a major are left open for review. `weekly-dependabot-audit.yml` runs Thursdays at 03:00 UTC, requests rebases on conflicting PRs, and files a labelled audit issue. See the Automation section of README.md.
+
 ## Repo conventions / rules of thumb
 
 - **Obey existing conventions.** Read the surrounding code first and match its style, structure, hooks, and patterns. Do not introduce new patterns or new libraries.
