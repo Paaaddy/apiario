@@ -112,6 +112,8 @@ Use `findByText` (not `getByText`) for post-interaction assertions to avoid Reac
 
 GitHub Actions deploys to GitHub Pages on every push to `master`. Build uses `--base /apiario/`. No staging environment — test locally before pushing.
 
+Dependency automation: `dependabot-automerge.yml` squash-merges Dependabot patch and minor PRs reactively (on `workflow_run` after **Deploy to GitHub Pages** succeeds); major bumps and grouped updates containing a major are left open for review. `weekly-dependabot-audit.yml` runs Thursdays at 03:00 UTC, requests rebases on conflicting PRs, and files a labelled audit issue. See the Automation section of README.md.
+
 ## gstack
 
 This repo uses [gstack](https://github.com/paaaddy/gstack) skills for planning, review, QA, and shipping. Invoke any skill with `/<skill-name>`.

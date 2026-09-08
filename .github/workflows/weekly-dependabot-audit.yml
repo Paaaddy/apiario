@@ -1,0 +1,155 @@
+name: Weekly Dependabot Audit
+
+# Dependabot opens its PRs on Monday (see .github/dependabot.yml). Running on
+# Thursday leaves three days for CI to report and for dependabot-automerge.yml
+# to clear the patch/minor PRs on its own, so whatever is still open by now is
+# genuinely stuck and worth a human's attention.
+on:
+  schedule:
+    - cron: '0 3 * * 4'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+
+    steps:
+      # --force makes this idempotent: creates the label, or updates the
+      # colour/description of one that already exists.
+      - name: Ensure audit labels exist
+        run: |
+          set -euo pipefail
+          gh label create automation --repo "$REPO" --force \
+            --color 1D76DB --description "Automated maintenance and bot workflows"
+          gh label create audit --repo "$REPO" --force \
+            --color 5319E7 --description "Periodic automated audit report"
+
+      - name: Audit open Dependabot PRs
+        run: |
+          set -euo pipefail
+
+          today=$(date -u +%F)
+          since=$(date -u -d '7 days ago' +%F)
+
+          open_json=$(gh pr list --repo "$REPO" --author "app/dependabot" \
+            --state open --limit 100 --json number)
+
+          rebased=""
+          open_rows=""
+
+          for number in $(printf '%s' "$open_json" | jq -r '.[].number'); do
+            pr=$(gh pr view "$number" --repo "$REPO" \
+              --json number,title,url,mergeable,comments,commits,statusCheckRollup)
+
+            title=$(printf '%s' "$pr" | jq -r '.title')
+            url=$(printf '%s' "$pr" | jq -r '.url')
+            mergeable=$(printf '%s' "$pr" | jq -r '.mergeable')
+
+            if [ "$mergeable" = "CONFLICTING" ]; then
+              # Only ask for a rebase if we are not already waiting on one.
+              # A rebase comment newer than the newest commit means Dependabot
+              # has not acted on the previous request yet.
+              last_commit=$(printf '%s' "$pr" | jq -r '[.commits[].committedDate] | max // ""')
+              last_ask=$(printf '%s' "$pr" | jq -r \
+                '[.comments[] | select(.body | test("@dependabot\\s+rebase")) | .createdAt] | max // ""')
+
+              if [ -n "$last_ask" ] && [ "$last_ask" \> "$last_commit" ]; then
+                status="⚠️ conflicting — rebase already requested, still pending"
+              else
+                gh pr comment "$number" --repo "$REPO" --body "@dependabot rebase"
+                status="⚠️ conflicting — rebase requested this run"
+                rebased="${rebased}- [#${number}](${url}) ${title}"$'\n'
+              fi
+            else
+              # CheckRun reports status+conclusion; StatusContext reports state.
+              # Normalise both to a single verdict per check.
+              verdicts=$(printf '%s' "$pr" | jq -r '
+                .statusCheckRollup // []
+                | map(
+                    if .__typename == "CheckRun"
+                    then (if .status != "COMPLETED" then "PENDING" else (.conclusion // "PENDING") end)
+                    else (.state // "PENDING")
+                    end
+                  )
+                | .[]')
+
+              if [ -z "$verdicts" ]; then
+                status="⚪ no checks reported"
+              elif printf '%s\n' "$verdicts" | grep -qE '^(FAILURE|ERROR|TIMED_OUT|CANCELLED|ACTION_REQUIRED)$'; then
+                status="❌ CI failing"
+              elif printf '%s\n' "$verdicts" | grep -qE '^(PENDING|QUEUED|IN_PROGRESS)$'; then
+                status="🕒 CI pending"
+              else
+                status="✅ CI green"
+              fi
+            fi
+
+            open_rows="${open_rows}| [#${number}](${url}) | ${title} | ${status} |"$'\n'
+          done
+
+          merged_rows=$(gh pr list --repo "$REPO" --author "app/dependabot" \
+            --state merged --search "merged:>=${since}" --limit 100 \
+            --json number,title,url,mergedAt \
+            --jq '.[] | "| [#\(.number)](\(.url)) | \(.title) | \(.mergedAt[0:10]) |"')
+
+          # Assembled as a file so the markdown survives untouched into the
+          # issue body — no shell quoting of newlines through an output.
+          {
+            echo "Automated audit of Dependabot activity in \`${REPO}\`."
+            echo
+            echo "- Report date: **${today}**"
+            echo "- Merge window reviewed: **${since} → ${today}**"
+            echo "- Triggered by: \`${GITHUB_EVENT_NAME}\`"
+            echo
+            echo "## Open Dependabot PRs"
+            echo
+            if [ -n "$open_rows" ]; then
+              echo "| PR | Title | Status |"
+              echo "| --- | --- | --- |"
+              printf '%s' "$open_rows"
+            else
+              echo "_None open._"
+            fi
+            echo
+            echo "## Merged in the last 7 days"
+            echo
+            if [ -n "$merged_rows" ]; then
+              echo "| PR | Title | Merged |"
+              echo "| --- | --- | --- |"
+              printf '%s\n' "$merged_rows"
+            else
+              echo "_None merged._"
+            fi
+            echo
+            echo "## Rebases requested this run"
+            echo
+            if [ -n "$rebased" ]; then
+              printf '%s' "$rebased"
+            else
+              echo "_None._"
+            fi
+            echo
+            echo "---"
+            echo
+            echo "Patch and minor updates merge automatically once CI passes"
+            echo "(\`.github/workflows/dependabot-automerge.yml\`). Anything left"
+            echo "open above needs a look: major bumps are held back by design,"
+            echo "everything else is stuck."
+          } > audit-report.md
+
+          cat audit-report.md
+
+          gh issue create --repo "$REPO" \
+            --title "Weekly PR Automation Audit - ${today}" \
+            --label automation --label audit \
+            --body-file audit-report.md
