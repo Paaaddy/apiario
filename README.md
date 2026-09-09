@@ -96,6 +96,26 @@ they stay open for review.
 For grouped updates the reported update type is the highest severity across the
 whole group, so a group containing any major bump does not match and stays open.
 
+To stop one major from blocking the safe updates travelling with it, every group
+in `.github/dependabot.yml` is scoped to `update-types: ["minor", "patch"]`:
+
+| Group | Contents | Outcome |
+|---|---|---|
+| `dev-dependencies` | dev deps, excluding the testing packages | auto-merges |
+| `fontsource` | `@fontsource/*` (production) | auto-merges |
+| `testing` | vitest, `@vitest/*`, `@testing-library/*`, jsdom | auto-merges |
+| `testing-major` | the same testing packages, majors only | held for review |
+| _(ungrouped)_ | any other major bump | individual PR, held for review |
+
+Two details are load-bearing:
+
+- `dev-dependencies` matches on `dependency-type: development`, which also
+  matches every testing package. Its `exclude-patterns` list is what lets the
+  `testing` groups actually receive them.
+- `testing-major` exists so vitest and `@vitest/ui` upgrade together. Left
+  ungrouped they would arrive as separate PRs that each fail until the other
+  lands, since `@vitest/ui` tracks vitest's major line.
+
 Two guards apply before any merge:
 
 - The CI run's `head_sha` must still equal the PR head, so a branch that moved

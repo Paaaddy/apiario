@@ -19,17 +19,44 @@ updates:
       - dependency-name: "vite-plugin-pwa"
         update-types: ["version-update:semver-major"]
     groups:
+      # `update-types` keeps majors out of every group below. A group is
+      # reported to fetch-metadata at the highest severity it contains, so
+      # one major bump used to mark a whole group as major and block the
+      # safe updates riding along with it from auto-merging (#101: vitest
+      # 4→5 held back seven patch/minor bumps). Majors now fall out of the
+      # groups and arrive separately for review.
       dev-dependencies:
         dependency-type: development
+        # The testing packages are matched by their own groups below.
+        # Without this they also match `dependency-type: development` and
+        # get absorbed here, which is what left the `testing` group empty.
+        exclude-patterns:
+          - "@testing-library/*"
+          - "vitest"
+          - "@vitest/*"
+          - "jsdom"
+        update-types: ["minor", "patch"]
       fontsource:
         patterns:
           - "@fontsource/*"
+        update-types: ["minor", "patch"]
       testing:
         patterns:
           - "@testing-library/*"
           - "vitest"
           - "@vitest/*"
           - "jsdom"
+        update-types: ["minor", "patch"]
+      # Testing majors stay grouped rather than splitting into one PR per
+      # package: @vitest/ui tracks vitest's major line, so upgrading them
+      # separately gives two PRs that each fail until the other lands.
+      testing-major:
+        patterns:
+          - "@testing-library/*"
+          - "vitest"
+          - "@vitest/*"
+          - "jsdom"
+        update-types: ["major"]
 
   - package-ecosystem: github-actions
     directory: /
