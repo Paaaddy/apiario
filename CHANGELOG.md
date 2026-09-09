@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.2](https://github.com/Paaaddy/apiario/compare/v2.4.1...v2.4.2) (2026-09-09)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group with 9 updates ([#101](https://github.com/Paaaddy/apiario/issues/101)) ([b0db00c](https://github.com/Paaaddy/apiario/commit/b0db00cd7aca3e374389fa7ad1aa5a5ee4fc5437))
+* **deps:** stop one major bump blocking a whole Dependabot group ([#103](https://github.com/Paaaddy/apiario/issues/103)) ([8bad242](https://github.com/Paaaddy/apiario/commit/8bad242b5d6c0f54aa502f13a9449da8b9d3ca0b))
+
 ## [2.4.1](https://github.com/Paaaddy/apiario/compare/v2.4.0...v2.4.1) (2026-09-06)
 
 
