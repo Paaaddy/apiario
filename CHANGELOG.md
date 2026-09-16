@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.4.3](https://github.com/Paaaddy/apiario/compare/v2.4.2...v2.4.3) (2026-09-16)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group with 2 updates ([27115be](https://github.com/Paaaddy/apiario/commit/27115bee557cbc1a6919500ba9a57413b9a2c6b1))
+* **deps-dev:** bump the dev-dependencies group with 2 updates ([7156ade](https://github.com/Paaaddy/apiario/commit/7156ade823871e785e6f0d9412a295e80b0fe943))
+* **deps:** align react with react-dom 19.3 ([b596832](https://github.com/Paaaddy/apiario/commit/b59683299104dc1788890c29b31a8b886d9041b7))
+* **deps:** align react-dom with react 19.3 ([352ed79](https://github.com/Paaaddy/apiario/commit/352ed7947bb0c5a9695fa38c39ab572e03d87bc9))
+* **deps:** bump react and @types/react ([819c057](https://github.com/Paaaddy/apiario/commit/819c0579c43ea233192a9a0be48d59d3581b8e0e))
+* **deps:** bump react and @types/react ([930530d](https://github.com/Paaaddy/apiario/commit/930530d58fdf68613963e57befff9b2f4f2fc4a5))
+* **deps:** bump react-dom and @types/react-dom ([d4cbc13](https://github.com/Paaaddy/apiario/commit/d4cbc13997d3948532b11786cbb57068833d6dce))
+* **deps:** bump react-dom and @types/react-dom ([f378f8b](https://github.com/Paaaddy/apiario/commit/f378f8b3139d325f786d38233a34b7cadf8d1445))
+
 ## [2.4.2](https://github.com/Paaaddy/apiario/compare/v2.4.1...v2.4.2) (2026-09-09)
 
 
