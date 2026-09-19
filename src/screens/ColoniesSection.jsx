@@ -1,35 +1,31 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import InspectionForm from '../components/InspectionForm'
-import { latestByColony } from '../utils/inspections'
 
-function daysSince(dateStr) {
-  const d = new Date(dateStr)
-  const now = new Date()
-  return Math.floor((now - d) / (1000 * 60 * 60 * 24))
-}
-
-function lastInspectedLabel(latestInspection, t) {
-  if (!latestInspection) return t(s.insp_never)
-  const days = daysSince(latestInspection.date)
-  if (days === 0) return t(s.insp_today)
-  if (days === 1) return t(s.insp_yesterday)
-  return t(s.insp_days_ago).replace('{n}', days)
+function lastInspectedLabel(status, t) {
+  if (!status || status.kind === 'never') return t(s.insp_never)
+  if (status.kind === 'today') return t(s.insp_today)
+  if (status.kind === 'yesterday') return t(s.insp_yesterday)
+  if (status.kind === 'daysAgo') return t(s.insp_days_ago).replace('{n}', status.days)
+  return t(s.insp_never)
 }
 
 export default function ColoniesSection({
+  colonyRecords = null,
   colonies = [],
   onAdd,
   onUpdate,
   onRemove,
-  inspections = [],
   onAddInspection,
   onSelectColony,
 }) {
   const { t } = useLanguage()
-
-  const latestByColonyMap = useMemo(() => latestByColony(inspections), [inspections])
+  const records = colonyRecords ?? colonies.map((colony) => ({
+    colony,
+    lastInspected: { kind: 'never' },
+  }))
+  const colonyList = records.map((record) => record.colony)
 
   const [isAdding, setIsAdding] = useState(false)
   const [draftName, setDraftName] = useState('')
@@ -80,7 +76,7 @@ export default function ColoniesSection({
   }
 
   const inspectTarget = inspectColonyId
-    ? colonies.find((c) => c.id === inspectColonyId) ?? null
+    ? colonyList.find((c) => c.id === inspectColonyId) ?? null
     : null
 
   return (
@@ -89,13 +85,14 @@ export default function ColoniesSection({
         {t(s.colonies_title)}
       </h2>
 
-      {colonies.length === 0 && !isAdding && (
+      {colonyList.length === 0 && !isAdding && (
         <p className="text-sm text-brown-mid mb-3">{t(s.colonies_empty)}</p>
       )}
 
       <ul className="flex flex-col gap-2 mb-3">
-        {colonies.map((colony) =>
-          editingId === colony.id ? (
+        {records.map((record) => {
+          const colony = record.colony
+          return editingId === colony.id ? (
             <li
               key={colony.id}
               className="bg-white border border-honey rounded-xl p-3 shadow-sm"
@@ -152,7 +149,7 @@ export default function ColoniesSection({
                     </p>
                   )}
                   <p className="mt-1 text-xs text-brown-mid/60">
-                    {t(s.insp_last_inspected)}: {lastInspectedLabel(latestByColonyMap.get(colony.id), t)}
+                    {t(s.insp_last_inspected)}: {lastInspectedLabel(record.lastInspected, t)}
                   </p>
                   {colony.createdAt && (
                     <p className="mt-0.5 text-xs text-brown-mid/40">
@@ -197,7 +194,7 @@ export default function ColoniesSection({
               </div>
             </li>
           )
-        )}
+        })}
       </ul>
 
       {isAdding ? (
@@ -250,7 +247,7 @@ export default function ColoniesSection({
 
       {inspectColonyId && (
         <InspectionForm
-          colonies={inspectTarget ? [inspectTarget] : colonies}
+          colonies={inspectTarget ? [inspectTarget] : colonyList}
           initial={inspectTarget ? { colonyId: inspectColonyId } : null}
           onSave={(data) => {
             onAddInspection?.(data)

@@ -5,6 +5,7 @@ import { strings as s } from '../i18n/strings'
 import { themeColors } from '../utils/themeTokens'
 import InspectionCard from '../components/InspectionCard'
 import InspectionForm from '../components/InspectionForm'
+import { buildColonyRecord } from '../utils/colonyRecords'
 
 const SPARKLINE_CONFIGS = [
   { key: 'varroa',      label: { de: 'Varroa / 100 Bienen', en: 'Varroa / 100 bees' }, min: 0, max: 10, lowerBetter: true },
@@ -72,21 +73,19 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
     setEditTarget(null)
   }
 
-  const colonyInspections = useMemo(() => {
-    return inspections
-      .filter(i => i.colonyId === colony.id)
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
-  }, [inspections, colony.id])
-
-  const totalHarvest = useMemo(() => {
-    return colonyInspections.reduce((sum, i) => sum + (i.harvest || 0), 0)
-  }, [colonyInspections])
+  const colonyRecord = useMemo(
+    () => (colony?.colony ? colony : buildColonyRecord(colony, inspections)),
+    [colony, inspections]
+  )
+  const displayColony = colonyRecord?.colony ?? colony
+  const historyNewestFirst = colonyRecord?.history ?? []
+  const totalHarvest = colonyRecord?.totalHarvestKg ?? 0
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: bg, color: ink, position: 'relative' }}>
       <div style={{ padding: '16px', borderBottom: `1px solid ${border}`, display: 'flex', alignItems: 'center', gap: 12, background: bg, position: 'sticky', top: 0, zIndex: 1 }}>
         <button onClick={onBack} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: inkMid, padding: 4 }}>←</button>
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, fontFamily: 'var(--theme-font-head)' }}>{colony.name}</h2>
+        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, fontFamily: 'var(--theme-font-head)' }}>{displayColony.name}</h2>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
@@ -98,13 +97,13 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
             </div>
             <div style={{ flex: 1, padding: '12px', borderRadius: 14, border: `1px solid ${border}`, background: 'transparent' }}>
               <p style={{ margin: '0 0 4px', fontSize: 12, color: inkMid, fontWeight: 600, textTransform: 'uppercase' }}>{t(s.colony_inspections_count)}</p>
-              <p style={{ margin: 0, fontSize: 20, fontWeight: 700, color: ink }}>{colonyInspections.length}</p>
+              <p style={{ margin: 0, fontSize: 20, fontWeight: 700, color: ink }}>{historyNewestFirst.length}</p>
             </div>
           </div>
 
-          {colony.notes && (
+          {displayColony.notes && (
             <div style={{ padding: '12px', borderRadius: 14, border: `1px solid ${border}`, background: 'transparent', fontSize: 14, color: inkMid, fontStyle: 'italic' }}>
-              {colony.notes}
+              {displayColony.notes}
             </div>
           )}
         </div>
@@ -113,9 +112,7 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 12, marginBottom: 20 }}>
           {SPARKLINE_CONFIGS.map(cfg => {
-            const data = colonyInspections
-              .filter(i => i[cfg.key] != null)
-              .map(i => ({ date: i.date, value: Number(i[cfg.key]) }))
+            const data = colonyRecord?.metrics?.[cfg.key]?.points ?? []
             const strokeColor = cfg.key === 'varroa' ? '#d44' : c.accent
             return (
               <SparklineCard
@@ -135,12 +132,12 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
         </div>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {colonyInspections.length > 0 ? (
-            colonyInspections.map(insp => (
+          {historyNewestFirst.length > 0 ? (
+            historyNewestFirst.map(insp => (
               <InspectionCard
                 key={insp.id}
                 inspection={insp}
-                colonyName={colony.name}
+                colonyName={displayColony.name}
                 onEdit={setEditTarget}
                 onDelete={onDeleteInspection}
               />
