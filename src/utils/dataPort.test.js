@@ -69,17 +69,17 @@ describe('importData', () => {
 
   it('returns parse error for invalid JSON', () => {
     const result = importData('not json {{{')
-    expect(result).toEqual({ ok: false, error: 'parse' })
+    expect(result).toMatchObject({ ok: false, error: 'parse', messageKey: 'data_import_error_parse', requiresReload: false })
   })
 
   it('returns format error for wrong format', () => {
     const result = importData(JSON.stringify({ format: 'something-else', data: {} }))
-    expect(result).toEqual({ ok: false, error: 'format' })
+    expect(result).toMatchObject({ ok: false, error: 'format', messageKey: 'data_import_error_format', requiresReload: false })
   })
 
   it('returns format error when data is missing', () => {
     const result = importData(JSON.stringify({ format: 'apiario-backup' }))
-    expect(result).toEqual({ ok: false, error: 'format' })
+    expect(result).toMatchObject({ ok: false, error: 'format', messageKey: 'data_import_error_format', requiresReload: false })
   })
 
   it('applies sensible defaults for missing slices', () => {

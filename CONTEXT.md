@@ -15,3 +15,7 @@ _Avoid_: Checkup, visit, control.
 **Colony record**:
 One colony together with its derived inspection history and metrics.
 _Avoid_: Colony view, hive summary.
+
+**Backup**:
+A user-owned export file containing Apiario data that can be restored into the app.
+_Avoid_: Data port, dump.

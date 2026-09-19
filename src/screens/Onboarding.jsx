@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { OnboardingProvider, useOnboarding } from '@onboardjs/react'
 import { useLanguage } from '../hooks/useLanguage'
-import { useDataPort } from '../hooks/useDataPort'
+import { useBackupRestoreController } from '../hooks/useBackupRestoreController'
 import { strings as s } from '../i18n/strings'
 import LanguageToggle from '../components/LanguageToggle'
 import HexWatermark from '../components/HexWatermark'
@@ -90,28 +90,8 @@ function FeaturesStep() {
 function PrivacyStep() {
   const { t } = useLanguage()
   const { next } = useOnboarding()
-  const { importData } = useDataPort()
+  const { status, restoreFromInput } = useBackupRestoreController(t)
   const fileInputRef = useRef(null)
-  const [status, setStatus] = useState(null)
-
-  async function handleFileChange(e) {
-    const file = e.target.files?.[0]
-    e.target.value = ''
-    if (!file) return
-    const result = await importData(file)
-    if (result.ok) {
-      setStatus({ kind: 'success', message: t(s.data_import_reload) })
-      window.location.reload()
-    } else {
-      const errorKey =
-        result.error === 'parse'
-          ? s.data_import_error_parse
-          : result.error === 'format'
-            ? s.data_import_error_format
-            : s.data_import_error_unexpected
-      setStatus({ kind: 'error', message: t(errorKey) })
-    }
-  }
 
   return (
     <div className="min-h-full bg-cream flex flex-col">
@@ -143,7 +123,7 @@ function PrivacyStep() {
             type="file"
             accept="application/json,.json"
             style={{ display: 'none' }}
-            onChange={handleFileChange}
+            onChange={restoreFromInput}
           />
           {status && (
             <p style={{ margin: '8px 0 0', fontSize: 13, fontWeight: 600, color: status.kind === 'error' ? '#d33' : '#92400e' }}>

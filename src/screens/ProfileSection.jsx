@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
-import { useDataPort } from '../hooks/useDataPort'
+import { useBackupRestoreController } from '../hooks/useBackupRestoreController'
 import { strings as s } from '../i18n/strings'
 import ThemeSwitcher from '../components/ThemeSwitcher'
 import { getButtonStyle } from '../utils/themeButtonStyle'
@@ -45,34 +45,13 @@ function OptionGroup({ title, options, currentValue, fieldKey, onUpdate, theme }
 
 function DataPrivacyCollapse({ theme }) {
   const { t } = useLanguage()
-  const { exportData, importData } = useDataPort()
+  const { status, exportBackupFile, restoreFromInput } = useBackupRestoreController(t)
   const fileInputRef = useRef(null)
   const [expanded, setExpanded] = useState(false)
-  const [status, setStatus] = useState(null)
   const c = themeColors(theme)
 
   async function handleExport() {
-    exportData()
-    setStatus({ kind: 'success', message: t(s.data_exported) })
-  }
-
-  async function handleFileChange(e) {
-    const file = e.target.files?.[0]
-    e.target.value = ''
-    if (!file) return
-    const result = await importData(file)
-    if (result.ok) {
-      setStatus({ kind: 'success', message: t(s.data_import_reload) })
-      window.location.reload()
-    } else {
-      const errorKey =
-        result.error === 'parse'
-          ? s.data_import_error_parse
-          : result.error === 'format'
-            ? s.data_import_error_format
-            : s.data_import_error_unexpected
-      setStatus({ kind: 'error', message: t(errorKey) })
-    }
+    exportBackupFile()
   }
 
   const btnBase = {
@@ -132,7 +111,7 @@ function DataPrivacyCollapse({ theme }) {
                 type="file"
                 accept="application/json,.json"
                 style={{ display: 'none' }}
-                onChange={handleFileChange}
+                onChange={restoreFromInput}
               />
             </div>
             {status && (

@@ -84,7 +84,7 @@ describe('useDataPort.importData', () => {
     await act(async () => {
       res = await result.current.importData(makeFile('{{{ not json'))
     })
-    expect(res).toEqual({ ok: false, error: 'parse' })
+    expect(res).toMatchObject({ ok: false, error: 'parse', messageKey: 'data_import_error_parse', requiresReload: false })
     expect(localStorage.getItem(PROFILE_KEY)).toBeNull()
     expect(localStorage.getItem(INSPECTIONS_KEY)).toBeNull()
     expect(localStorage.getItem(LOG_KEY)).toBeNull()
@@ -96,7 +96,7 @@ describe('useDataPort.importData', () => {
     await act(async () => {
       res = await result.current.importData(makeFile(JSON.stringify({ format: 'nope', data: {} })))
     })
-    expect(res).toEqual({ ok: false, error: 'format' })
+    expect(res).toMatchObject({ ok: false, error: 'format', messageKey: 'data_import_error_format', requiresReload: false })
     expect(localStorage.getItem(PROFILE_KEY)).toBeNull()
   })
 })
