@@ -1,18 +1,17 @@
-import { useState, useCallback, useRef, useEffect, useMemo, lazy, Suspense } from 'react'
+import { useState, useCallback, useEffect, useMemo, lazy, Suspense } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
 import { useProfile, buildSeededColonies } from './hooks/useProfile'
-import { useVoice } from './hooks/useVoice'
 import { useTaskLog } from './hooks/useTaskLog'
 import { useInspections } from './hooks/useInspections'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import { useAppBadge } from './hooks/useAppBadge'
 import { useSeason } from './hooks/useSeason'
+import { useHandsFreeSession } from './hooks/useHandsFreeSession'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
-import { VOICE_CONFIG, dispatchVoiceCommand } from './utils/voiceCommands'
 import ErrorBoundary from './components/ErrorBoundary'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
@@ -81,55 +80,8 @@ function AppContent() {
     }
   }, [profile?.onboardingDone])
 
-  const [voiceActive, setVoiceActive] = useState(false)
-  const [lastCommand, setLastCommand] = useState('')
-  const [voicePermissionBlocked, setVoicePermissionBlocked] = useState(false)
-  const { speak, stopSpeaking, startListening, stopListening } = useVoice()
+  const handsFree = useHandsFreeSession(locale, setActiveTab)
   const pwaInstall = usePwaInstallPrompt()
-
-  const handleVoiceStop = useCallback(() => {
-    setVoiceActive(false)
-    setLastCommand('')
-    stopSpeaking()
-    stopListening()
-  }, [stopSpeaking, stopListening])
-
-  const handleVoiceStopRef = useRef(handleVoiceStop)
-  useEffect(() => { handleVoiceStopRef.current = handleVoiceStop }, [handleVoiceStop])
-
-  const handleVoiceActivate = useCallback(() => {
-    if (voiceActive) return
-    const config = VOICE_CONFIG[locale] ?? VOICE_CONFIG.en
-    setVoiceActive(true)
-    speak(config.greeting, { lang: config.lang })
-    startListening(
-      (transcript) => {
-        setLastCommand(transcript)
-        const { action, spokenText } = dispatchVoiceCommand(transcript, locale)
-        speak(spokenText, { lang: config.lang })
-        if (action === 'stop') {
-          handleVoiceStopRef.current()
-        } else if (action) {
-          setActiveTab(action)
-        }
-      },
-      (error) => {
-        handleVoiceStopRef.current()
-        if (error === 'not-allowed' || error === 'service-not-allowed') {
-          setVoicePermissionBlocked(true)
-        }
-      },
-      { lang: config.lang }
-    )
-  }, [voiceActive, locale, speak, startListening, setActiveTab])
-
-  const handleVoicePermissionRetry = useCallback(() => {
-    setVoicePermissionBlocked(false)
-    // Defer to the next tick so the modal unmounts before we re-request.
-    // Some browsers ignore a fresh permission request if the previous one
-    // is still considered "in-flight".
-    setTimeout(() => handleVoiceActivate(), 0)
-  }, [handleVoiceActivate])
 
   if (!profile.onboardingDone) {
     return (
@@ -193,7 +145,7 @@ function AppContent() {
         </Suspense>
       </main>
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
-      <BeeFab onActivate={handleVoiceActivate} isActive={voiceActive} />
+      <BeeFab onActivate={handsFree.start} isActive={handsFree.isActive} />
       <PwaInstallHint
         isInstalled={pwaInstall.isInstalled}
         installSupported={pwaInstall.installSupported}
@@ -202,11 +154,11 @@ function AppContent() {
         dismissible
         floating
       />
-      {voiceActive && <VoiceOverlay onStop={handleVoiceStop} lastCommand={lastCommand} />}
-      {voicePermissionBlocked && (
+      {handsFree.isActive && <VoiceOverlay onStop={handsFree.stop} lastCommand={handsFree.lastCommand} />}
+      {handsFree.permissionBlocked && (
         <VoicePermissionModal
-          onRetry={handleVoicePermissionRetry}
-          onDismiss={() => setVoicePermissionBlocked(false)}
+          onRetry={handsFree.retryPermission}
+          onDismiss={handsFree.dismissPermission}
         />
       )}
     </div>
