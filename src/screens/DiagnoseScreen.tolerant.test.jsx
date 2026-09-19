@@ -31,8 +31,9 @@ describe('DiagnoseScreen — corrupted tree', () => {
 
     await user.click(screen.getByRole('button', { name: /option/i }))
 
-    // After clicking into a broken node the screen renders null (safe fallback)
-    // rather than throwing. The root question is gone and nothing crashes.
+    // After clicking into a broken node the flow offers a recoverable reset
+    // rather than white-screening or throwing.
     expect(screen.queryByText(/what are you seeing/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /start over/i })).toBeInTheDocument()
   })
 })

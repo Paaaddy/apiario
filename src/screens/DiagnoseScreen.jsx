@@ -1,14 +1,11 @@
-import { useState, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { validateDiagnosisTree } from '../utils/validateDiagnosis'
-import { latestOverall } from '../utils/inspections'
+import { useDiagnosisFlow } from '../hooks/useDiagnosisFlow'
 import { strings as s } from '../i18n/strings'
-import diagnosisData from '../data/diagnosis.json'
 import DiagnosisResult from '../components/DiagnosisResult'
 import LanguageToggle from '../components/LanguageToggle'
 import { useWakeLock } from '../hooks/useWakeLock'
-import { haptics } from '../utils/haptics'
 import HexWatermark from '../components/HexWatermark'
 import { themeColors } from '../utils/themeTokens'
 
@@ -16,57 +13,37 @@ if (import.meta.env.DEV) {
   validateDiagnosisTree()
 }
 
-function routeFromInspection(inspection) {
-  if (!inspection) return null
-  if (inspection.queenStatus === 'not_seen') return 'queenless'
-  if (inspection.varroa != null && inspection.varroa >= 3) return 'varroa-suspect'
-  if (inspection.broodPattern != null && inspection.broodPattern <= 2) return 'sick-brood'
-  return null
-}
-
 export default function DiagnoseScreen({ inspections = [] }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const c = themeColors(theme)
-  const [currentNodeId, setCurrentNodeId] = useState('root')
-const [history, setHistory] = useState([])
-  
-  const latestInspection = useMemo(() => latestOverall(inspections), [inspections])
-  const prefilledNodeId = useMemo(() => routeFromInspection(latestInspection), [latestInspection])
+  const flow = useDiagnosisFlow(inspections)
   
   useWakeLock(true)
   
-  const node = diagnosisData[currentNodeId]
+  const node = flow.node
+  const stepNumber = flow.stepNumber
+  const stepLabel = flow.stepLabel
+  const totalSteps = flow.totalSteps
+  const totalLabel = flow.totalLabel
 
-  const stepNumber = history.length + 1
-  const stepLabel = String(stepNumber).padStart(2, '0')
-  const totalSteps = useMemo(() => {
-    let maxDepth = 0
-    const traverse = (nodeId, depth) => {
-      const n = diagnosisData[nodeId]
-      if (!n || n.type === 'outcome') {
-        maxDepth = Math.max(maxDepth, depth)
-        return
-      }
-      n.options.forEach(opt => traverse(opt.next, depth + 1))
-    }
-    traverse('root', 1)
-    return maxDepth
-  }, [])
-  const totalLabel = String(totalSteps).padStart(2, '0')
-
-  if (!node) return null
-
-  function handleSelect(nextId) {
-    haptics.tap()
-    setHistory((prev) => [...prev, currentNodeId])
-    setCurrentNodeId(nextId)
-  }
-
-  function handleReset() {
-    haptics.tap()
-    setHistory([])
-    setCurrentNodeId('root')
+  if (flow.isInvalid) {
+    return (
+      <div className="relative flex flex-col min-h-full">
+        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
+          <HexWatermark />
+          <div className="relative flex items-start justify-between gap-3">
+            <h1 className="min-w-0 flex-1 font-serif text-2xl font-bold text-brown">🔎 {t(s.diagnose_title)}</h1>
+            <LanguageToggle />
+          </div>
+        </div>
+        <div className="px-4 py-6">
+          <button onClick={flow.reset} className="text-sm text-brown-mid underline underline-offset-2">
+            {t(s.diagnose_restart)}
+          </button>
+        </div>
+      </div>
+    )
   }
 
   // ── Theme C: Seasonal Light — dark moody diagnose ─────────────
@@ -80,7 +57,7 @@ const [history, setHistory] = useState([])
             <LanguageToggle />
           </div>
           <div style={{ position: 'relative' }}>
-            <DiagnosisResult node={node} onReset={handleReset} darkMode />
+            <DiagnosisResult node={node} onReset={flow.reset} darkMode />
           </div>
         </div>
       )
@@ -106,10 +83,10 @@ const [history, setHistory] = useState([])
           </h1>
         </div>
         <div style={{ position: 'relative', padding: '8px 22px 120px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {currentNodeId === 'root' && prefilledNodeId && (
+          {flow.canPrefill && (
             <button
               type="button"
-              onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
+              onClick={flow.prefill}
               style={{ width: '100%', textAlign: 'left', padding: '14px 18px', borderRadius: 16, background: 'rgba(245,166,35,0.15)', border: '1px solid rgba(245,166,35,0.4)', color: c.accent, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
             >
               🔍 {t(s.diagnose_from_inspection)}
@@ -118,7 +95,7 @@ const [history, setHistory] = useState([])
           {node.options.map((option, i) => (
             <button
               key={option.next}
-              onClick={() => handleSelect(option.next)}
+              onClick={() => flow.select(option.next)}
               style={{ width: '100%', textAlign: 'left', padding: '18px 20px', borderRadius: 20, background: '#fff', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.25)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}
             >
               <div style={{ flex: 1 }}>
@@ -130,7 +107,7 @@ const [history, setHistory] = useState([])
               <div style={{ width: 36, height: 36, borderRadius: '50%', background: c.diagnoseBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: '#fff', fontSize: 16 }}>›</div>
             </button>
           ))}
-          <button onClick={handleReset}
+          <button onClick={flow.reset}
             style={{ marginTop: 8, background: 'none', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 4, color: 'rgba(255,255,255,0.6)', padding: '8px 14px', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', cursor: 'pointer' }}>
             ↺ {t(s.diagnose_restart)}
           </button>
@@ -155,7 +132,7 @@ const [history, setHistory] = useState([])
               🔎 {t(s.diagnose_title)}
             </h1>
           </div>
-          <DiagnosisResult node={node} onReset={handleReset} />
+          <DiagnosisResult node={node} onReset={flow.reset} />
         </div>
       )
     }
@@ -182,10 +159,10 @@ const [history, setHistory] = useState([])
           </p>
         </div>
         <div style={{ padding: '16px 24px 120px' }}>
-          {currentNodeId === 'root' && prefilledNodeId && (
+          {flow.canPrefill && (
             <button
               type="button"
-              onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
+              onClick={flow.prefill}
               style={{ width: '100%', textAlign: 'left', marginBottom: 12, padding: '12px 14px', background: c.bg, border: `1px solid ${c.rule}`, borderRadius: 4, fontFamily: 'var(--theme-font-head)', fontSize: 14, color: c.ink, cursor: 'pointer' }}
             >
               🔍 {t(s.diagnose_from_inspection)}
@@ -194,10 +171,10 @@ const [history, setHistory] = useState([])
           {node.options.map((option, i) => (
             <div
               key={option.next}
-              onClick={() => handleSelect(option.next)}
+              onClick={() => flow.select(option.next)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleSelect(option.next)}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && flow.select(option.next)}
               style={{ padding: '16px 4px', borderBottom: '1px solid rgba(200,184,144,0.4)', display: 'flex', alignItems: 'center', gap: 14, cursor: 'pointer' }}
             >
               <span style={{ fontFamily: 'var(--theme-font-mono)', fontSize: 10, color: c.inkLight, width: 22, flexShrink: 0 }}>
@@ -209,7 +186,7 @@ const [history, setHistory] = useState([])
               </svg>
             </div>
           ))}
-          <button onClick={handleReset}
+          <button onClick={flow.reset}
             style={{ marginTop: 20, background: 'none', border: `1px solid ${c.rule}`, borderRadius: 2, color: c.inkMid, padding: '8px 14px', fontSize: 11, letterSpacing: '1.5px', fontFamily: 'var(--theme-font-mono)', textTransform: 'uppercase', cursor: 'pointer' }}>
             ↺ {t(s.diagnose_restart)}
           </button>
@@ -229,7 +206,7 @@ const [history, setHistory] = useState([])
             <LanguageToggle />
           </div>
         </div>
-        <DiagnosisResult node={node} onReset={handleReset} />
+        <DiagnosisResult node={node} onReset={flow.reset} />
       </div>
     )
   }
@@ -255,10 +232,10 @@ const [history, setHistory] = useState([])
         <h2 className="font-serif text-lg font-semibold text-brown">{t(node.question)}</h2>
       </div>
 
-      {currentNodeId === 'root' && prefilledNodeId && (
+      {flow.canPrefill && (
         <div className="px-4 mb-1">
           <button
-            onClick={() => { haptics.tap(); setHistory(['root']); setCurrentNodeId(prefilledNodeId) }}
+            onClick={flow.prefill}
             className="w-full text-left bg-amber-50 border border-honey rounded-xl px-5 py-3 text-brown text-sm font-semibold"
           >
             🔍 {t(s.diagnose_from_inspection)}
@@ -270,7 +247,7 @@ const [history, setHistory] = useState([])
         {node.options.map((option) => (
           <button
             key={option.next}
-            onClick={() => handleSelect(option.next)}
+            onClick={() => flow.select(option.next)}
             className="w-full text-left bg-white rounded-xl px-5 py-4 border border-amber-100 text-brown text-sm font-medium shadow-sm active:bg-amber-50 transition-colors leading-snug"
           >
             {t(option.label)}
@@ -279,7 +256,7 @@ const [history, setHistory] = useState([])
       </div>
 
       <div className="px-4 mt-4">
-        <button onClick={handleReset} className="text-sm text-brown-mid underline underline-offset-2">
+        <button onClick={flow.reset} className="text-sm text-brown-mid underline underline-offset-2">
           {t(s.diagnose_restart)}
         </button>
       </div>
