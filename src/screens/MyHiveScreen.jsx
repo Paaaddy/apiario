@@ -12,6 +12,7 @@ import MyHiveTabStrip from '../components/MyHiveTabStrip'
 import PwaInstallHint from '../components/PwaInstallHint'
 import HexWatermark from '../components/HexWatermark'
 import { themeColors } from '../utils/themeTokens'
+import { useColonyRecords, useSelectedColonyRecord } from '../hooks/useColonyRecords'
 
 export default function MyHiveScreen({
   profile,
@@ -34,16 +35,17 @@ export default function MyHiveScreen({
   const [selectedColonyId, setSelectedColonyId] = useState(null)
 
   const colonies = profile?.colonies ?? []
-  const selectedColony = colonies.find(c => c.id === selectedColonyId)
+  const colonyRecords = useColonyRecords(colonies, inspections)
+  const selectedColonyRecord = useSelectedColonyRecord(colonyRecords, selectedColonyId)
 
   function renderTabContent() {
     switch (activeTab) {
       case 'colonies':
-        if (selectedColonyId) {
+        if (selectedColonyId && selectedColonyRecord) {
           return (
             <ColonyDetail
-              colony={selectedColony}
-              inspections={inspections}
+              colony={selectedColonyRecord}
+              inspections={[]}
               colonies={colonies}
               onBack={() => setSelectedColonyId(null)}
               onUpdateInspection={onUpdateInspection}
@@ -57,11 +59,10 @@ export default function MyHiveScreen({
               <PwaInstallHint isInstalled={pwaInstall.isInstalled} installSupported={pwaInstall.installSupported} onInstall={pwaInstall.promptInstall} compact dismissible />
             </div>
             <ColoniesSection
-              colonies={colonies}
+              colonyRecords={colonyRecords}
               onAdd={onAddColony}
               onUpdate={onUpdateColony}
               onRemove={onRemoveColony}
-              inspections={inspections}
               onAddInspection={onAddInspection}
               onSelectColony={setSelectedColonyId}
             />
