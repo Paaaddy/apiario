@@ -11,6 +11,7 @@ import SeasonHeader from '../components/SeasonHeader'
 import { addWeeks, isSameIsoWeek } from '../utils/season'
 import { haptics } from '../utils/haptics'
 import { themeColors } from '../utils/themeTokens'
+import { buildNextActions } from '../utils/nextActions'
 
 if (import.meta.env.DEV) {
   validateSeasonsTree()
@@ -55,7 +56,94 @@ function formatDayMonth(date, locale) {
   return date.toLocaleDateString(loc, { day: 'numeric', month: 'short' })
 }
 
-export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask }) {
+function NextActionsPanel({ actions, theme, onNextAction }) {
+  const { t } = useLanguage()
+  const c = themeColors(theme)
+
+  if (!actions?.length) return null
+
+  const panelStyle = {
+    marginBottom: theme === 'a' ? 4 : 14,
+    padding: theme === 'b' ? '12px 0 16px' : '14px',
+    borderRadius: theme === 'b' ? 0 : theme === 'c' ? 20 : 14,
+    border: theme === 'b' ? `1px solid ${c.rule}` : `1px solid ${c.border}`,
+    borderLeft: theme === 'b' ? 0 : undefined,
+    borderRight: theme === 'b' ? 0 : undefined,
+    background: theme === 'b' ? 'transparent' : c.cardBg,
+    boxShadow: theme === 'a' ? '0 1px 3px rgba(61,31,0,0.08)' : 'none',
+    backdropFilter: theme === 'c' ? 'blur(18px) saturate(140%)' : undefined,
+    WebkitBackdropFilter: theme === 'c' ? 'blur(18px) saturate(140%)' : undefined,
+  }
+
+  return (
+    <section aria-label={t(s.next_actions_title)} style={panelStyle}>
+      <p style={{
+        margin: '0 0 10px',
+        fontFamily: theme === 'a' ? '"Playfair Display", serif' : 'var(--theme-font-head)',
+        fontSize: theme === 'b' ? 16 : 14,
+        fontWeight: theme === 'b' ? 500 : 700,
+        color: c.ink,
+      }}>
+        {t(s.next_actions_title)}
+      </p>
+      <div style={{ display: 'grid', gap: theme === 'b' ? 10 : 8 }}>
+        {actions.map((action) => {
+          const isButton = Boolean(action.target && onNextAction)
+          const content = (
+            <>
+              <span style={{
+                display: 'block',
+                fontFamily: theme === 'b' ? 'var(--theme-font-head)' : undefined,
+                fontSize: 14,
+                lineHeight: 1.3,
+                fontWeight: 700,
+                color: c.ink,
+              }}>
+                {t(action.title)}
+              </span>
+              <span style={{
+                display: 'block',
+                marginTop: 3,
+                fontSize: 12,
+                lineHeight: 1.45,
+                color: c.inkMid,
+              }}>
+                {t(action.reason)}
+              </span>
+            </>
+          )
+          const itemStyle = {
+            width: '100%',
+            textAlign: 'left',
+            padding: theme === 'b' ? '2px 0 10px' : '10px 12px',
+            borderRadius: theme === 'b' ? 0 : 10,
+            border: theme === 'b' ? 0 : `1px solid ${action.kind === 'diagnosis-warning' ? c.accent : c.rule}`,
+            borderBottom: theme === 'b' ? `1px solid ${c.rule}` : undefined,
+            background: theme === 'b' ? 'transparent' : action.kind === 'all-clear' ? 'rgba(111,127,86,0.10)' : 'rgba(255,255,255,0.55)',
+            cursor: isButton ? 'pointer' : 'default',
+          }
+
+          if (isButton) {
+            return (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onNextAction(action.target)}
+                style={itemStyle}
+              >
+                {content}
+              </button>
+            )
+          }
+
+          return <div key={action.id} style={itemStyle}>{content}</div>
+        })}
+      </div>
+    </section>
+  )
+}
+
+export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask, inspections = [], onNextAction }) {
   const { t, locale } = useLanguage()
   const { theme } = useTheme()
   const completedCount = completedTaskIds?.size ?? 0
@@ -70,11 +158,20 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   const today = useMemo(() => new Date(), [])
   const viewingToday = isSameIsoWeek(selectedDate, today)
 
-  const { label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
+  const { season, label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
     profile,
     completedCount,
     selectedDate
   )
+
+  const nextActions = useMemo(() => buildNextActions({
+    profile,
+    inspections,
+    season,
+    tasks,
+    completedTaskIds,
+    today: selectedDate,
+  }), [profile, inspections, season, tasks, completedTaskIds, selectedDate])
 
   const goPreviousWeek = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d, -1)) }, [])
   const goNextWeek    = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d, 1))  }, [])
@@ -98,6 +195,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
       <div style={{ position: 'relative', minHeight: '100%', background: c.bg }}>
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 14px 120px' }}>
+          <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
           {tasks.length === 0 ? (
             <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: '"Playfair Display", serif', fontSize: 18 }}>{t(s.season_nothing)}</p>
           ) : (
@@ -134,6 +232,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
       <div style={{ minHeight: '100%', background: c.bg }}>
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 24px 120px' }}>
+          <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
           {tasks.length === 0 ? (
             <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: 'var(--theme-font-head)', fontSize: 18, fontStyle: 'italic' }}>{t(s.season_nothing)}</p>
           ) : (
@@ -206,6 +305,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
       </div>
 
       <div className="flex-1 px-4 py-5 flex flex-col gap-3">
+        <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
         {tasks.length === 0 ? (
           <p className="text-center text-brown-mid py-8 font-serif text-lg">{t(s.season_nothing)}</p>
         ) : (

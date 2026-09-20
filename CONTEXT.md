@@ -23,3 +23,7 @@ _Avoid_: Data port, dump.
 **Diagnosis flow**:
 A guided path from observed colony symptoms to a suggested outcome and actions.
 _Avoid_: Diagnosis screen, wizard.
+
+**Next action**:
+A recommended colony or seasonal task surfaced from Apiario's existing records and guidance.
+_Avoid_: Next best action, recommendation, prompt.

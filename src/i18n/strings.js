@@ -10,6 +10,7 @@ export const strings = {
   season_this_week:   { de: 'Aufgaben diese Woche', en: "This week's tasks" },
   season_tasks_noun:  { de: 'Aufgaben zu prüfen',   en: 'things to check'  },
   season_nothing:     { de: 'Diese Woche nichts Dringendes. Bald wieder vorbeischauen.', en: 'Nothing urgent this week. Check back soon.' },
+  next_actions_title: { de: 'Nächste Schritte',     en: 'Next actions'      },
 
   // Week picker
   week_previous:      { de: 'Vorherige Woche',      en: 'Previous week'     },
