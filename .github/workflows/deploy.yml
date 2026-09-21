@@ -35,19 +35,19 @@ permissions:
   pages: write
   id-token: write
 
-# GitHub's official recommendation for the `pages` concurrency group:
-# do NOT cancel in-progress deployments. Cancelling a Pages deployment
-# can leave the environment in a half-applied state, so the Actions UI
-# surfaces a warning on every run that sets `cancel-in-progress: true`
-# on a Pages job. Keep it false, let the queue drain naturally.
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Scoped per ref rather than sharing the single global `pages` group with
+    # the deploy job below. Under one shared group, two open PRs (and any
+    # push to master) queued behind each other for no reason — a PR build
+    # ships nothing, so it has no bearing on the Pages environment.
+    # Superseded PR builds are cancelled; master builds are left to finish
+    # because a deploy depends on them.
+    concurrency:
+      group: build-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -89,6 +89,14 @@ jobs:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # GitHub's official recommendation for the `pages` concurrency group: do
+    # NOT cancel in-progress deployments — cancelling one can leave the
+    # environment half-applied. Keep it false and let the queue drain. This
+    # now sits on the deploy job, which is what actually touches Pages,
+    # instead of on the whole workflow.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
