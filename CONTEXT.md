@@ -19,3 +19,7 @@ _Avoid_: Colony view, hive summary.
 **Backup**:
 A user-owned export file containing Apiario data that can be restored into the app.
 _Avoid_: Data port, dump.
+
+**Diagnosis flow**:
+A guided path from observed colony symptoms to a suggested outcome and actions.
+_Avoid_: Diagnosis screen, wizard.
