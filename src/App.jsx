@@ -55,6 +55,12 @@ function AppContent() {
     runWithViewTransition(() => setActiveTabState(next))
   }, [])
 
+  const handleNextAction = useCallback((target) => {
+    if (target?.tab && VALID_TABS.includes(target.tab)) {
+      setActiveTab(target.tab)
+    }
+  }, [setActiveTab])
+
   // Surface the number of outstanding urgent/important tasks on the
   // installed app icon — the beekeeper sees "3" on the home screen
   // without opening the app.
@@ -112,6 +118,8 @@ function AppContent() {
               log={log}
               completedTaskIds={completedTaskIds}
               onToggleTask={toggleTask}
+              inspections={inspections}
+              onNextAction={handleNextAction}
             />
           )}
           {activeTab === 'diagnose' && <DiagnoseScreen inspections={inspections} />}
