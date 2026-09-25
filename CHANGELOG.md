@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.5.0](https://github.com/Paaaddy/apiario/compare/v2.4.3...v2.5.0) (2026-09-22)
+
+
+### Features
+
+* add next actions guidance ([#119](https://github.com/Paaaddy/apiario/issues/119)) ([15d21cf](https://github.com/Paaaddy/apiario/commit/15d21cf5f74463383ea8c65388fc25fa8f0d7bd0))
+* deepen diagnosis flow module ([f1e2348](https://github.com/Paaaddy/apiario/commit/f1e234817963111520fd235b5d8d1cdf7dc4a08b))
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group with 3 updates ([#117](https://github.com/Paaaddy/apiario/issues/117)) ([b9ac1b9](https://github.com/Paaaddy/apiario/commit/b9ac1b9b06d35d6d5e9c5ad534de3515ab6f786a))
+* **deps-dev:** bump the testing group across 1 directory with 4 updates ([#118](https://github.com/Paaaddy/apiario/issues/118)) ([ec5ce94](https://github.com/Paaaddy/apiario/commit/ec5ce940105e8356e759e768bc7738b85810ca6f))
+
 ## [2.4.3](https://github.com/Paaaddy/apiario/compare/v2.4.2...v2.4.3) (2026-09-16)
 
 
