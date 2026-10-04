@@ -38,6 +38,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
           </div>
         </div>
         <div className="px-4 py-6">
+          <p role="alert" className="mb-4 text-sm text-brown">{t(s.diagnose_unavailable)}</p>
           <button onClick={flow.reset} className="text-sm text-brown-mid underline underline-offset-2">
             {t(s.diagnose_restart)}
           </button>

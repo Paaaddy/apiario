@@ -171,12 +171,17 @@ function buildOverdueInspectionAction(colonies, latestByColony, season, today) {
 }
 
 function buildSeasonalAction(tasks = [], completedTaskIds = new Set()) {
-  const incomplete = tasks.filter((task) => !completedTaskIds.has(task.id))
-  if (incomplete.length === 0) return []
-  const task = [...incomplete].sort((a, b) => {
-    const urgency = (URGENCY_RANK[a.urgency] ?? 3) - (URGENCY_RANK[b.urgency] ?? 3)
-    return urgency || tasks.indexOf(a) - tasks.indexOf(b)
-  })[0]
+  let task = null
+  let bestRank = Infinity
+  for (const candidate of tasks) {
+    if (completedTaskIds.has(candidate.id)) continue
+    const rank = URGENCY_RANK[candidate.urgency] ?? 3
+    if (rank < bestRank) {
+      task = candidate
+      bestRank = rank
+    }
+  }
+  if (!task) return []
 
   return [{
     id: `seasonal-${task.id}`,

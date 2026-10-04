@@ -19,9 +19,9 @@ function validPayload() {
     schemaVersion: 2,
     exportedAt: '2026-01-01T00:00:00.000Z',
     data: {
-      profile: { hiveCount: 2, colonies: [{ id: 'col-1', name: 'A' }] },
-      inspections: [{ id: 'i1' }],
-      log: [{ id: 'l1' }],
+      profile: { schemaVersion: 3, hiveCount: 2, colonies: [{ id: 'col-1', name: 'A' }] },
+      inspections: [{ id: 'i1', colonyId: 'col-1', date: '2026-01-01', queenStatus: 'seen' }],
+      log: [{ id: 'l1', type: 'custom', text: 'Observed flight', date: '2026-01-01' }],
     },
   })
 }
@@ -46,12 +46,59 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  vi.restoreAllMocks()
   localStorage.clear()
   URL.createObjectURL = originalCreate
   URL.revokeObjectURL = originalRevoke
 })
 
 describe('useBackupRestoreController', () => {
+  it('keeps failed restore recovery available until the prior records can be recovered', async () => {
+    const previous = '{"hiveCount":1}'
+    localStorage.setItem(PROFILE_KEY, previous)
+    const setItem = Storage.prototype.setItem
+    let storageAvailable = false
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (key, value) {
+      if (!storageAvailable && (key === INSPECTIONS_KEY || (key === PROFILE_KEY && value === previous))) {
+        throw new DOMException('Storage unavailable', 'QuotaExceededError')
+      }
+      return setItem.call(this, key, value)
+    })
+    const reload = vi.fn()
+    let { result, unmount } = renderHook(() => useController(reload), { wrapper })
+    await act(async () => { await result.current.restoreBackupFile(makeFile(validPayload())) })
+    expect(result.current.status).toEqual({
+      kind: 'error', message: 'Restoration and recovery failed. Do not reload; retry recovering your previous records.',
+    })
+    expect(result.current.canRecover).toBe(true)
+    await act(async () => { await result.current.restoreBackupFile(makeFile(validPayload())) })
+    expect(result.current.canRecover).toBe(true)
+    unmount()
+    ;({ result } = renderHook(() => useController(reload), { wrapper }))
+    expect(result.current.canRecover).toBe(true)
+    storageAvailable = true
+    await act(async () => { result.current.recoverPreviousData() })
+    expect(result.current.canRecover).toBe(false)
+    expect(localStorage.getItem(PROFILE_KEY)).toBe(previous)
+    expect(localStorage.getItem(INSPECTIONS_KEY)).toBeNull()
+    expect(localStorage.getItem(LOG_KEY)).toBeNull()
+    expect(result.current.status).toEqual({ kind: 'success', message: 'Previous records recovered. You can try importing again.' })
+    expect(reload).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['en', 'Something went wrong during import.'],
+    ['de', 'Beim Import ist etwas schiefgelaufen.'],
+  ])('reports an unreadable file in %s without reloading', async (locale, message) => {
+    localStorage.setItem('apiario-locale', locale)
+    const reload = vi.fn()
+    const file = { text: async () => { throw new Error('Read failed') } }
+    const { result } = renderHook(() => useController(reload), { wrapper })
+    await act(async () => { await result.current.restoreBackupFile(file) })
+    expect(result.current.status).toEqual({ kind: 'error', message })
+    expect(reload).not.toHaveBeenCalled()
+  })
+
   it('sets an exported status after export', () => {
     const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
     const { result } = renderHook(() => useController(vi.fn()), { wrapper })
@@ -73,8 +120,8 @@ describe('useBackupRestoreController', () => {
 
     expect(result.current.status).toEqual({ kind: 'success', message: 'Data loaded. Reloading app…' })
     expect(JSON.parse(localStorage.getItem(PROFILE_KEY)).hiveCount).toBe(2)
-    expect(JSON.parse(localStorage.getItem(INSPECTIONS_KEY))).toEqual([{ id: 'i1' }])
-    expect(JSON.parse(localStorage.getItem(LOG_KEY))).toEqual([{ id: 'l1' }])
+    expect(JSON.parse(localStorage.getItem(INSPECTIONS_KEY))).toEqual(JSON.parse(validPayload()).data.inspections)
+    expect(JSON.parse(localStorage.getItem(LOG_KEY))).toEqual(JSON.parse(validPayload()).data.log)
     expect(reload).toHaveBeenCalled()
   })
 

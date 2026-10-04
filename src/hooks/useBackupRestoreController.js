@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useDataPort } from './useDataPort'
+import { backupErrorOutcome } from '../utils/dataBackup'
 import { strings as s } from '../i18n/strings'
 
 function messageFor(result, t) {
@@ -7,28 +8,26 @@ function messageFor(result, t) {
 }
 
 export function useBackupRestoreController(t, reload = () => window.location.reload()) {
-  const { exportBackup, importData } = useDataPort()
-  const [status, setStatus] = useState(null)
+  const { exportBackup, importData, canRecover, recoverPreviousData: recover } = useDataPort()
+  const [outcome, setOutcome] = useState(() => canRecover ? backupErrorOutcome('recovery') : null)
+  const displayedOutcome = outcome?.error === 'recovery' && !canRecover
+    ? { ok: true, messageKey: 'data_import_recovered' }
+    : outcome
+  const status = displayedOutcome ? { kind: displayedOutcome.ok ? 'success' : 'error', message: messageFor(displayedOutcome, t) } : null
 
   const exportBackupFile = useCallback(() => {
     const result = exportBackup()
-    setStatus({
-      kind: result.ok ? 'success' : 'error',
-      message: messageFor(result, t),
-    })
+    setOutcome(result)
     return result
-  }, [exportBackup, t])
+  }, [exportBackup])
 
   const restoreBackupFile = useCallback(async (file) => {
     if (!file) return null
     const result = await importData(file)
-    setStatus({
-      kind: result.ok ? 'success' : 'error',
-      message: messageFor(result, t),
-    })
+    setOutcome(result)
     if (result.ok && result.requiresReload) reload()
     return result
-  }, [importData, reload, t])
+  }, [importData, reload])
 
   const restoreFromInput = useCallback(async (event) => {
     const file = event.target.files?.[0]
@@ -36,10 +35,18 @@ export function useBackupRestoreController(t, reload = () => window.location.rel
     return restoreBackupFile(file)
   }, [restoreBackupFile])
 
+  const recoverPreviousData = useCallback(() => {
+    const result = recover()
+    setOutcome(result)
+    return result
+  }, [recover])
+
   return {
     status,
     exportBackupFile,
     restoreBackupFile,
     restoreFromInput,
+    canRecover,
+    recoverPreviousData,
   }
 }

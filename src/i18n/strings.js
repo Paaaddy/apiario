@@ -1,4 +1,16 @@
+import { backupStrings } from './backupStrings'
+
 export const strings = {
+  ...backupStrings,
+  storage_error: {
+    de: 'Änderungen sind nicht gespeichert. Lass die App geöffnet und versuche das Speichern erneut.',
+    en: 'Changes are not saved. Keep the app open and retry saving.',
+  },
+  storage_retry: { de: 'Speichern erneut versuchen', en: 'Retry saving' },
+  diagnose_unavailable: {
+    de: 'Die Diagnosehinweise sind nicht verfügbar. Versuche einen Neustart oder wechsle zu einem anderen Tab.',
+    en: 'Diagnosis guidance is unavailable. Try restarting or return to another tab.',
+  },
   // Navigation
   nav_season:   { de: 'Saison',     en: 'Season'  },
   nav_diagnose: { de: 'Diagnose',   en: 'Diagnose' },

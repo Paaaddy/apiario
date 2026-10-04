@@ -8,11 +8,14 @@ import { useInspections } from './hooks/useInspections'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import { useAppBadge } from './hooks/useAppBadge'
 import { useSeason } from './hooks/useSeason'
+import { useCurrentDate } from './hooks/useCurrentDate'
 import { useHandsFreeSession } from './hooks/useHandsFreeSession'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
 import NextActionNotice from './components/NextActionNotice'
+import StorageNotice from './components/StorageNotice'
+import BackupRecoveryNotice from './components/BackupRecoveryNotice'
 import ErrorBoundary from './components/ErrorBoundary'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
@@ -37,9 +40,16 @@ function initialTab() {
 
 function AppContent() {
   const { locale } = useLanguage()
-  const { profile, updateProfile, addColony, updateColony, removeColony } = useProfile()
-  const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry } = useTaskLog()
-  const { inspections, addInspection, updateInspection, removeInspection, removeInspectionsByColonyId } = useInspections()
+  const { profile, updateProfile, addColony, updateColony, removeColony, persistenceError: profileError, retrySave: retryProfile } = useProfile()
+  const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry, persistenceError: logError, retrySave: retryLog } = useTaskLog()
+  const { inspections, addInspection, updateInspection, removeInspection, removeInspectionsByColonyId, persistenceError: inspectionError, retrySave: retryInspections } = useInspections()
+  const storageNotice = (profileError || logError || inspectionError) && (
+    <StorageNotice onRetry={() => {
+      if (profileError) retryProfile()
+      if (logError) retryLog()
+      if (inspectionError) retryInspections()
+    }} />
+  )
 
   const handleRemoveColony = useCallback((colonyId) => {
     removeInspectionsByColonyId(colonyId)
@@ -71,7 +81,8 @@ function AppContent() {
   // Surface the number of outstanding urgent/important tasks on the
   // installed app icon — the beekeeper sees "3" on the home screen
   // without opening the app.
-  const seasonForBadge = useSeason(profile)
+  const today = useCurrentDate()
+  const seasonForBadge = useSeason(profile, completedTaskIds.size, today)
   const pendingUrgentCount = useMemo(() => {
     const tasks = seasonForBadge.tasks ?? []
     return tasks.filter(
@@ -99,6 +110,8 @@ function AppContent() {
   if (!profile.onboardingDone) {
     return (
       <div className="flex flex-col h-full bg-cream">
+        <BackupRecoveryNotice />
+        {storageNotice}
         <Suspense fallback={<div className="flex-1" />}>
           <Onboarding
             onComplete={(answers) => {
@@ -117,11 +130,14 @@ function AppContent() {
 
   return (
     <div className="flex flex-col h-full bg-cream">
+      <BackupRecoveryNotice />
+      {storageNotice}
       <main className="flex-1 overflow-y-auto">
         {!targetColonyExists && <NextActionNotice key={nextAction.selectionId} />}
         <Suspense fallback={<div className="flex-1" />}>
           {activeTab === 'season' && (
             <SeasonScreen
+              today={today}
               profile={profile}
               log={log}
               completedTaskIds={completedTaskIds}

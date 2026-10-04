@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { useSeason } from '../hooks/useSeason'
+import { useCurrentDate } from '../hooks/useCurrentDate'
 import { strings as s } from '../i18n/strings'
 import { validateSeasonsTree } from '../utils/validateSeasons'
 import TaskCard from '../components/TaskCard'
@@ -144,7 +145,7 @@ function NextActionsPanel({ actions, theme, onNextAction }) {
   )
 }
 
-export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask, inspections = [], onNextAction, nextAction }) {
+export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask, inspections = [], onNextAction, nextAction, today: suppliedToday }) {
   const { t, locale } = useLanguage()
   const { theme } = useTheme()
   const completedCount = completedTaskIds?.size ?? 0
@@ -155,15 +156,18 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
     return map
   }, [log])
 
-  const [selectedDate, setSelectedDate] = useState(() => new Date())
-  const today = useMemo(() => new Date(), [])
+  const currentDate = useCurrentDate(suppliedToday == null)
+  const today = suppliedToday ?? currentDate
+  const [browsedDate, setSelectedDate] = useState(null)
+  const selectedDate = browsedDate ?? today
   const viewingToday = isSameIsoWeek(selectedDate, today)
 
-  const { season, label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
+  const { label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
     profile,
     completedCount,
     selectedDate
   )
+  const { season } = useSeason(profile, completedCount, today)
 
   const nextActions = useMemo(() => buildNextActions({
     profile,
@@ -171,8 +175,8 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
     season,
     tasks,
     completedTaskIds,
-    today: selectedDate,
-  }), [profile, inspections, season, tasks, completedTaskIds, selectedDate])
+    today,
+  }), [profile, inspections, season, tasks, completedTaskIds, today])
 
   const taskElements = useRef(new Map())
   const consumedAction = useRef(null)
@@ -207,9 +211,9 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
     )
   }
 
-  const goPreviousWeek = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d, -1)) }, [])
-  const goNextWeek    = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d, 1))  }, [])
-  const goToday       = useCallback(() => { haptics.tap(); setSelectedDate(new Date())               }, [])
+  const goPreviousWeek = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d ?? today, -1)) }, [today])
+  const goNextWeek    = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d ?? today, 1))  }, [today])
+  const goToday       = useCallback(() => { haptics.tap(); setSelectedDate(null) }, [])
 
   const rangeLabel =
     weekRange?.start && weekRange?.end

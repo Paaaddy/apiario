@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
+import { createElement, StrictMode } from 'react'
 import { vi } from 'vitest'
 import { useTaskLog } from './useTaskLog'
 
@@ -17,9 +18,84 @@ beforeEach(() => {
 
 afterEach(() => {
   globalThis.navigator.vibrate = originalVibrate
+  vi.restoreAllMocks()
 })
 
 describe('useTaskLog', () => {
+  it('does not replay log writes or haptics in StrictMode and clears errors on successful mutations', () => {
+    const write = vi.spyOn(Storage.prototype, 'setItem')
+    const { result } = renderHook(() => useTaskLog(), {
+      wrapper: ({ children }) => createElement(StrictMode, null, children),
+    })
+    expect(result.current.persistenceError).toBeNull()
+    expect(write).not.toHaveBeenCalled()
+    act(() => result.current.toggleTask(task))
+    expect(write).toHaveBeenCalledTimes(1)
+    expect(globalThis.navigator.vibrate).toHaveBeenCalledTimes(1)
+    write.mockImplementationOnce(() => { throw new Error('Storage unavailable') })
+    act(() => result.current.toggleTask(task))
+    expect(write).toHaveBeenCalledTimes(2)
+    expect(result.current.completedTaskIds.size).toBe(0)
+    expect(result.current.persistenceError?.error).toBe('storage')
+    act(() => result.current.addCustomEntry({ text: 'Fed syrup', date: '2026-04-13' }))
+    expect(write).toHaveBeenCalledTimes(3)
+    expect(globalThis.navigator.vibrate).toHaveBeenCalledTimes(1)
+    expect(result.current.persistenceError).toBeNull()
+  })
+
+  it('applies batched log mutations and retries the latest log before a render', () => {
+    const { result, unmount } = renderHook(() => useTaskLog())
+    act(() => result.current.addCustomEntry({ text: 'Old note', date: '2026-04-12' }))
+    const oldId = result.current.log[0].id
+    globalThis.navigator.vibrate.mockClear()
+    const write = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('Storage unavailable')
+    })
+    const secondTask = { id: 'sp-02', name: { de: 'Vorräte', en: 'Stores' } }
+    act(() => {
+      result.current.toggleTask(task)
+      result.current.toggleTask(task)
+      result.current.toggleTask(secondTask)
+      result.current.deleteEntry(oldId)
+      result.current.addCustomEntry({ text: 'Fed syrup', date: '2026-04-13' })
+      write.mockRestore()
+      expect(result.current.retrySave()).toEqual({ ok: true })
+    })
+    expect(globalThis.navigator.vibrate).toHaveBeenCalledTimes(2)
+    expect(result.current.completedTaskIds).toEqual(new Set(['sp-02']))
+    expect(result.current.log).toHaveLength(2)
+    expect(result.current.log.find((entry) => entry.type === 'custom').text).toBe('Fed syrup')
+    expect(result.current.persistenceError).toBeNull()
+    unmount()
+    const remounted = renderHook(() => useTaskLog())
+    expect(remounted.result.current.completedTaskIds).toEqual(new Set(['sp-02']))
+    expect(remounted.result.current.log).toHaveLength(2)
+    expect(remounted.result.current.log.find((entry) => entry.type === 'custom').text).toBe('Fed syrup')
+  })
+
+  it('keeps failed log changes unsaved until retry persists the latest entries', () => {
+    const { result, unmount } = renderHook(() => useTaskLog())
+    const write = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Storage denied', 'SecurityError')
+    })
+    act(() => result.current.toggleTask(task))
+    expect(result.current.completedTaskIds.has(task.id)).toBe(true)
+    expect(result.current.persistenceError).toEqual({
+      ok: false, error: 'storage', messageKey: 'storage_error', requiresReload: false,
+    })
+    act(() => result.current.addCustomEntry({ text: 'Fed syrup', date: '2026-04-13' }))
+    act(() => result.current.retrySave())
+    expect(result.current.persistenceError?.error).toBe('storage')
+    write.mockRestore()
+    act(() => result.current.retrySave())
+    expect(result.current.persistenceError).toBeNull()
+    unmount()
+    const remounted = renderHook(() => useTaskLog())
+    expect(remounted.result.current.completedTaskIds.has(task.id)).toBe(true)
+    expect(remounted.result.current.log.find((entry) => entry.type === 'custom').text).toBe('Fed syrup')
+    expect(remounted.result.current.persistenceError).toBeNull()
+  })
+
   it('starts with empty log', () => {
     const { result } = renderHook(() => useTaskLog())
     expect(result.current.log).toHaveLength(0)

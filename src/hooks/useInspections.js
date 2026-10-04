@@ -1,8 +1,9 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useStoredState } from './useStoredState'
 import { groupByColony, latestByColony } from '../utils/inspections'
+import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
 
 const STORAGE_KEY = 'apiario-inspections'
-const MAX_PER_COLONY = 500
 
 function loadInspections() {
   try {
@@ -14,14 +15,9 @@ function loadInspections() {
   }
 }
 
-function saveInspections(list) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
-  } catch {}
-}
-
 export function useInspections() {
-  const [inspections, setInspections] = useState(loadInspections)
+  const { state: inspections, updateState: setInspections, persistenceError, retrySave } =
+    useStoredState(STORAGE_KEY, loadInspections)
 
   const addInspection = useCallback((data) => {
     setInspections((prev) => {
@@ -34,36 +30,32 @@ export function useInspections() {
       const others = prev.filter((e) => e.colonyId !== data.colonyId)
       const cappedColony = [entry, ...sameColony].slice(0, MAX_PER_COLONY)
       const next = [...cappedColony, ...others]
-      saveInspections(next)
       return next
     })
-  }, [])
+  }, [setInspections])
 
   const updateInspection = useCallback((id, patch) => {
     setInspections((prev) => {
       const next = prev.map((e) =>
         e.id === id ? { ...e, ...patch, id: e.id, createdAt: e.createdAt } : e
       )
-      saveInspections(next)
       return next
     })
-  }, [])
+  }, [setInspections])
 
   const removeInspection = useCallback((id) => {
     setInspections((prev) => {
       const next = prev.filter((e) => e.id !== id)
-      saveInspections(next)
       return next
     })
-  }, [])
+  }, [setInspections])
 
   const removeInspectionsByColonyId = useCallback((colonyId) => {
     setInspections((prev) => {
       const next = prev.filter((e) => e.colonyId !== colonyId)
-      saveInspections(next)
       return next
     })
-  }, [])
+  }, [setInspections])
 
   const byColony = useMemo(() => groupByColony(inspections), [inspections])
   const latest = useMemo(() => latestByColony(inspections), [inspections])
@@ -86,5 +78,7 @@ export function useInspections() {
     removeInspectionsByColonyId,
     getColonyInspections,
     getLatestInspection,
+    persistenceError,
+    retrySave,
   }
 }

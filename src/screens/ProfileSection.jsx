@@ -45,7 +45,7 @@ function OptionGroup({ title, options, currentValue, fieldKey, onUpdate, theme }
 
 function DataPrivacyCollapse({ theme }) {
   const { t } = useLanguage()
-  const { status, exportBackupFile, restoreFromInput } = useBackupRestoreController(t)
+  const { status, canRecover, exportBackupFile, restoreFromInput } = useBackupRestoreController(t)
   const fileInputRef = useRef(null)
   const [expanded, setExpanded] = useState(false)
   const c = themeColors(theme)
@@ -97,10 +97,11 @@ function DataPrivacyCollapse({ theme }) {
               {t(s.data_hint)}
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-              <button onClick={handleExport} style={{ ...btnBase, ...getButtonStyle(theme, false) }}>
+              <button disabled={canRecover} onClick={handleExport} style={{ ...btnBase, ...getButtonStyle(theme, false) }}>
                 {t(s.data_export)}
               </button>
               <button
+                disabled={canRecover}
                 onClick={() => fileInputRef.current?.click()}
                 style={{ ...btnBase, ...getButtonStyle(theme, false) }}
               >
@@ -114,8 +115,8 @@ function DataPrivacyCollapse({ theme }) {
                 onChange={restoreFromInput}
               />
             </div>
-            {status && (
-              <p style={{ margin: '10px 0 0', fontSize: 13, fontWeight: 600, color: status.kind === 'error' ? 'var(--theme-accent, #d33)' : 'var(--theme-ink-mid, #92400e)' }}>
+            {status && !canRecover && (
+              <p role={status.kind === 'error' ? 'alert' : 'status'} style={{ margin: '10px 0 0', fontSize: 13, fontWeight: 600, color: status.kind === 'error' ? 'var(--theme-accent, #d33)' : 'var(--theme-ink-mid, #92400e)' }}>
                 {status.message}
               </p>
             )}
