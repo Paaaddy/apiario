@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo, lazy, Suspense } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef, lazy, Suspense } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
@@ -12,6 +12,7 @@ import { useHandsFreeSession } from './hooks/useHandsFreeSession'
 import { runWithViewTransition } from './utils/viewTransitions'
 import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
+import NextActionNotice from './components/NextActionNotice'
 import ErrorBoundary from './components/ErrorBoundary'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
@@ -45,19 +46,25 @@ function AppContent() {
     removeColony(colonyId)
   }, [removeColony, removeInspectionsByColonyId])
   const [activeTab, setActiveTabState] = useState(initialTab)
+  const [nextAction, setNextAction] = useState(null)
+  const actionSequence = useRef(0)
+  const targetColonyExists = !nextAction?.colonyId || profile.colonies.some((colony) => colony.id === nextAction.colonyId)
 
   // Wrap tab changes in the View Transitions API when available so
   // the user sees a native-feeling cross-fade between Season / Diagnose
   // / My Hive instead of a hard swap. Also gives a small haptic tap
   // on the tab change.
-  const setActiveTab = useCallback((next) => {
+  const setActiveTab = useCallback((next, action = null) => {
     haptics.tap()
-    runWithViewTransition(() => setActiveTabState(next))
+    runWithViewTransition(() => {
+      setNextAction(action)
+      setActiveTabState(next)
+    })
   }, [])
 
   const handleNextAction = useCallback((target) => {
     if (target?.tab && VALID_TABS.includes(target.tab)) {
-      setActiveTab(target.tab)
+      setActiveTab(target.tab, { ...target, selectionId: ++actionSequence.current })
     }
   }, [setActiveTab])
 
@@ -111,6 +118,7 @@ function AppContent() {
   return (
     <div className="flex flex-col h-full bg-cream">
       <main className="flex-1 overflow-y-auto">
+        {!targetColonyExists && <NextActionNotice key={nextAction.selectionId} />}
         <Suspense fallback={<div className="flex-1" />}>
           {activeTab === 'season' && (
             <SeasonScreen
@@ -120,11 +128,13 @@ function AppContent() {
               onToggleTask={toggleTask}
               inspections={inspections}
               onNextAction={handleNextAction}
+              nextAction={nextAction}
             />
           )}
-          {activeTab === 'diagnose' && <DiagnoseScreen inspections={inspections} />}
+          {activeTab === 'diagnose' && <DiagnoseScreen inspections={targetColonyExists ? inspections : []} nextAction={nextAction} />}
           {activeTab === 'inspect' && (
             <InspectScreen
+              initialColonyId={targetColonyExists ? nextAction?.colonyId : undefined}
               colonies={profile?.colonies ?? []}
               inspections={inspections}
               onAdd={addInspection}

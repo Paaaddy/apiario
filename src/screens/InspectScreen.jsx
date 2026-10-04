@@ -12,6 +12,7 @@ export default function InspectScreen({
   onAdd,
   onUpdate,
   onDelete,
+  initialColonyId,
 }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
@@ -23,6 +24,7 @@ export default function InspectScreen({
       onAdd={onAdd}
       onUpdate={onUpdate}
       onDelete={onDelete}
+      initialColonyId={initialColonyId}
     />
   )
 

@@ -133,7 +133,7 @@ describe('Next actions', () => {
     )
 
     fireEvent.click(screen.getByRole('button', { name: /Possible issue in Blue Hive/i }))
-    expect(onNextAction).toHaveBeenCalledWith({ tab: 'diagnose' })
+    expect(onNextAction).toHaveBeenCalledWith({ tab: 'diagnose', colonyId: 'c1', warning: 'queenless' })
   })
 
   it('shows the all-clear state when records are current and seasonal tasks are complete', () => {

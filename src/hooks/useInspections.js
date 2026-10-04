@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-import { groupByColony } from '../utils/inspections'
+import { groupByColony, latestByColony } from '../utils/inspections'
 
 const STORAGE_KEY = 'apiario-inspections'
 const MAX_PER_COLONY = 500
@@ -66,6 +66,7 @@ export function useInspections() {
   }, [])
 
   const byColony = useMemo(() => groupByColony(inspections), [inspections])
+  const latest = useMemo(() => latestByColony(inspections), [inspections])
 
   const getColonyInspections = useCallback(
     (colonyId) => byColony.get(colonyId) ?? [],
@@ -73,8 +74,8 @@ export function useInspections() {
   )
 
   const getLatestInspection = useCallback(
-    (colonyId) => byColony.get(colonyId)?.[0] ?? null,
-    [byColony]
+    (colonyId) => latest.get(colonyId) ?? null,
+    [latest]
   )
 
   return {

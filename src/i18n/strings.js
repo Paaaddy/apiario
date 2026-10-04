@@ -11,6 +11,8 @@ export const strings = {
   season_tasks_noun:  { de: 'Aufgaben zu prüfen',   en: 'things to check'  },
   season_nothing:     { de: 'Diese Woche nichts Dringendes. Bald wieder vorbeischauen.', en: 'Nothing urgent this week. Check back soon.' },
   next_actions_title: { de: 'Nächste Schritte',     en: 'Next actions'      },
+  next_action_unavailable: { de: 'Das gewählte Volk oder die Aufgabe ist nicht mehr verfügbar.', en: 'The selected colony or task is no longer available.' },
+  insp_date_unknown: { de: 'Unbekanntes Kontrolldatum', en: 'Unknown inspection date' },
 
   // Week picker
   week_previous:      { de: 'Vorherige Woche',      en: 'Previous week'     },

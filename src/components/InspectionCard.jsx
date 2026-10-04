@@ -38,6 +38,7 @@ export default function InspectionCard({ inspection, colonyName, onEdit, onDelet
   const border = c.cardBorder
 
   const queenEmoji = QUEEN_EMOJI[inspection.queenStatus] ?? '❓'
+  const dateLabel = typeof inspection.date === 'string' && inspection.date ? inspection.date : t(s.insp_date_unknown)
 
   return (
     <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 14, marginBottom: 10, overflow: 'hidden' }}>
@@ -47,11 +48,11 @@ export default function InspectionCard({ inspection, colonyName, onEdit, onDelet
         onClick={() => setExpanded((v) => !v)}
         style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
         aria-expanded={expanded}
-        aria-label={`${inspection.date}${colonyName ? `, ${colonyName}` : ''} — ${expanded ? 'collapse' : 'expand'}`}
+        aria-label={`${dateLabel}${colonyName ? `, ${colonyName}` : ''} — ${expanded ? 'collapse' : 'expand'}`}
       >
         <span style={{ fontSize: 20 }}>{queenEmoji}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: ink }}>{inspection.date}</p>
+          <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: ink }}>{dateLabel}</p>
           {colonyName && (
             <p style={{ margin: '2px 0 0', fontSize: 12, color: inkMid }}>{colonyName}</p>
           )}

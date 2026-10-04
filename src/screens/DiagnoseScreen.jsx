@@ -13,11 +13,11 @@ if (import.meta.env.DEV) {
   validateDiagnosisTree()
 }
 
-export default function DiagnoseScreen({ inspections = [] }) {
+export default function DiagnoseScreen({ inspections = [], nextAction }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const c = themeColors(theme)
-  const flow = useDiagnosisFlow(inspections)
+  const flow = useDiagnosisFlow(inspections, { nextAction })
   
   useWakeLock(true)
   
