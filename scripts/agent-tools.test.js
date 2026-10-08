@@ -1,13 +1,14 @@
 // @vitest-environment node
 import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const fixtures = []
 const gitEnv = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')))
 function fixture() {
-  const directory = mkdtempSync('/tmp/opencode/apiario-tools-')
+  const directory = mkdtempSync(join(tmpdir(), 'apiario-tools-'))
   fixtures.push(directory)
   return directory
 }
