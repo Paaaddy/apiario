@@ -90,7 +90,7 @@ describe('Inspection calendar dates', () => {
   })
 
   it('uses local calendar days across midnight and DST, clamping future ages', () => {
-    // Run with TZ=Europe/Berlin: midnight is still the previous UTC date.
+    // npm run test:timezone enforces Berlin and Los Angeles for this file.
     expect(localDateString(new Date(2026, 2, 30, 0, 15))).toBe('2026-03-30')
     expect(inspectionAgeDays('2026-03-29', new Date(2026, 2, 30, 0, 15))).toBe(1)
     expect(inspectionAgeDays('2026-10-25', new Date(2026, 9, 26, 23, 45))).toBe(1)
