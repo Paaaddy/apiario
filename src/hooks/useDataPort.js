@@ -1,6 +1,7 @@
-import { useCallback } from 'react'
+import { useCallback, useRef, useSyncExternalStore } from 'react'
 import { exportData as buildExport } from '../utils/dataPort'
-import { exportBackupOutcome, restoreBackup } from '../utils/dataBackup'
+import { backupErrorOutcome, exportBackupOutcome, hasBackupRecovery, recoverBackup, restoreBackup, subscribeBackupRecovery } from '../utils/dataBackup'
+import { MAX_BACKUP_BYTES } from '../utils/backupLimits'
 
 function triggerDownload(data) {
   const date = new Date().toISOString().split('T')[0]
@@ -18,6 +19,8 @@ function triggerDownload(data) {
 }
 
 export function useDataPort() {
+  const canRecover = useSyncExternalStore(subscribeBackupRecovery, hasBackupRecovery)
+  const importingRef = useRef(false)
   const exportData = useCallback(() => {
     const data = buildExport()
     triggerDownload(data)
@@ -25,20 +28,28 @@ export function useDataPort() {
   }, [])
 
   const exportBackup = useCallback(() => {
+    if (hasBackupRecovery()) return backupErrorOutcome('recovery')
     const data = buildExport()
     triggerDownload(data)
     return exportBackupOutcome(data)
   }, [])
 
   const importData = useCallback(async (file) => {
-    let text
+    if (hasBackupRecovery()) return backupErrorOutcome('recovery')
+    if (importingRef.current) return backupErrorOutcome('unexpected')
+    if (file.size > MAX_BACKUP_BYTES) return backupErrorOutcome('size')
+    importingRef.current = true
     try {
-      text = await file.text()
+      const text = await file.text()
+      return restoreBackup(text)
     } catch {
-      return { ok: false, error: 'unexpected' }
+      return backupErrorOutcome('unexpected')
+    } finally {
+      importingRef.current = false
     }
-    return restoreBackup(text)
   }, [])
 
-  return { exportData, exportBackup, importData }
+  const recoverPreviousData = useCallback(() => recoverBackup(), [])
+
+  return { exportData, exportBackup, importData, canRecover, recoverPreviousData }
 }

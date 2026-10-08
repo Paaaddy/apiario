@@ -22,18 +22,17 @@ function wrap(ui) {
 }
 
 describe('DiagnoseScreen — corrupted tree', () => {
-  it('does not white-screen when navigation leads to a missing node', async () => {
+  it('rejects broken content before navigation and offers localized feedback and a safe restart', async () => {
     const { default: DiagnoseScreen } = await import('./DiagnoseScreen')
     const user = userEvent.setup()
     wrap(<DiagnoseScreen />)
 
-    expect(screen.getByText(/what are you seeing/i)).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: /option/i }))
-
-    // After clicking into a broken node the flow offers a recoverable reset
-    // rather than white-screening or throwing.
     expect(screen.queryByText(/what are you seeing/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('alert')).toHaveTextContent('Diagnosis guidance is unavailable. Try restarting or return to another tab.')
     expect(screen.getByRole('button', { name: /start over/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /start over/i }))
+    expect(screen.getByRole('alert')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'DE', exact: true }))
+    expect(screen.getByRole('alert')).toHaveTextContent('Die Diagnosehinweise sind nicht verfügbar.')
   })
 })

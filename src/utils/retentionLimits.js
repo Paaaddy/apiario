@@ -1,0 +1,2 @@
+export const MAX_TASK_LOG_ENTRIES = 500
+export const MAX_INSPECTIONS_PER_COLONY = 500

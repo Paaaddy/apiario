@@ -15,6 +15,27 @@ const routineTask = {
 }
 
 describe('buildNextActions', () => {
+  it('preserves source order among equally urgent incomplete seasonal tasks', () => {
+    const actions = buildNextActions({
+      profile: { colonies: [{ id: 'c1', name: 'Blue Hive' }] },
+      inspections: [{ id: 'i1', colonyId: 'c1', date: '2026-04-14', queenStatus: 'seen' }],
+      season: 'spring', today: new Date(2026, 3, 15),
+      tasks: [{ ...springTask, id: 'done' }, { ...springTask, id: 'first' }, { ...springTask, id: 'second' }],
+      completedTaskIds: new Set(['done']),
+    })
+    expect(actions[0].id).toBe('seasonal-first')
+  })
+
+  it('keeps unknown urgency below routine urgency', () => {
+    const actions = buildNextActions({
+      profile: { colonies: [{ id: 'c1', name: 'Blue Hive' }] },
+      inspections: [{ id: 'i1', colonyId: 'c1', date: '2026-04-14', queenStatus: 'seen' }],
+      season: 'spring', today: new Date(2026, 3, 15),
+      tasks: [{ ...springTask, id: 'unknown', urgency: 'unknown' }, routineTask],
+    })
+    expect(actions[0].id).toBe('seasonal-sp-02')
+  })
+
   it('guides a new user through setup before seasonal work', () => {
     const actions = buildNextActions({
       profile: { colonies: [], experience: 0 },

@@ -1,8 +1,9 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { useMemo, useCallback } from 'react'
 import { haptics } from '../utils/haptics'
+import { MAX_TASK_LOG_ENTRIES as MAX_ENTRIES } from '../utils/retentionLimits'
+import { useStoredState } from './useStoredState'
 
 const STORAGE_KEY = 'apiario-log'
-const MAX_ENTRIES = 500
 
 function loadLog() {
   try {
@@ -14,33 +15,13 @@ function loadLog() {
   }
 }
 
-function saveLog(log) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(log))
-  } catch {}
-}
-
 function cap(log) {
   return log.length > MAX_ENTRIES ? log.slice(0, MAX_ENTRIES) : log
 }
 
 export function useTaskLog() {
-  const [log, setLog] = useState(loadLog)
-
-  // Mirror `log` into a ref so the event-handler path below can read
-  // the latest log synchronously without having to re-bind the
-  // callback on every log change. This is what lets us decide
-  // "is this a check or an uncheck?" *before* we fire the haptic.
-  const logRef = useRef(log)
-
-  // Mirror `log` into a ref after commit so the event-handler path below
-  // can read the latest log synchronously without re-binding on every
-  // change. Updating in an effect (not during render) satisfies the
-  // `react-hooks/refs` rule; handlers run after commit, so they always
-  // see the freshest value.
-  useEffect(() => {
-    logRef.current = log
-  }, [log])
+  const { state: log, updateState: setLog, persistenceError, retrySave } =
+    useStoredState(STORAGE_KEY, loadLog)
 
   const completedTaskIds = useMemo(
     () => new Set(log.filter((e) => e.type === 'task').map((e) => e.taskId)),
@@ -48,21 +29,12 @@ export function useTaskLog() {
   )
 
   const toggleTask = useCallback((task) => {
-    // IMPORTANT: fire the haptic SYNCHRONOUSLY from the outer callback,
-    // not from inside the `setLog` state updater. React schedules the
-    // updater to run during the commit phase, which can happen outside
-    // the user-activation window that Chrome / Android require for
-    // `navigator.vibrate()` to actually trigger the motor. Calling
-    // haptics.tap() here keeps us inside the click handler's gesture.
-    const alreadyChecked = (logRef.current ?? []).some(
-      (e) => e.type === 'task' && e.taskId === task.id
-    )
-    // Only buzz on check — undoing a mistake stays silent so it feels
-    // reversible rather than rewarded.
-    if (!alreadyChecked) haptics.tap()
-
+    // useStoredState runs this transaction synchronously in the event, not
+    // as a React updater: haptics stay inside the user-activation window.
     setLog((prev) => {
       const exists = prev.find((e) => e.type === 'task' && e.taskId === task.id)
+      // Undo remains silent, including several toggles in the same event.
+      if (!exists) haptics.tap()
       const next = exists
         ? prev.filter((e) => !(e.type === 'task' && e.taskId === task.id))
         : cap([
@@ -75,10 +47,9 @@ export function useTaskLog() {
             },
             ...prev,
           ])
-      saveLog(next)
       return next
     })
-  }, [])
+  }, [setLog])
 
   const addCustomEntry = useCallback(({ text, date }) => {
     setLog((prev) => {
@@ -91,18 +62,16 @@ export function useTaskLog() {
         },
         ...prev,
       ])
-      saveLog(next)
       return next
     })
-  }, [])
+  }, [setLog])
 
   const deleteEntry = useCallback((id) => {
     setLog((prev) => {
       const next = prev.filter((e) => e.id !== id)
-      saveLog(next)
       return next
     })
-  }, [])
+  }, [setLog])
 
   const sortedLog = useMemo(
     () =>
@@ -114,5 +83,5 @@ export function useTaskLog() {
     [log]
   )
 
-  return { log: sortedLog, completedTaskIds, toggleTask, addCustomEntry, deleteEntry }
+  return { log: sortedLog, completedTaskIds, toggleTask, addCustomEntry, deleteEntry, persistenceError, retrySave }
 }

@@ -4,10 +4,7 @@ import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import InspectionScaleInput from './InspectionScaleInput'
 import { themeColors } from '../utils/themeTokens'
-
-function today() {
-  return new Date().toISOString().split('T')[0]
-}
+import { localDateString } from '../utils/inspections'
 
 const QUEEN_OPTIONS = [
   { value: 'seen',     emoji: '👑', key: 'insp_queen_seen'     },
@@ -36,7 +33,7 @@ function FieldLabel({ text, htmlFor, id, color }) {
   return <p id={id} style={style}>{text}</p>
 }
 
-export default function InspectionForm({ colonies = [], initial = null, onSave, onClose }) {
+export default function InspectionForm({ colonies = [], initial = null, initialColonyId = null, onSave, onClose }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const dialogRef = useRef(null)
@@ -63,8 +60,8 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
     return () => el.removeEventListener('keydown', trap)
   }, [onClose])
 
-  const [date, setDate]                   = useState(initial?.date ?? today())
-  const [colonyId, setColonyId]           = useState(initial?.colonyId ?? (colonies[0]?.id ?? ''))
+  const [date, setDate]                   = useState(initial?.date ?? localDateString())
+  const [colonyId, setColonyId]           = useState(initial?.colonyId ?? initialColonyId ?? (colonies[0]?.id ?? ''))
   const [queenStatus, setQueenStatus]     = useState(initial?.queenStatus ?? null)
   const [queenYear, setQueenYear]         = useState(initial?.queenYear ?? '')
   const [broodPattern, setBrood]          = useState(initial?.broodPattern ?? null)
@@ -78,7 +75,7 @@ export default function InspectionForm({ colonies = [], initial = null, onSave, 
   const [notes, setNotes]                 = useState(initial?.notes ?? '')
 
   const isEditing = Boolean(initial)
-  const canSave   = date && colonyId && queenStatus
+  const canSave   = date && colonies.some((colony) => colony.id === colonyId) && queenStatus
 
   const isDark   = theme === 'c'
   const c        = themeColors(theme)
