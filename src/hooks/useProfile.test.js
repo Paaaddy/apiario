@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
+import { createElement, StrictMode } from 'react'
 import { useProfile, buildSeededColonies } from './useProfile'
 
 const STORAGE_KEY = 'apiario-profile'
@@ -8,7 +9,81 @@ beforeEach(() => {
   localStorage.clear()
 })
 
+afterEach(() => {
+  vi.restoreAllMocks()
+})
+
 describe('useProfile', () => {
+  it('does not replay profile writes in StrictMode and reports failed writes until a successful mutation', () => {
+    const write = vi.spyOn(Storage.prototype, 'setItem')
+    const { result } = renderHook(() => useProfile(), {
+      wrapper: ({ children }) => createElement(StrictMode, null, children),
+    })
+    expect(result.current.persistenceError).toBeNull()
+    expect(write).not.toHaveBeenCalled()
+    act(() => result.current.addColony('Orchard'))
+    expect(write).toHaveBeenCalledTimes(1)
+    write.mockImplementationOnce(() => { throw new Error('Storage unavailable') })
+    act(() => result.current.updateColony('col-1', { notes: 'Unsaved note' }))
+    expect(write).toHaveBeenCalledTimes(2)
+    expect(result.current.profile.colonies[0].notes).toBe('Unsaved note')
+    expect(result.current.persistenceError?.error).toBe('storage')
+    act(() => result.current.updateProfile({ experience: 1 }))
+    expect(write).toHaveBeenCalledTimes(3)
+    expect(result.current.persistenceError).toBeNull()
+  })
+
+  it('applies batched colony mutations and retries the latest profile before a render', () => {
+    const { result, unmount } = renderHook(() => useProfile())
+    const write = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('Storage unavailable')
+    })
+    act(() => {
+      result.current.updateProfile({ hiveCount: 2 })
+      result.current.updateProfile({ climateZone: 'central' })
+      result.current.addColony('Orchard')
+      result.current.addColony('Meadow')
+      result.current.updateColony('col-2', { notes: 'Needs feeding' })
+      result.current.removeColony('col-1')
+      write.mockRestore()
+      expect(result.current.retrySave()).toEqual({ ok: true })
+    })
+    expect(result.current.profile).toMatchObject({
+      hiveCount: 2, climateZone: 'central',
+      colonies: [{ id: 'col-2', name: 'Meadow', notes: 'Needs feeding' }],
+    })
+    expect(result.current.persistenceError).toBeNull()
+    unmount()
+    const remounted = renderHook(() => useProfile())
+    expect(remounted.result.current.profile).toMatchObject({
+      hiveCount: 2, climateZone: 'central',
+      colonies: [{ id: 'col-2', name: 'Meadow', notes: 'Needs feeding' }],
+    })
+  })
+
+  it('keeps failed profile changes unsaved until retry persists the latest profile', () => {
+    const { result, unmount } = renderHook(() => useProfile())
+    const write = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Storage full', 'QuotaExceededError')
+    })
+    act(() => result.current.updateProfile({ hiveCount: 2 }))
+    expect(result.current.profile.hiveCount).toBe(2)
+    expect(result.current.persistenceError).toEqual({
+      ok: false, error: 'storage', messageKey: 'storage_error', requiresReload: false,
+    })
+    act(() => result.current.addColony('Orchard'))
+    act(() => result.current.retrySave())
+    expect(result.current.persistenceError?.error).toBe('storage')
+    write.mockRestore()
+    act(() => result.current.retrySave())
+    expect(result.current.persistenceError).toBeNull()
+    unmount()
+    const remounted = renderHook(() => useProfile())
+    expect(remounted.result.current.profile.hiveCount).toBe(2)
+    expect(remounted.result.current.profile.colonies[0].name).toBe('Orchard')
+    expect(remounted.result.current.persistenceError).toBeNull()
+  })
+
   it('returns default profile when localStorage is empty', () => {
     const { result } = renderHook(() => useProfile())
     expect(result.current.profile).toEqual({

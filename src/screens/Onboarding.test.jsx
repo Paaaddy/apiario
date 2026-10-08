@@ -15,9 +15,9 @@ function validPayload() {
     schemaVersion: 2,
     exportedAt: '2026-01-01T00:00:00.000Z',
     data: {
-      profile: { hiveCount: 2, colonies: [{ id: 'col-1', name: 'A' }] },
-      inspections: [{ id: 'i1' }],
-      log: [{ id: 'l1' }],
+      profile: { schemaVersion: 3, hiveCount: 2, colonies: [{ id: 'col-1', name: 'A' }] },
+      inspections: [{ id: 'i1', colonyId: 'col-1', date: '2026-01-01', queenStatus: 'seen' }],
+      log: [{ id: 'l1', type: 'custom', text: 'Observed flight', date: '2026-01-01' }],
     },
   })
 }

@@ -1,4 +1,5 @@
 import diagnosisData from '../data/diagnosis.json'
+import { analyzeDiagnosisTree } from './validateDiagnosis'
 
 export function routeFromInspection(inspection) {
   if (!inspection) return null
@@ -9,17 +10,8 @@ export function routeFromInspection(inspection) {
 }
 
 export function getDiagnosisMaxDepth(data = diagnosisData, rootId = 'root') {
-  let maxDepth = 0
-  const traverse = (nodeId, depth) => {
-    const node = data[nodeId]
-    if (!node || node.type === 'outcome') {
-      maxDepth = Math.max(maxDepth, depth)
-      return
-    }
-    node.options.forEach((option) => traverse(option.next, depth + 1))
-  }
-  traverse(rootId, 1)
-  return maxDepth
+  const analysis = analyzeDiagnosisTree(data)
+  return analysis.isValid ? (analysis.depths.get(rootId) ?? 1) : 1
 }
 
 export function buildDiagnosisFlowState({
@@ -28,7 +20,8 @@ export function buildDiagnosisFlowState({
   history = [],
   latestInspection = null,
 }) {
-  const node = data[currentNodeId]
+  const analysis = analyzeDiagnosisTree(data)
+  const node = analysis.depths.has(currentNodeId) ? data[currentNodeId] : undefined
   const stepNumber = history.length + 1
   const totalSteps = getDiagnosisMaxDepth(data)
   const prefillNodeId = currentNodeId === 'root' ? routeFromInspection(latestInspection) : null
@@ -37,7 +30,7 @@ export function buildDiagnosisFlowState({
     currentNodeId,
     node,
     history,
-    isInvalid: !node,
+    isInvalid: !analysis.isValid || !node,
     isOutcome: node?.type === 'outcome',
     stepNumber,
     stepLabel: String(stepNumber).padStart(2, '0'),

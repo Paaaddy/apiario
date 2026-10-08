@@ -1,6 +1,5 @@
 import { routeFromInspection } from './diagnosisFlow'
-
-const DAY_MS = 24 * 60 * 60 * 1000
+import { latestByColony, inspectionAgeDays } from './inspections'
 
 const KIND_RANK = {
   'diagnosis-warning': 0,
@@ -50,30 +49,6 @@ const DIAGNOSIS_COPY = {
   },
 }
 
-function daysBetween(start, end) {
-  const a = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate())
-  const b = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate())
-  return Math.max(0, Math.floor((b - a) / DAY_MS))
-}
-
-function parseInspectionDate(value) {
-  const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? null : date
-}
-
-function getLatestInspectionsByColony(inspections = []) {
-  const latest = new Map()
-  inspections.forEach((inspection) => {
-    const date = parseInspectionDate(inspection.date)
-    if (!date) return
-    const existing = latest.get(inspection.colonyId)
-    if (!existing || date > existing.date) {
-      latest.set(inspection.colonyId, { inspection, date })
-    }
-  })
-  return latest
-}
-
 function interpolate(template, values) {
   return Object.entries(values).reduce(
     (text, [key, value]) => text.replaceAll(`{${key}}`, String(value)),
@@ -105,9 +80,10 @@ function buildSetupActions(colonies) {
   return []
 }
 
-function buildFirstInspectionAction(colonies, inspections) {
-  if (colonies.length === 0 || inspections.length > 0) return []
-  return [{
+function buildFirstInspectionAction(colonies, latestByColony, inspections) {
+  const undated = colonies.filter((colony) => !latestByColony.has(colony.id))
+  if (undated.length === 0) return []
+  if (colonies.length === 1 && !inspections.some((inspection) => inspection.colonyId === colonies[0].id)) return [{
     id: 'setup-first-inspection',
     kind: 'setup',
     title: { de: 'Erste Kontrolle erfassen', en: 'Record your first inspection' },
@@ -116,14 +92,22 @@ function buildFirstInspectionAction(colonies, inspections) {
       en: 'One inspection makes colony guidance more precise.',
     },
     urgency: 'important',
-    target: { tab: 'inspect' },
+    target: { tab: 'inspect', colonyId: undated[0].id },
   }]
+  return undated.map((colony) => ({
+    id: `setup-dated-inspection-${colony.id}`,
+    kind: 'setup',
+    title: withValues({ de: 'Datierte Kontrolle für {name} erfassen', en: 'Record a dated inspection for {name}' }, { name: colony.name }),
+    reason: { de: 'Ohne gültiges Kontrolldatum sind keine zeitlichen Hinweise möglich.', en: 'A valid inspection date is needed for dated guidance.' },
+    urgency: 'important',
+    target: { tab: 'inspect', colonyId: colony.id },
+  }))
 }
 
 function buildDiagnosisWarnings(colonies, latestByColony) {
   return colonies.flatMap((colony) => {
     const latest = latestByColony.get(colony.id)
-    const route = routeFromInspection(latest?.inspection)
+    const route = routeFromInspection(latest)
     const copy = DIAGNOSIS_COPY[route]
     if (!copy) return []
     return [{
@@ -135,7 +119,7 @@ function buildDiagnosisWarnings(colonies, latestByColony) {
       ),
       reason: copy.reason,
       urgency: copy.urgency,
-      target: { tab: 'diagnose' },
+      target: { tab: 'diagnose', colonyId: colony.id, warning: route },
     }]
   })
 }
@@ -145,7 +129,7 @@ function buildOverdueInspectionAction(colonies, latestByColony, season, today) {
   const overdue = colonies.flatMap((colony) => {
     const latest = latestByColony.get(colony.id)
     if (!latest) return []
-    const ageDays = daysBetween(latest.date, today)
+    const ageDays = inspectionAgeDays(latest.date, today)
     return ageDays > threshold ? [{ colony, ageDays }] : []
   })
 
@@ -166,7 +150,7 @@ function buildOverdueInspectionAction(colonies, latestByColony, season, today) {
         { days: ageDays }
       ),
       urgency: 'important',
-      target: { tab: 'inspect' },
+      target: { tab: 'inspect', colonyId: colony.id },
     }]
   }
 
@@ -187,12 +171,17 @@ function buildOverdueInspectionAction(colonies, latestByColony, season, today) {
 }
 
 function buildSeasonalAction(tasks = [], completedTaskIds = new Set()) {
-  const incomplete = tasks.filter((task) => !completedTaskIds.has(task.id))
-  if (incomplete.length === 0) return []
-  const task = [...incomplete].sort((a, b) => {
-    const urgency = (URGENCY_RANK[a.urgency] ?? 3) - (URGENCY_RANK[b.urgency] ?? 3)
-    return urgency || tasks.indexOf(a) - tasks.indexOf(b)
-  })[0]
+  let task = null
+  let bestRank = Infinity
+  for (const candidate of tasks) {
+    if (completedTaskIds.has(candidate.id)) continue
+    const rank = URGENCY_RANK[candidate.urgency] ?? 3
+    if (rank < bestRank) {
+      task = candidate
+      bestRank = rank
+    }
+  }
+  if (!task) return []
 
   return [{
     id: `seasonal-${task.id}`,
@@ -227,12 +216,12 @@ export function buildNextActions({
   today = new Date(),
 }) {
   const colonies = profile?.colonies ?? []
-  const latestByColony = getLatestInspectionsByColony(inspections)
+  const latestInspections = latestByColony(inspections)
   const actions = [
-    ...buildDiagnosisWarnings(colonies, latestByColony),
-    ...buildOverdueInspectionAction(colonies, latestByColony, season, today),
+    ...buildDiagnosisWarnings(colonies, latestInspections),
+    ...buildOverdueInspectionAction(colonies, latestInspections, season, today),
     ...buildSetupActions(colonies),
-    ...buildFirstInspectionAction(colonies, inspections),
+    ...buildFirstInspectionAction(colonies, latestInspections, inspections),
     ...buildSeasonalAction(tasks, completedTaskIds),
   ].sort((a, b) => {
     const kind = KIND_RANK[a.kind] - KIND_RANK[b.kind]

@@ -12,6 +12,8 @@ on:
       - 'vite.config.*'
       - 'tailwind.config.*'
       - 'postcss.config.*'
+      - 'scripts/**'
+      - 'eslint.config.*'
   # Run the `build` job on PRs targeting master too so branch
   # protection's required check is satisfied. The `deploy` job below
   # is gated on `github.event_name == 'push'`, so PR builds verify
@@ -27,6 +29,8 @@ on:
       - 'vite.config.*'
       - 'tailwind.config.*'
       - 'postcss.config.*'
+      - 'scripts/**'
+      - 'eslint.config.*'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
@@ -72,9 +76,7 @@ jobs:
       # Tests gate the deploy. Without this, a compromised dependency that
       # builds cleanly would auto-merge via dependabot-automerge.yml and
       # ship to every installed PWA via the autoUpdate service worker.
-      - run: npm run test:run
-
-      - run: npm run build -- --base /apiario/
+      - run: npm run verify
 
       # Only ship the artifact when this run was triggered by a push to
       # master (or a manual dispatch). PR builds stop at the build step

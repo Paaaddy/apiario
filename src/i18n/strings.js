@@ -1,4 +1,16 @@
+import { backupStrings } from './backupStrings'
+
 export const strings = {
+  ...backupStrings,
+  storage_error: {
+    de: 'Änderungen sind nicht gespeichert. Lass die App geöffnet und versuche das Speichern erneut.',
+    en: 'Changes are not saved. Keep the app open and retry saving.',
+  },
+  storage_retry: { de: 'Speichern erneut versuchen', en: 'Retry saving' },
+  diagnose_unavailable: {
+    de: 'Die Diagnosehinweise sind nicht verfügbar. Versuche einen Neustart oder wechsle zu einem anderen Tab.',
+    en: 'Diagnosis guidance is unavailable. Try restarting or return to another tab.',
+  },
   // Navigation
   nav_season:   { de: 'Saison',     en: 'Season'  },
   nav_diagnose: { de: 'Diagnose',   en: 'Diagnose' },
@@ -11,6 +23,8 @@ export const strings = {
   season_tasks_noun:  { de: 'Aufgaben zu prüfen',   en: 'things to check'  },
   season_nothing:     { de: 'Diese Woche nichts Dringendes. Bald wieder vorbeischauen.', en: 'Nothing urgent this week. Check back soon.' },
   next_actions_title: { de: 'Nächste Schritte',     en: 'Next actions'      },
+  next_action_unavailable: { de: 'Das gewählte Volk oder die Aufgabe ist nicht mehr verfügbar.', en: 'The selected colony or task is no longer available.' },
+  insp_date_unknown: { de: 'Unbekanntes Kontrolldatum', en: 'Unknown inspection date' },
 
   // Week picker
   week_previous:      { de: 'Vorherige Woche',      en: 'Previous week'     },

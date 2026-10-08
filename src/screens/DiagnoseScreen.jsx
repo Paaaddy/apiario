@@ -13,11 +13,11 @@ if (import.meta.env.DEV) {
   validateDiagnosisTree()
 }
 
-export default function DiagnoseScreen({ inspections = [] }) {
+export default function DiagnoseScreen({ inspections = [], nextAction }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const c = themeColors(theme)
-  const flow = useDiagnosisFlow(inspections)
+  const flow = useDiagnosisFlow(inspections, { nextAction })
   
   useWakeLock(true)
   
@@ -38,6 +38,7 @@ export default function DiagnoseScreen({ inspections = [] }) {
           </div>
         </div>
         <div className="px-4 py-6">
+          <p role="alert" className="mb-4 text-sm text-brown">{t(s.diagnose_unavailable)}</p>
           <button onClick={flow.reset} className="text-sm text-brown-mid underline underline-offset-2">
             {t(s.diagnose_restart)}
           </button>

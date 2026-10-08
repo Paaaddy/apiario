@@ -20,6 +20,9 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance, 
 - **Installable** — add to home screen on Android and iOS (PWA); the app icon badge shows how many urgent/important tasks are still open
 - **Hands-free mode** — floating bee button activates voice control via Web Speech API, including opening the Inspect and Learn tabs
 
+See [Backup and local-save safety](docs/backup-safety.md) for import limits,
+unsaved-change retry, and failed-restore recovery.
+
 ---
 
 ## Tech stack
@@ -33,7 +36,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance, 
 | Fonts | @fontsource (self-hosted, precached) |
 | State | React context + localStorage |
 | Voice | Web Speech API |
-| Tests | Vitest + Testing Library (315 tests, 40 files) |
+| Tests | Vitest + Testing Library |
 | Deploy | GitHub Actions → GitHub Pages |
 
 ---
@@ -44,7 +47,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance, 
 npm install
 npm run dev              # http://localhost:5173
 npm run dev -- --host    # expose on local network
-npm run test:run         # run all tests (315 tests, 40 files)
+npm run test:run         # run all tests
 npm run build            # production build
 npm run lint             # ESLint
 ```

@@ -42,9 +42,9 @@ else
   echo "pre-commit: lint passed."
 fi
 
-echo "pre-commit: running tests (CI mode)..."
+echo "pre-commit: running tests (CI mode) and timezone regressions..."
 # shellcheck disable=SC2086
-if ! npm run test:run >/dev/null 2>&1; then
+if ! npm run test:run || ! npm run test:timezone; then
   echo ""
   echo "pre-commit: TESTS FAILED — fix the failing tests before committing."
   echo "  Run 'npm run test:run' to see the details."

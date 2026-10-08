@@ -1,7 +1,8 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { useSeason } from '../hooks/useSeason'
+import { useCurrentDate } from '../hooks/useCurrentDate'
 import { strings as s } from '../i18n/strings'
 import { validateSeasonsTree } from '../utils/validateSeasons'
 import TaskCard from '../components/TaskCard'
@@ -12,6 +13,7 @@ import { addWeeks, isSameIsoWeek } from '../utils/season'
 import { haptics } from '../utils/haptics'
 import { themeColors } from '../utils/themeTokens'
 import { buildNextActions } from '../utils/nextActions'
+import NextActionNotice from '../components/NextActionNotice'
 
 if (import.meta.env.DEV) {
   validateSeasonsTree()
@@ -143,7 +145,7 @@ function NextActionsPanel({ actions, theme, onNextAction }) {
   )
 }
 
-export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask, inspections = [], onNextAction }) {
+export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask, inspections = [], onNextAction, nextAction, today: suppliedToday }) {
   const { t, locale } = useLanguage()
   const { theme } = useTheme()
   const completedCount = completedTaskIds?.size ?? 0
@@ -154,15 +156,18 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
     return map
   }, [log])
 
-  const [selectedDate, setSelectedDate] = useState(() => new Date())
-  const today = useMemo(() => new Date(), [])
+  const currentDate = useCurrentDate(suppliedToday == null)
+  const today = suppliedToday ?? currentDate
+  const [browsedDate, setSelectedDate] = useState(null)
+  const selectedDate = browsedDate ?? today
   const viewingToday = isSameIsoWeek(selectedDate, today)
 
-  const { season, label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
+  const { label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
     profile,
     completedCount,
     selectedDate
   )
+  const { season } = useSeason(profile, completedCount, today)
 
   const nextActions = useMemo(() => buildNextActions({
     profile,
@@ -170,12 +175,45 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
     season,
     tasks,
     completedTaskIds,
-    today: selectedDate,
-  }), [profile, inspections, season, tasks, completedTaskIds, selectedDate])
+    today,
+  }), [profile, inspections, season, tasks, completedTaskIds, today])
 
-  const goPreviousWeek = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d, -1)) }, [])
-  const goNextWeek    = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d, 1))  }, [])
-  const goToday       = useCallback(() => { haptics.tap(); setSelectedDate(new Date())               }, [])
+  const taskElements = useRef(new Map())
+  const consumedAction = useRef(null)
+  useEffect(() => {
+    if (!nextAction?.taskId || consumedAction.current === nextAction) return
+    consumedAction.current = nextAction
+    const element = taskElements.current.get(nextAction.taskId)
+    element?.focus({ preventScroll: true })
+    element?.scrollIntoView?.({ block: 'center', behavior: 'auto' })
+  }, [nextAction, tasks])
+
+  const [taskHandoff, setTaskHandoff] = useState(() => ({
+    action: nextAction,
+    unavailable: Boolean(nextAction?.taskId && !tasks.some((task) => task.id === nextAction.taskId)),
+  }))
+  if (taskHandoff.action !== nextAction) {
+    setTaskHandoff({
+      action: nextAction,
+      unavailable: Boolean(nextAction?.taskId && !tasks.some((task) => task.id === nextAction.taskId)),
+    })
+  }
+  const notice = taskHandoff.unavailable ? <NextActionNotice key={nextAction.selectionId} /> : null
+  function renderTask(task, inGlassContainer = false) {
+    const logEntry = logByTaskId.get(task.id)
+    return (
+      <div key={task.id} role="group" aria-label={t(task.name)} tabIndex={-1}
+        ref={(element) => { if (element) taskElements.current.set(task.id, element); else taskElements.current.delete(task.id) }}
+        className="rounded-xl focus:outline-none focus:ring-2 focus:ring-honey" style={{ scrollMarginTop: 180 }}>
+        <TaskCard task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null}
+          onToggle={onToggleTask ? () => onToggleTask(task) : undefined} inGlassContainer={inGlassContainer} />
+      </div>
+    )
+  }
+
+  const goPreviousWeek = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d ?? today, -1)) }, [today])
+  const goNextWeek    = useCallback(() => { haptics.tap(); setSelectedDate((d) => addWeeks(d ?? today, 1))  }, [today])
+  const goToday       = useCallback(() => { haptics.tap(); setSelectedDate(null) }, [])
 
   const rangeLabel =
     weekRange?.start && weekRange?.end
@@ -196,16 +234,12 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 14px 120px' }}>
           <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
+          {notice}
           {tasks.length === 0 ? (
             <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: '"Playfair Display", serif', fontSize: 18 }}>{t(s.season_nothing)}</p>
           ) : (
             <div style={{ background: c.cardBg, backdropFilter: 'blur(18px) saturate(140%)', WebkitBackdropFilter: 'blur(18px) saturate(140%)', borderRadius: 22, border: '1px solid rgba(255,255,255,0.6)', boxShadow: '0 2px 4px rgba(61,31,0,0.06), 0 12px 36px rgba(61,31,0,0.10)', overflow: 'hidden' }}>
-              {tasks.map((task) => {
-                const logEntry = logByTaskId.get(task.id)
-                return (
-                  <TaskCard key={task.id} task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null} onToggle={onToggleTask ? () => onToggleTask(task) : undefined} inGlassContainer />
-                )
-              })}
+              {tasks.map((task) => renderTask(task, true))}
             </div>
           )}
           {nextLockedSecret && (
@@ -233,15 +267,11 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 24px 120px' }}>
           <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
+          {notice}
           {tasks.length === 0 ? (
             <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: 'var(--theme-font-head)', fontSize: 18, fontStyle: 'italic' }}>{t(s.season_nothing)}</p>
           ) : (
-            tasks.map((task) => {
-              const logEntry = logByTaskId.get(task.id)
-              return (
-                <TaskCard key={task.id} task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null} onToggle={onToggleTask ? () => onToggleTask(task) : undefined} />
-              )
-            })
+            tasks.map((task) => renderTask(task))
           )}
           {nextLockedSecret && (
             <div style={{ marginTop: 16, padding: '12px', border: `1px dashed ${c.rule}`, color: c.inkMid, textAlign: 'center', fontSize: 13, fontFamily: 'var(--theme-font-head)', fontStyle: 'italic' }}>
@@ -306,15 +336,11 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
 
       <div className="flex-1 px-4 py-5 flex flex-col gap-3">
         <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
+        {notice}
         {tasks.length === 0 ? (
           <p className="text-center text-brown-mid py-8 font-serif text-lg">{t(s.season_nothing)}</p>
         ) : (
-          tasks.map((task) => {
-            const logEntry = logByTaskId.get(task.id)
-            return (
-              <TaskCard key={task.id} task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null} onToggle={onToggleTask ? () => onToggleTask(task) : undefined} />
-            )
-          })
+          tasks.map((task) => renderTask(task))
         )}
         {nextLockedSecret && (
           <div className="mt-2 rounded-xl border border-dashed border-purple-300 bg-purple-50/60 p-4 text-sm text-purple-900 text-center">

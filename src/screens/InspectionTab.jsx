@@ -5,6 +5,7 @@ import { strings as s } from '../i18n/strings'
 import InspectionCard from '../components/InspectionCard'
 import InspectionForm from '../components/InspectionForm'
 import { themeColors } from '../utils/themeTokens'
+import { groupByColony } from '../utils/inspections'
 
 const MAX_VISIBLE = 5
 
@@ -14,10 +15,12 @@ export default function InspectionTab({
   onAdd,
   onUpdate,
   onDelete,
+  initialColonyId = null,
 }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
-  const [formOpen, setFormOpen]         = useState(false)
+  const [formOpen, setFormOpen]         = useState(() => initialColonyId != null && colonies.some((colony) => colony.id === initialColonyId))
+  const [formColonyId, setFormColonyId] = useState(initialColonyId)
   const [editTarget, setEditTarget]     = useState(null)
   const [expandedColonies, setExpanded] = useState({})
 
@@ -32,20 +35,11 @@ export default function InspectionTab({
     [colonies]
   )
 
-  const byColony = useMemo(() => {
-    const map = {}
-    for (const insp of inspections) {
-      if (!map[insp.colonyId]) map[insp.colonyId] = []
-      map[insp.colonyId].push(insp)
-    }
-    for (const id of Object.keys(map)) {
-      map[id].sort((a, b) => b.date.localeCompare(a.date))
-    }
-    return map
-  }, [inspections])
+  const byColony = useMemo(() => groupByColony(inspections), [inspections])
 
   function openAdd() {
     setEditTarget(null)
+    setFormColonyId(null)
     setFormOpen(true)
   }
 
@@ -95,6 +89,7 @@ export default function InspectionTab({
           <InspectionForm
             colonies={colonies}
             initial={editTarget}
+            initialColonyId={formColonyId}
             onSave={handleSave}
             onClose={() => setFormOpen(false)}
           />
@@ -117,9 +112,9 @@ export default function InspectionTab({
 
       {/* Grouped by colony — only colonies with inspections */}
       {colonies
-        .filter((c) => byColony[c.id]?.length > 0)
+        .filter((c) => byColony.get(c.id)?.length > 0)
         .map((colony) => {
-          const list    = byColony[colony.id] ?? []
+          const list    = byColony.get(colony.id) ?? []
           const showAll = expandedColonies[colony.id]
           const visible = showAll ? list : list.slice(0, MAX_VISIBLE)
 
@@ -173,6 +168,7 @@ export default function InspectionTab({
         <InspectionForm
           colonies={colonies}
           initial={editTarget}
+          initialColonyId={formColonyId}
           onSave={handleSave}
           onClose={() => setFormOpen(false)}
         />
