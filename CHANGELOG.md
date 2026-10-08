@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.5.2](https://github.com/Paaaddy/apiario/compare/v2.5.1...v2.5.2) (2026-10-08)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump source-map-js from 1.2.1 to 1.2.2 ([#135](https://github.com/Paaaddy/apiario/issues/135)) ([e2dcee1](https://github.com/Paaaddy/apiario/commit/e2dcee12650add264b19f34384305906e6f905c0))
+* **deps-dev:** bump the dev-dependencies group with 3 updates ([#129](https://github.com/Paaaddy/apiario/issues/129)) ([087f32e](https://github.com/Paaaddy/apiario/commit/087f32e8e8e2d602adfd4cb1e5c46f3638715613))
+* **deps-dev:** bump the testing group with 2 updates ([#130](https://github.com/Paaaddy/apiario/issues/130)) ([41b9ed7](https://github.com/Paaaddy/apiario/commit/41b9ed7afd9519d368512659663104c0dc0f6988))
+
 ## [2.5.1](https://github.com/Paaaddy/apiario/compare/v2.5.0...v2.5.1) (2026-10-04)
 
 
