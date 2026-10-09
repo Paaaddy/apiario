@@ -57,10 +57,12 @@ All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "
 - `Onboarding` — 6-step OnboardJS flow (welcome → features → hiveCount → climateZone → experience → complete) using `@onboardjs/react`. Steps are created once in a `stepsRef` and a `COMPONENT_REGISTRY` maps step keys to React components.
 
 ### Voice / hands-free
-`useVoice` wraps Web Speech API (`SpeechSynthesis` + `SpeechRecognition`). Command dispatch lives in `App.jsx` — the hook itself is stateless. Voice is a progressive enhancement; the app is fully usable without it.
+`useHandsFreeSession` owns command dispatch and session state; `useVoice` owns browser recognition lifetime. Listening is shown only after recognition starts. Unsupported recognition, start failures and natural termination stop the session with de/en inline Restart/Close feedback; permission failures retain the permission dialog. Intentional Stop stays quiet. Voice is a progressive enhancement; the app is fully usable without it.
 
 ### PWA / offline
 `vite-plugin-pwa` with Workbox `generateSW` mode. All assets, JSON data, and font WOFF2 files are precached (56 entries, ~1074 KB). Fonts are self-hosted via `@fontsource` packages imported in `main.jsx` — no CDN dependency. `registerType: 'autoUpdate'` auto-installs new service workers. Build produces the SW; `dev` does not register it.
+
+`registerAutoUpdate` intercepts the plugin's actual reload callback. `reloadSafety` synchronously tracks failed durable writes, form drafts and pending record recovery. A blocked update becomes an explicit Apply update action once safe; it never reloads automatically after a retry. Successful deliberate Backup replacement keeps its direct reload behavior. Hourly update checks use the registered worker's `update()` method, not the plugin's activation helper. Worker activation itself is still automatic; reload protection is not protection from browser crashes or manual reloads.
 
 ## Styling
 

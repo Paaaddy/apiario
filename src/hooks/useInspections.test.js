@@ -33,6 +33,18 @@ describe('useInspections', () => {
     expect(localStorage.getItem('apiario-inspections')).toBe(raw)
   })
 
+  it('allows moving into available space and preserves all other records and safe invalid dates', () => {
+    const existing = [
+      { id: 'moving', colonyId: 'source', date: false, createdAt: 'old', extra: { retained: true } },
+      { id: 'other', colonyId: 'other', date: '2026-05-01' },
+    ]
+    localStorage.setItem('apiario-inspections', JSON.stringify(existing))
+    const { result } = renderHook(() => useInspections())
+    act(() => result.current.updateInspection('moving', { colonyId: 'target' }))
+    expect(result.current.inspections).toEqual([{ ...existing[0], colonyId: 'target' }, existing[1]])
+    expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual(result.current.inspections)
+  })
+
   it('starts with empty inspections', () => {
     const { result } = renderHook(() => useInspections())
     expect(result.current.inspections).toEqual([])

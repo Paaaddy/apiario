@@ -11,6 +11,31 @@ browser's storage restriction, and select **Retry saving**. The notice disappear
 only when every failed record collection has been saved. Reloading before retry
 can lose these in-memory changes.
 
+Automatic update reloads wait while a data write is unsaved, a form contains
+unsubmitted changes, or record recovery is pending. Save or discard drafts and
+retry saving/recovery first. Once protection clears, select **Apply update**;
+clearing protection does not itself reload the app. A successful, deliberately
+requested Backup replacement still reloads immediately. This protection governs
+app-initiated reloads, not closing the browser, crashes, or a manual reload.
+
+If stored records cannot be safely read, their original browser storage values
+remain untouched. Readable records can still be shown, but edits and retries
+cannot overwrite the damaged collection. An invalid calendar date alone does not
+make an Inspection structurally unsafe. Legacy task entries without names remain
+readable; importing a Backup still requires the stricter Backup record rules.
+
+## Colony deletion and Inspection moves
+
+Removing a Colony coordinates its Profile and Inspection writes. If either write
+fails, the visible Colony and its history stay in place, and **Retry deletion**
+tries again using the latest session records. Completed writes roll back to their
+exact previous stored values. If rollback fails too, recover previous records
+before retrying deletion; ordinary writes stay unsaved until recovery finishes.
+
+Moving an existing Inspection into a Colony already holding 500 Inspections is
+rejected without deleting any history. The edit form stays open with its draft.
+Adding a new Inspection retains the existing 500-entry retention policy.
+
 ## Import validation
 
 Open **My Hive → Profile → Data & backup** to restore a Backup. Validation happens
@@ -56,6 +81,10 @@ recovery snapshot available. New imports and exports are blocked while recovery
 is pending; ordinary edits remain unsaved drafts until recovery completes, so
 recovery cannot overwrite newer durable observations. Retry any unsaved edits
 after recovering the prior records.
+
+Backup replacement and Colony deletion share this exact-value rollback and
+session recovery implementation. Their user-facing failure messages remain
+distinct.
 
 This is handled-failure recovery, **not** a database transaction. localStorage
 cannot guarantee atomic multi-key writes under browser/process crashes. Recovery

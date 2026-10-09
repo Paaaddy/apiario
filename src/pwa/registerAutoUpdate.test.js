@@ -18,6 +18,18 @@ it('intercepts the actual auto-update reload callback', () => {
   dispose()
 })
 
+it('polls the actual registration and stops polling on disposal', async () => {
+  const dispose = registerPwaAutoUpdate(vi.fn())
+  const options = registerSW.mock.calls[0][0]
+  const registration = { update: vi.fn().mockResolvedValue(undefined) }
+  options.onRegisteredSW('/sw.js', registration)
+  await vi.advanceTimersByTimeAsync(60 * 60 * 1000)
+  expect(registration.update).toHaveBeenCalledOnce()
+  dispose()
+  await vi.advanceTimersByTimeAsync(60 * 60 * 1000)
+  expect(registration.update).toHaveBeenCalledOnce()
+})
+
 it('does not reload over unsaved data, even before React renders the storage notice', () => {
   const reload = vi.fn()
   const dispose = registerPwaAutoUpdate(reload)
