@@ -1,6 +1,9 @@
 import { MAX_LEGACY_SEEDED_COLONIES } from './backupLimits'
 import { PROFILE_SCHEMA_VERSION } from './profileMigration'
 
+export const STORED_VALUE = Symbol('validated stored value')
+function storedValue(value, unsafe) { return { [STORED_VALUE]: true, value, unsafe } }
+
 function isRecord(value) {
   return value != null && typeof value === 'object' && !Array.isArray(value)
 }
@@ -80,7 +83,7 @@ export function isLogEntry(entry, allowMissingTaskName = false) {
 export function loadStoredValue(key, fallback, accepts, normalize = (value) => value) {
   try {
     const raw = localStorage.getItem(key)
-    if (raw === null) return { value: fallback, unsafe: false }
+    if (raw === null) return storedValue(fallback, false)
     const parsed = JSON.parse(raw)
     if (!accepts(parsed)) {
       // A read-only projection keeps sound records visible without replacing
@@ -93,10 +96,10 @@ export function loadStoredValue(key, fallback, accepts, normalize = (value) => v
             return true
           })
         : fallback
-      return { value, unsafe: true }
+      return storedValue(value, true)
     }
-    return { value: normalize(parsed), unsafe: false }
+    return storedValue(normalize(parsed), false)
   } catch {
-    return { value: fallback, unsafe: true }
+    return storedValue(fallback, true)
   }
 }

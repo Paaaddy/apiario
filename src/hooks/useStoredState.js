@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { hasStorageRecovery, writeStorageTransaction } from '../utils/storageTransaction'
 import { protectReload } from '../pwa/reloadSafety'
+import { STORED_VALUE } from '../utils/recordValidation'
 
 const STORAGE_ERROR = {
   ok: false,
@@ -33,7 +34,10 @@ export function runStoredTransaction(change) {
 // Loaders own validation/migration. Mutations and retries run in event handlers,
 // never in replayable React updaters or mount effects.
 export function useStoredState(storageKey, load) {
-  const [loaded] = useState(load)
+  const [loaded] = useState(() => {
+    const value = load()
+    return value?.[STORED_VALUE] ? value : { value, unsafe: false }
+  })
   const [state, setState] = useState(loaded.value)
   const [persistenceError, setPersistenceError] = useState(loaded.unsafe ? INVALID_SOURCE : null)
   const stateRef = useRef(state)
