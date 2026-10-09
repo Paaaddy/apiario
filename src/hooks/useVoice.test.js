@@ -28,6 +28,38 @@ afterEach(() => {
 })
 
 describe('useVoice', () => {
+  it('reports synthesis-only browsers as unsupported for recognition', () => {
+    delete global.SpeechRecognition
+    const { result } = renderHook(() => useVoice())
+    const onError = vi.fn()
+    act(() => result.current.startListening(vi.fn(), onError))
+    expect(onError).toHaveBeenCalledWith('unsupported')
+  })
+
+  it('reports start failures instead of throwing', () => {
+    mockStart.mockImplementationOnce(() => { throw new DOMException('Unavailable') })
+    const { result } = renderHook(() => useVoice())
+    const onError = vi.fn()
+    act(() => result.current.startListening(vi.fn(), onError))
+    expect(onError).toHaveBeenCalledWith('start-failed')
+  })
+
+  it('reports actual start/end and suppresses stale callbacks after stop', () => {
+    const { result } = renderHook(() => useVoice())
+    const onStart = vi.fn(), onEnd = vi.fn(), onCommand = vi.fn(), onError = vi.fn()
+    act(() => result.current.startListening(onCommand, onError, { onStart, onEnd }))
+    const recognition = global.SpeechRecognition.mock.instances[0]
+    expect(recognition.onstart).toEqual(expect.any(Function))
+    act(() => recognition.onstart())
+    expect(onStart).toHaveBeenCalledOnce()
+    act(() => recognition.onerror({ error: 'network' }))
+    expect(onError).toHaveBeenCalledWith('network')
+    const end = recognition.onend
+    act(() => result.current.stopListening())
+    act(() => end())
+    expect(onEnd).not.toHaveBeenCalled()
+  })
+
   it('isSupported is true when Web Speech API is available', () => {
     const { result } = renderHook(() => useVoice())
     expect(result.current.isSupported).toBe(true)

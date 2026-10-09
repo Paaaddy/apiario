@@ -15,6 +15,17 @@ function wrap(ui) {
 }
 
 describe('InspectionForm', () => {
+  it('keeps the form and draft open when the destination Colony is full', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    wrap(<InspectionForm colonies={colonies} initial={{ id: 'i', colonyId: 'c1', queenStatus: 'seen', notes: 'Keep this draft' }}
+      onSave={() => ({ ok: false, messageKey: 'insp_colony_full' })} onClose={onClose} />)
+    await user.click(screen.getByRole('button', { name: /^Save$/ }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('This colony already has 500 inspections')
+    expect(onClose).not.toHaveBeenCalled()
+    expect(screen.getByDisplayValue('Keep this draft')).toBeInTheDocument()
+  })
+
   it('renders the add title', () => {
     wrap(<InspectionForm colonies={colonies} onSave={() => {}} onClose={() => {}} />)
     expect(screen.getByText(/new inspection/i)).toBeInTheDocument()
