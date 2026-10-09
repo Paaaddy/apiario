@@ -2,17 +2,12 @@ import { useMemo, useCallback } from 'react'
 import { haptics } from '../utils/haptics'
 import { MAX_TASK_LOG_ENTRIES as MAX_ENTRIES } from '../utils/retentionLimits'
 import { useStoredState } from './useStoredState'
+import { isLogEntry, uniqueRecords, loadStoredValue } from '../utils/recordValidation'
 
 const STORAGE_KEY = 'apiario-log'
 
 function loadLog() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    const parsed = raw ? JSON.parse(raw) : []
-    return Array.isArray(parsed) ? cap(parsed) : []
-  } catch {
-    return []
-  }
+  return loadStoredValue(STORAGE_KEY, [], (value) => uniqueRecords(value, (entry) => isLogEntry(entry, true)), cap)
 }
 
 function cap(log) {

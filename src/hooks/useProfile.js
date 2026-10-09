@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useStoredState } from './useStoredState'
 import { PROFILE_SCHEMA_VERSION, migrateProfile, nextColonyId } from '../utils/profileMigration'
+import { isProfile, loadStoredValue } from '../utils/recordValidation'
 export { buildSeededColonies } from '../utils/profileMigration'
 
 const STORAGE_KEY = 'apiario-profile'
@@ -20,10 +21,7 @@ function today() {
 }
 
 function loadProfile() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return DEFAULT_PROFILE
-    const parsed = JSON.parse(raw)
+  return loadStoredValue(STORAGE_KEY, DEFAULT_PROFILE, isProfile, (parsed) => {
     // IMPORTANT: detect the schema version from the PARSED data, not from the
     // merged-with-defaults version — otherwise the defaults' schemaVersion
     // would hide the fact that stored data is an older version.
@@ -32,9 +30,7 @@ function loadProfile() {
     // Fill in any keys that newer schema versions introduced but the stored
     // object never had.
     return { ...DEFAULT_PROFILE, ...migrated }
-  } catch {
-    return DEFAULT_PROFILE
-  }
+  })
 }
 
 export function useProfile() {

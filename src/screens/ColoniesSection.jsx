@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import InspectionForm from '../components/InspectionForm'
+import { useDraftProtection } from '../hooks/useDraftProtection'
 
 function lastInspectedLabel(status, t) {
   if (!status || status.kind === 'never') return t(s.insp_never)
@@ -21,6 +22,7 @@ export default function ColoniesSection({
   onSelectColony,
 }) {
   const { t } = useLanguage()
+  const { markDraft, clearDraft } = useDraftProtection()
   const records = colonyRecords ?? colonies.map((colony) => ({
     colony,
     lastInspected: { kind: 'never' },
@@ -42,15 +44,18 @@ export default function ColoniesSection({
     setDraftName('')
     setDraftNotes('')
     setIsAdding(false)
+    clearDraft()
   }
 
   function cancelAdd() {
+    clearDraft()
     setDraftName('')
     setDraftNotes('')
     setIsAdding(false)
   }
 
   function beginEdit(colony) {
+    clearDraft()
     setEditingId(colony.id)
     setEditName(colony.name)
     setEditNotes(colony.notes ?? '')
@@ -61,9 +66,11 @@ export default function ColoniesSection({
     if (!name) return
     onUpdate?.(editingId, { name, notes: editNotes.trim() })
     setEditingId(null)
+    clearDraft()
   }
 
   function cancelEdit() {
+    clearDraft()
     setEditingId(null)
     setEditName('')
     setEditNotes('')
@@ -80,7 +87,7 @@ export default function ColoniesSection({
     : null
 
   return (
-    <section className="mb-8">
+    <section className="mb-8" onChangeCapture={markDraft}>
       <h2 className="font-serif text-base font-semibold text-brown mb-3">
         {t(s.colonies_title)}
       </h2>

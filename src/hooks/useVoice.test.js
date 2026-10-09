@@ -52,9 +52,9 @@ describe('useVoice', () => {
     expect(recognition.onstart).toEqual(expect.any(Function))
     act(() => recognition.onstart())
     expect(onStart).toHaveBeenCalledOnce()
+    const end = recognition.onend
     act(() => recognition.onerror({ error: 'network' }))
     expect(onError).toHaveBeenCalledWith('network')
-    const end = recognition.onend
     act(() => result.current.stopListening())
     act(() => end())
     expect(onEnd).not.toHaveBeenCalled()

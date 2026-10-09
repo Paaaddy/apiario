@@ -2,21 +2,16 @@ import { useCallback, useMemo } from 'react'
 import { useStoredState } from './useStoredState'
 import { groupByColony, latestByColony } from '../utils/inspections'
 import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
+import { isInspection, uniqueRecords, loadStoredValue } from '../utils/recordValidation'
 
 const STORAGE_KEY = 'apiario-inspections'
 
 function loadInspections() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    const parsed = raw ? JSON.parse(raw) : []
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
+  return loadStoredValue(STORAGE_KEY, [], (value) => uniqueRecords(value, isInspection))
 }
 
 export function useInspections() {
-  const { state: inspections, updateState: setInspections, persistenceError, retrySave } =
+  const { state: inspections, updateState: setInspections, persistenceError, retrySave, getState } =
     useStoredState(STORAGE_KEY, loadInspections)
 
   const addInspection = useCallback((data) => {
@@ -35,13 +30,19 @@ export function useInspections() {
   }, [setInspections])
 
   const updateInspection = useCallback((id, patch) => {
-    setInspections((prev) => {
+    const current = getState()
+    const entry = current.find((record) => record.id === id)
+    if (entry && patch.colonyId && patch.colonyId !== entry.colonyId &&
+      current.filter((record) => record.colonyId === patch.colonyId).length >= MAX_PER_COLONY) {
+      return { ok: false, messageKey: 'insp_colony_full' }
+    }
+    return setInspections((prev) => {
       const next = prev.map((e) =>
         e.id === id ? { ...e, ...patch, id: e.id, createdAt: e.createdAt } : e
       )
       return next
     })
-  }, [setInspections])
+  }, [setInspections, getState])
 
   const removeInspection = useCallback((id) => {
     setInspections((prev) => {
