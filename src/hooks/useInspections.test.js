@@ -7,6 +7,21 @@ beforeEach(() => { localStorage.clear() })
 afterEach(() => { localStorage.clear() })
 
 describe('useInspections', () => {
+  it('rejects invalid ordinary additions and edits before state or storage changes', () => {
+    const { result } = renderHook(() => useInspections())
+    let outcome
+    act(() => { outcome = result.current.addInspection({ colonyId: 'a', harvest: -1 }) })
+    expect(outcome).toMatchObject({ ok: false, error: 'validation' })
+    expect(result.current.inspections).toEqual([])
+    expect(localStorage.getItem('apiario-inspections')).toBeNull()
+    act(() => result.current.addInspection({ colonyId: 'a', queenStatus: 'seen', date: false }))
+    const before = localStorage.getItem('apiario-inspections')
+    act(() => { outcome = result.current.updateInspection(result.current.inspections[0].id, { harvest: Infinity }) })
+    expect(outcome).toMatchObject({ ok: false, error: 'validation' })
+    expect(localStorage.getItem('apiario-inspections')).toBe(before)
+    expect(result.current.inspections[0].harvest).toBeUndefined()
+  })
+
   it('rejects a move into a full Colony without deleting either history', () => {
     const existing = Array.from({ length: MAX_INSPECTIONS_PER_COLONY }, (_, i) => ({
       id: `full-${i}`, colonyId: 'full', date: '2026-05-01', queenStatus: 'seen',
