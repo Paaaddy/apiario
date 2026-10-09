@@ -259,8 +259,7 @@ export default function ColoniesSection({
           colonies={inspectTarget ? [inspectTarget] : colonyList}
           initial={inspectTarget ? { colonyId: inspectColonyId } : null}
           onSave={(data) => {
-            onAddInspection?.(data)
-            setInspectColonyId(null)
+            return onAddInspection?.(data)
           }}
           onClose={() => setInspectColonyId(null)}
         />

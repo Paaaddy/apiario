@@ -5,9 +5,10 @@ import { useStoredState } from './useStoredState'
 import { isLogEntry, uniqueRecords, loadStoredValue } from '../utils/recordValidation'
 
 const STORAGE_KEY = 'apiario-log'
+const acceptsLog = (value) => uniqueRecords(value, (entry) => isLogEntry(entry, true))
 
 function loadLog() {
-  return loadStoredValue(STORAGE_KEY, [], (value) => uniqueRecords(value, (entry) => isLogEntry(entry, true)), cap)
+  return loadStoredValue(STORAGE_KEY, [], acceptsLog, cap)
 }
 
 function cap(log) {
@@ -16,7 +17,7 @@ function cap(log) {
 
 export function useTaskLog() {
   const { state: log, updateState: setLog, persistenceError, retrySave } =
-    useStoredState(STORAGE_KEY, loadLog)
+    useStoredState(STORAGE_KEY, loadLog, acceptsLog)
 
   const completedTaskIds = useMemo(
     () => new Set(log.filter((e) => e.type === 'task').map((e) => e.taskId)),
@@ -26,7 +27,7 @@ export function useTaskLog() {
   const toggleTask = useCallback((task) => {
     // useStoredState runs this transaction synchronously in the event, not
     // as a React updater: haptics stay inside the user-activation window.
-    setLog((prev) => {
+    return setLog((prev) => {
       const exists = prev.find((e) => e.type === 'task' && e.taskId === task.id)
       // Undo remains silent, including several toggles in the same event.
       if (!exists) haptics.tap()
@@ -34,7 +35,7 @@ export function useTaskLog() {
         ? prev.filter((e) => !(e.type === 'task' && e.taskId === task.id))
         : cap([
             {
-              id: `task-${task.id}-${Date.now()}`,
+              id: `task-${task.id}-${crypto.randomUUID()}`,
               type: 'task',
               taskId: task.id,
               taskName: task.name,
@@ -47,10 +48,10 @@ export function useTaskLog() {
   }, [setLog])
 
   const addCustomEntry = useCallback(({ text, date }) => {
-    setLog((prev) => {
+    return setLog((prev) => {
       const next = cap([
         {
-          id: `custom-${Date.now()}`,
+          id: `custom-${crypto.randomUUID()}`,
           type: 'custom',
           text,
           date,
@@ -62,7 +63,7 @@ export function useTaskLog() {
   }, [setLog])
 
   const deleteEntry = useCallback((id) => {
-    setLog((prev) => {
+    return setLog((prev) => {
       const next = prev.filter((e) => e.id !== id)
       return next
     })

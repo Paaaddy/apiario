@@ -35,17 +35,17 @@ function loadProfile() {
 
 export function useProfile() {
   const { state: profile, updateState: setProfile, persistenceError, retrySave } =
-    useStoredState(STORAGE_KEY, loadProfile)
+    useStoredState(STORAGE_KEY, loadProfile, isProfile)
 
   const updateProfile = useCallback((updates) => {
-    setProfile((prev) => {
+    return setProfile((prev) => {
       const next = { ...prev, ...updates }
       return next
     })
   }, [setProfile])
 
   const addColony = useCallback((name, notes = '') => {
-    setProfile((prev) => {
+    return setProfile((prev) => {
       const existing = prev.colonies ?? []
       const colony = {
         id: nextColonyId(existing),
@@ -61,7 +61,7 @@ export function useProfile() {
   }, [setProfile])
 
   const updateColony = useCallback((id, updates) => {
-    setProfile((prev) => {
+    return setProfile((prev) => {
       const colonies = (prev.colonies ?? []).map((c) =>
         c.id === id ? { ...c, ...updates } : c
       )
@@ -71,7 +71,7 @@ export function useProfile() {
   }, [setProfile])
 
   const removeColony = useCallback((id) => {
-    setProfile((prev) => {
+    return setProfile((prev) => {
       const colonies = (prev.colonies ?? []).filter((c) => c.id !== id)
       const next = { ...prev, colonies }
       return next

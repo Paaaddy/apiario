@@ -23,6 +23,9 @@ remain untouched. Readable records can still be shown, but edits and retries
 cannot overwrite the damaged collection. An invalid calendar date alone does not
 make an Inspection structurally unsafe. Legacy task entries without names remain
 readable; importing a Backup still requires the stricter Backup record rules.
+Ordinary changes are checked against these shared structural rules before writing,
+so the app cannot save a new record that its loader would reject. Rejected
+Inspection fields stay in the form for correction rather than closing the draft.
 
 ## Colony deletion and Inspection moves
 

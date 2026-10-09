@@ -107,7 +107,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
     })
     // Failed durable writes remain ordinary drafts managed by persistence;
     // rejected moves must keep this form open because no mutation was applied.
-    if (outcome?.ok === false && outcome.messageKey === 'insp_colony_full') {
+    if (outcome?.ok === false && (outcome.error === 'validation' || outcome.messageKey === 'insp_colony_full')) {
       setSaveError(outcome.messageKey)
       return
     }

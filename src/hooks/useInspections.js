@@ -5,17 +5,18 @@ import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retention
 import { isInspection, uniqueRecords, loadStoredValue } from '../utils/recordValidation'
 
 const STORAGE_KEY = 'apiario-inspections'
+const acceptsInspections = (value) => uniqueRecords(value, isInspection)
 
 function loadInspections() {
-  return loadStoredValue(STORAGE_KEY, [], (value) => uniqueRecords(value, isInspection))
+  return loadStoredValue(STORAGE_KEY, [], acceptsInspections)
 }
 
 export function useInspections() {
   const { state: inspections, updateState: setInspections, persistenceError, retrySave, getState } =
-    useStoredState(STORAGE_KEY, loadInspections)
+    useStoredState(STORAGE_KEY, loadInspections, acceptsInspections)
 
   const addInspection = useCallback((data) => {
-    setInspections((prev) => {
+    return setInspections((prev) => {
       const entry = {
         id: crypto.randomUUID(),
         ...data,
@@ -45,14 +46,14 @@ export function useInspections() {
   }, [setInspections, getState])
 
   const removeInspection = useCallback((id) => {
-    setInspections((prev) => {
+    return setInspections((prev) => {
       const next = prev.filter((e) => e.id !== id)
       return next
     })
   }, [setInspections])
 
   const removeInspectionsByColonyId = useCallback((colonyId) => {
-    setInspections((prev) => {
+    return setInspections((prev) => {
       const next = prev.filter((e) => e.colonyId !== colonyId)
       return next
     })

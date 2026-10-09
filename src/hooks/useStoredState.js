@@ -11,6 +11,8 @@ const STORAGE_ERROR = {
 }
 
 const INVALID_SOURCE = { ...STORAGE_ERROR, messageKey: 'storage_invalid' }
+const INVALID_CHANGE = { ok: false, error: 'validation', messageKey: 'record_invalid', requiresReload: false }
+const acceptsAny = () => true
 let activeTransaction = null
 
 // Internal seam: stage related hook changes without exposing storage mechanics
@@ -33,7 +35,7 @@ export function runStoredTransaction(change) {
 
 // Loaders own validation/migration. Mutations and retries run in event handlers,
 // never in replayable React updaters or mount effects.
-export function useStoredState(storageKey, load) {
+export function useStoredState(storageKey, load, accepts = acceptsAny) {
   const [loaded] = useState(() => {
     const value = load()
     return value?.[STORED_VALUE] ? value : { value, unsafe: false }
@@ -81,20 +83,25 @@ export function useStoredState(storageKey, load) {
   }, [report])
 
   const updateState = useCallback((update) => {
+    const previous = activeTransaction?.entries.get(token.current)?.value ?? stateRef.current
+    const next = update(previous)
+    // Ordinary writes use the same structural rules as loading and Backup;
+    // rejected changes never enter session state or durable storage.
+    if (!accepts(next)) {
+      if (activeTransaction) activeTransaction.error = INVALID_CHANGE
+      return INVALID_CHANGE
+    }
     if (activeTransaction) {
       if (loaded.unsafe) activeTransaction.error = INVALID_SOURCE
-      const previous = activeTransaction.entries.get(token.current)?.value ?? stateRef.current
-      const next = update(previous)
       activeTransaction.entries.set(token.current, { key: storageKey, value: next, commit })
       return { ok: true }
     }
-    const next = update(stateRef.current)
     // Advance synchronously so several mutations in one event see each other,
     // including when storage is unavailable. Failed changes remain in memory.
     stateRef.current = next
     setState(next)
     return save(next)
-  }, [save, storageKey, loaded.unsafe, commit])
+  }, [save, storageKey, loaded.unsafe, commit, accepts])
 
   const getState = useCallback(() => stateRef.current, [])
 
