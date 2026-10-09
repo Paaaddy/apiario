@@ -82,7 +82,19 @@ export function loadStoredValue(key, fallback, accepts, normalize = (value) => v
     const raw = localStorage.getItem(key)
     if (raw === null) return { value: fallback, unsafe: false }
     const parsed = JSON.parse(raw)
-    if (!accepts(parsed)) return { value: fallback, unsafe: true }
+    if (!accepts(parsed)) {
+      // A read-only projection keeps sound records visible without replacing
+      // the original collection. Never persist this filtered projection.
+      const seen = new Set()
+      const value = Array.isArray(parsed) && Array.isArray(fallback)
+        ? parsed.filter((record) => {
+            if (!accepts([record]) || seen.has(record.id)) return false
+            seen.add(record.id)
+            return true
+          })
+        : fallback
+      return { value, unsafe: true }
+    }
     return { value: normalize(parsed), unsafe: false }
   } catch {
     return { value: fallback, unsafe: true }

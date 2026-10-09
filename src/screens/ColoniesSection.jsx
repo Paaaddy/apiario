@@ -22,7 +22,8 @@ export default function ColoniesSection({
   onSelectColony,
 }) {
   const { t } = useLanguage()
-  const { markDraft, clearDraft } = useDraftProtection()
+  const { markDraft: markAddDraft, clearDraft: clearAddDraft } = useDraftProtection()
+  const { markDraft: markEditDraft, clearDraft: clearEditDraft } = useDraftProtection()
   const records = colonyRecords ?? colonies.map((colony) => ({
     colony,
     lastInspected: { kind: 'never' },
@@ -44,18 +45,18 @@ export default function ColoniesSection({
     setDraftName('')
     setDraftNotes('')
     setIsAdding(false)
-    clearDraft()
+    clearAddDraft()
   }
 
   function cancelAdd() {
-    clearDraft()
+    clearAddDraft()
     setDraftName('')
     setDraftNotes('')
     setIsAdding(false)
   }
 
   function beginEdit(colony) {
-    clearDraft()
+    clearEditDraft()
     setEditingId(colony.id)
     setEditName(colony.name)
     setEditNotes(colony.notes ?? '')
@@ -66,11 +67,11 @@ export default function ColoniesSection({
     if (!name) return
     onUpdate?.(editingId, { name, notes: editNotes.trim() })
     setEditingId(null)
-    clearDraft()
+    clearEditDraft()
   }
 
   function cancelEdit() {
-    clearDraft()
+    clearEditDraft()
     setEditingId(null)
     setEditName('')
     setEditNotes('')
@@ -87,7 +88,7 @@ export default function ColoniesSection({
     : null
 
   return (
-    <section className="mb-8" onChangeCapture={markDraft}>
+    <section className="mb-8">
       <h2 className="font-serif text-base font-semibold text-brown mb-3">
         {t(s.colonies_title)}
       </h2>
@@ -102,6 +103,7 @@ export default function ColoniesSection({
           return editingId === colony.id ? (
             <li
               key={colony.id}
+              onChangeCapture={markEditDraft}
               className="bg-white border border-honey rounded-xl p-3 shadow-sm"
             >
               <input
@@ -205,7 +207,7 @@ export default function ColoniesSection({
       </ul>
 
       {isAdding ? (
-        <div className="bg-white border border-honey rounded-xl p-3 shadow-sm">
+        <div onChangeCapture={markAddDraft} className="bg-white border border-honey rounded-xl p-3 shadow-sm">
           <input
             type="text"
             maxLength={100}
