@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
+import { useState } from 'react'
 import { LanguageProvider } from '../context/LanguageContext'
 import { ThemeProvider } from '../context/ThemeContext'
 import { applyPendingUpdate, cancelPendingReload, getReloadStatus, protectReload, requestAppReload } from '../pwa/reloadSafety'
@@ -7,12 +8,39 @@ import UpdateNotice from './UpdateNotice'
 import InspectionForm from './InspectionForm'
 import ColoniesSection from '../screens/ColoniesSection'
 import LogSection from '../screens/LogSection'
+import { useInspections } from '../hooks/useInspections'
+import StorageNotice from './StorageNotice'
 
 const colonies = [{ id: 'a', name: 'Apple' }]
 const reload = vi.fn()
 function wrap(ui) { return render(<ThemeProvider><LanguageProvider>{ui}</LanguageProvider></ThemeProvider>) }
 beforeEach(() => { localStorage.setItem('apiario-locale', 'en'); reload.mockClear() })
-afterEach(() => { cancelPendingReload(reload); localStorage.clear() })
+afterEach(() => { cancelPendingReload(reload); vi.restoreAllMocks(); localStorage.clear() })
+
+function StoredForm() {
+  const [open, setOpen] = useState(true)
+  const { addInspection, persistenceError, retrySave } = useInspections()
+  return <>
+    <UpdateNotice />
+    {persistenceError && <StorageNotice onRetry={retrySave} />}
+    {open && <InspectionForm colonies={colonies} onSave={addInspection} onClose={() => setOpen(false)} />}
+  </>
+}
+
+it('hands off draft protection to failed-write protection when an Inspection form closes', () => {
+  wrap(<StoredForm />)
+  fireEvent.click(screen.getByRole('button', { name: /👑 Seen/ }))
+  act(() => requestAppReload(reload))
+  const writes = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('Full') })
+  fireEvent.click(screen.getByRole('button', { name: 'Save', exact: true }))
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.getByRole('status')).toHaveTextContent('Update waiting')
+  expect(reload).not.toHaveBeenCalled()
+  writes.mockRestore()
+  fireEvent.click(screen.getByRole('button', { name: 'Retry saving' }))
+  expect(screen.getByRole('button', { name: 'Apply update' })).toBeInTheDocument()
+  expect(reload).not.toHaveBeenCalled()
+})
 
 it.each(['a', 'b', 'c'])('protects an Inspection draft and offers explicit update after discard in theme %s', (theme) => {
   localStorage.setItem('apiario-theme', theme)

@@ -12,6 +12,24 @@ beforeEach(() => {
 })
 afterEach(() => vi.unstubAllGlobals())
 
+it.each(['unsupported', 'network', 'start-failed', 'not-allowed'])('connects %s recognition failure to accurate session feedback', (failure) => {
+  if (failure === 'unsupported') delete global.SpeechRecognition
+  if (failure === 'start-failed') global.SpeechRecognition.mockImplementationOnce(function () {
+    recognition = this
+    this.start = () => { throw new Error('Start failed') }
+    this.stop = vi.fn()
+  })
+  const { result } = renderHook(() => useHandsFreeSession('en', vi.fn()))
+  act(() => result.current.start())
+  if (failure === 'network' || failure === 'not-allowed') act(() => recognition.onerror({ error: failure }))
+  expect(result.current.isActive).toBe(false)
+  expect(result.current.isStarting).toBe(false)
+  expect(result.current.permissionBlocked).toBe(failure === 'not-allowed')
+  expect(result.current.feedback).toBe(failure === 'not-allowed' ? null : failure === 'unsupported' ? 'unsupported' : 'error')
+  act(() => result.current.dismissFeedback())
+  expect(result.current.feedback).toBeNull()
+})
+
 it('waits for actual recognition, stops on natural end, and only restarts explicitly', () => {
   const { result } = renderHook(() => useHandsFreeSession('en', vi.fn()))
   act(() => result.current.start())
