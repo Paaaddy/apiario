@@ -53,7 +53,7 @@ All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "
 - `ColoniesSection` — named colony list with add / edit / delete; shows "last inspected" label per colony; "+ Inspect" shortcut opens `InspectionForm` overlay
 - `InspectionTab` — all inspections for all colonies, grouped; `InspectionCard` renders one record with edit/delete; `InspectionForm` handles add/edit with `InspectionScaleInput` for 0–5 scales
 - `LogSection` — Verlauf log with month grouping + custom entry form
-- `ProfileSection` — hive count / climate / experience option groups + `ThemeSwitcher`
+- `ProfileSection` — hive count / climate / experience option groups + `ThemeSwitcher`; static bilingual About Apiario section below Data & backup with a GitHub creator credit link
 - `Onboarding` — 6-step OnboardJS flow (welcome → features → hiveCount → climateZone → experience → complete) using `@onboardjs/react`. Steps are created once in a `stepsRef` and a `COMPONENT_REGISTRY` maps step keys to React components.
 
 ### Voice / hands-free
