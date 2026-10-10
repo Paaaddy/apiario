@@ -158,6 +158,26 @@ describe('ProfileSection: Data & Privacy Collapse', () => {
   })
 })
 
+describe('ProfileSection: About Apiario', () => {
+  it.each(['a', 'b', 'c'].flatMap((theme) => ['de', 'en'].map((locale) => [theme, locale])))(
+    'shows project copy and GitHub credit in theme %s, locale %s',
+    (theme, locale) => {
+      localStorage.setItem('apiario-theme', theme)
+      localStorage.setItem('apiario-locale', locale)
+      wrap(<ProfileSection profile={mockProfile} onUpdate={vi.fn()} />)
+
+      const heading = screen.getByRole('heading', { name: locale === 'de' ? 'Über Apiario' : 'About Apiario' })
+      expect(screen.getByText(locale === 'de'
+        ? 'Apiario ist ein kleines, persönliches Projekt für Imkerei-Aufzeichnungen. Für mich selbst entwickelt und mit Freunden geteilt.'
+        : 'Apiario is a small, personal project for keeping beekeeping records. Built for myself and shared with friends.')).toBeVisible()
+      const credit = screen.getByRole('link', { name: locale === 'de' ? 'Entwickelt von @Paaaddy' : 'Created by @Paaaddy' })
+      expect(credit).toHaveAttribute('href', 'https://github.com/Paaaddy')
+      expect(heading.compareDocumentPosition(screen.getByRole('button', { name: s.data_title[locale] })) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy()
+      expect(screen.queryByRole('heading', { name: /Impressum|Legal notice/i })).not.toBeInTheDocument()
+    },
+  )
+})
+
 describe('ProfileSection: Theme Switcher', () => {
   it('renders ThemeSwitcher component', () => {
     const onUpdate = vi.fn()
