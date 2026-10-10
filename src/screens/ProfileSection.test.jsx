@@ -159,6 +159,9 @@ describe('ProfileSection: Data & Privacy Collapse', () => {
 })
 
 describe('ProfileSection: About Apiario', () => {
+  // Value: protects=About is a named region and GitHub opens safely in a new tab;
+  // fails_when=the region label, blank target, or either protective rel token is removed;
+  // why_new=existing six cases check copy and href but not landmark naming or external-link safety; seam=none
   it.each(['a', 'b', 'c'].flatMap((theme) => ['de', 'en'].map((locale) => [theme, locale])))(
     'shows project copy and GitHub credit in theme %s, locale %s',
     (theme, locale) => {
@@ -167,11 +170,14 @@ describe('ProfileSection: About Apiario', () => {
       wrap(<ProfileSection profile={mockProfile} onUpdate={vi.fn()} />)
 
       const heading = screen.getByRole('heading', { name: locale === 'de' ? 'Über Apiario' : 'About Apiario' })
+      expect(screen.getByRole('region', { name: heading.textContent })).toContainElement(heading)
       expect(screen.getByText(locale === 'de'
         ? 'Apiario ist ein kleines, persönliches Projekt für Imkerei-Aufzeichnungen. Für mich selbst entwickelt und mit Freunden geteilt.'
         : 'Apiario is a small, personal project for keeping beekeeping records. Built for myself and shared with friends.')).toBeVisible()
       const credit = screen.getByRole('link', { name: locale === 'de' ? 'Entwickelt von @Paaaddy' : 'Created by @Paaaddy' })
       expect(credit).toHaveAttribute('href', 'https://github.com/Paaaddy')
+      expect(credit).toHaveAttribute('target', '_blank')
+      expect(credit.rel.split(/\s+/)).toEqual(expect.arrayContaining(['noopener', 'noreferrer']))
       expect(heading.compareDocumentPosition(screen.getByRole('button', { name: s.data_title[locale] })) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy()
       expect(screen.queryByRole('heading', { name: /Impressum|Legal notice/i })).not.toBeInTheDocument()
     },
