@@ -35,7 +35,7 @@ Single-page, tab-based. `ThemeProvider` wraps everything, then `LanguageProvider
 - **Context split convention**: each context is split into a primitive module (`src/context/*-context.js`, exports the raw `createContext(...)` only) and a provider module (`src/context/*Context.jsx`, exports the `*Provider` component). This keeps the provider file component-only, satisfying `react-refresh/only-export-components` and preserving Fast Refresh.
 - **Task log** (`useTaskLog`): localStorage under `apiario-log`. Two entry types: `task` (from season checkbox) and `custom` (free text). Capped at 500 entries. Exposes `completedTaskIds` Set for O(1) checkbox state lookup.
 - **Season** (`useSeason`): pure derivation from current date + profile. Reads `src/data/seasons.json`, filters tasks by `minExperience`.
-- **Inspections** (`useInspections`): localStorage under `apiario-inspections`. Shape: `{ id, colonyId, date, queenStatus, varroa, broodPattern, notes, createdAt }`. Exposes `addInspection`, `updateInspection`, `removeInspection`, `removeInspectionsByColonyId` (cascade-delete, call before `removeColony`), `getColonyInspections` (sorted newest-first), `getLatestInspection`.
+- **Inspections** (`useInspections`): localStorage under `apiario-inspections`. Shape: `{ id, colonyId, date, queenStatus, varroa, broodPattern, notes, createdAt }`. Exposes `addInspection`, `updateInspection`, `removeInspection`, `removeInspectionsByColonyId`, `getColonyInspections` (sorted newest-first), `getLatestInspection`. Application Colony deletion uses `useColonyRemoval` to coordinate Profile and Inspection changes with shared rollback/recovery; do not sequence the two durable removals independently. Ordinary mutations reject structurally invalid data before changing state; Inspection forms retain rejected drafts and display de/en feedback.
 - **Diagnosis** (`DiagnoseScreen`): tree traversal through `src/data/diagnosis.json`. Nodes keyed by ID; `type: 'outcome'` nodes are terminal. Accepts `inspections` prop; latest inspection auto-routes to a relevant node when queen/varroa/brood anomalies are detected.
 
 ### Content data
@@ -57,10 +57,12 @@ All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "
 - `Onboarding` — 6-step OnboardJS flow (welcome → features → hiveCount → climateZone → experience → complete) using `@onboardjs/react`. Steps are created once in a `stepsRef` and a `COMPONENT_REGISTRY` maps step keys to React components.
 
 ### Voice / hands-free
-`useVoice` wraps Web Speech API (`SpeechSynthesis` + `SpeechRecognition`). Command dispatch lives in `App.jsx` — the hook itself is stateless. Voice is a progressive enhancement; the app is fully usable without it.
+`useHandsFreeSession` owns command dispatch and session state; `useVoice` owns browser recognition lifetime. Listening is shown only after recognition starts. Unsupported recognition, start failures and natural termination stop the session with de/en inline Restart/Close feedback; permission failures retain the permission dialog. Intentional Stop stays quiet. Voice is a progressive enhancement; the app is fully usable without it.
 
 ### PWA / offline
 `vite-plugin-pwa` with Workbox `generateSW` mode. All assets, JSON data, and font WOFF2 files are precached (56 entries, ~1074 KB). Fonts are self-hosted via `@fontsource` packages imported in `main.jsx` — no CDN dependency. `registerType: 'autoUpdate'` auto-installs new service workers. Build produces the SW; `dev` does not register it.
+
+`registerAutoUpdate` intercepts the plugin's actual reload callback. `reloadSafety` synchronously tracks failed durable writes, form drafts and pending record recovery. A blocked update becomes an explicit Apply update action once safe; it never reloads automatically after a retry. Successful deliberate Backup replacement keeps its direct reload behavior. Hourly update checks use the registered worker's `update()` method, not the plugin's activation helper. Worker activation itself is still automatic; reload protection is not protection from browser crashes or manual reloads.
 
 ## Styling
 

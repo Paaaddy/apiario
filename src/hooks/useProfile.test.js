@@ -14,6 +14,15 @@ afterEach(() => {
 })
 
 describe('useProfile', () => {
+  it('rejects structurally invalid ordinary updates without persisting them', () => {
+    const { result } = renderHook(() => useProfile())
+    let outcome
+    act(() => { outcome = result.current.updateProfile({ colonies: [null] }) })
+    expect(outcome).toMatchObject({ ok: false, error: 'validation' })
+    expect(result.current.profile.colonies).toEqual([])
+    expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+  })
+
   it('does not replay profile writes in StrictMode and reports failed writes until a successful mutation', () => {
     const write = vi.spyOn(Storage.prototype, 'setItem')
     const { result } = renderHook(() => useProfile(), {

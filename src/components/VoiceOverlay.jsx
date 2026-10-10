@@ -1,7 +1,7 @@
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 
-export default function VoiceOverlay({ onStop, lastCommand }) {
+export default function VoiceOverlay({ onStop, lastCommand, isStarting = false }) {
   const { t } = useLanguage()
 
   const COMMANDS = [
@@ -28,7 +28,7 @@ export default function VoiceOverlay({ onStop, lastCommand }) {
           <p className="font-serif text-sm font-bold text-brown text-center mb-1">
             {t(s.voice_title)}
           </p>
-          <p className="text-brown-mid text-xs text-center mb-4">{t(s.voice_listening)}</p>
+          <p role="status" className="text-brown-mid text-xs text-center mb-4">{t(isStarting ? s.voice_starting : s.voice_listening)}</p>
 
           <div className="flex flex-col gap-2">
             {COMMANDS.map(({ label, desc }) => (

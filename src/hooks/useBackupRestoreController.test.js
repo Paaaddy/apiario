@@ -4,6 +4,7 @@ import { vi, beforeEach, afterEach } from 'vitest'
 import { LanguageProvider } from '../context/LanguageContext'
 import { useLanguage } from './useLanguage'
 import { useBackupRestoreController } from './useBackupRestoreController'
+import { cancelPendingReload, getReloadStatus, protectReload, requestAppReload } from '../pwa/reloadSafety'
 
 const PROFILE_KEY = 'apiario-profile'
 const INSPECTIONS_KEY = 'apiario-inspections'
@@ -53,6 +54,41 @@ afterEach(() => {
 })
 
 describe('useBackupRestoreController', () => {
+  it('deliberately reloads after successful Backup replacement even with a protected draft/update', async () => {
+    const token = {}, updateReload = vi.fn(), restoreReload = vi.fn()
+    protectReload(token, true)
+    requestAppReload(updateReload)
+    try {
+      const { result } = renderHook(() => useController(restoreReload), { wrapper })
+      await act(async () => result.current.restoreBackupFile(makeFile(validPayload())))
+      expect(restoreReload).toHaveBeenCalledOnce()
+      expect(updateReload).not.toHaveBeenCalled()
+    } finally {
+      protectReload(token, false)
+      cancelPendingReload(updateReload)
+    }
+  })
+
+  it('defers an update during Backup recovery and does not automatically reload when recovery succeeds', async () => {
+    const previous = '{"hiveCount":1}'
+    localStorage.setItem(PROFILE_KEY, previous)
+    const write = Storage.prototype.setItem
+    const writes = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (key, value) {
+      if (key === INSPECTIONS_KEY || (key === PROFILE_KEY && value === previous)) throw new Error('Full')
+      return write.call(this, key, value)
+    })
+    const reload = vi.fn()
+    const { result } = renderHook(() => useController(reload), { wrapper })
+    await act(async () => result.current.restoreBackupFile(makeFile(validPayload())))
+    act(() => requestAppReload(reload))
+    expect(getReloadStatus()).toMatchObject({ pending: true, blocked: true })
+    writes.mockRestore()
+    act(() => result.current.recoverPreviousData())
+    expect(getReloadStatus()).toMatchObject({ pending: true, blocked: false })
+    expect(reload).not.toHaveBeenCalled()
+    cancelPendingReload(reload)
+  })
+
   it('keeps failed restore recovery available until the prior records can be recovered', async () => {
     const previous = '{"hiveCount":1}'
     localStorage.setItem(PROFILE_KEY, previous)

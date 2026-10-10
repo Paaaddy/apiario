@@ -22,6 +22,20 @@ afterEach(() => {
 })
 
 describe('useTaskLog', () => {
+  it('keeps same-millisecond custom entries uniquely identified and reloadable', () => {
+    vi.spyOn(Date, 'now').mockReturnValue(12345)
+    const { result, unmount } = renderHook(() => useTaskLog())
+    act(() => {
+      result.current.addCustomEntry({ text: 'First', date: '2026-05-01' })
+      result.current.addCustomEntry({ text: 'Second', date: '2026-05-01' })
+    })
+    expect(new Set(result.current.log.map((entry) => entry.id)).size).toBe(2)
+    unmount()
+    const loaded = renderHook(() => useTaskLog())
+    expect(loaded.result.current.log).toHaveLength(2)
+    expect(loaded.result.current.persistenceError).toBeNull()
+  })
+
   it('does not replay log writes or haptics in StrictMode and clears errors on successful mutations', () => {
     const write = vi.spyOn(Storage.prototype, 'setItem')
     const { result } = renderHook(() => useTaskLog(), {

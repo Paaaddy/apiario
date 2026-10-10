@@ -1,11 +1,65 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useInspections } from './useInspections'
+import { MAX_INSPECTIONS_PER_COLONY } from '../utils/retentionLimits'
 
 beforeEach(() => { localStorage.clear() })
 afterEach(() => { localStorage.clear() })
 
 describe('useInspections', () => {
+  it('rejects invalid ordinary additions and edits before state or storage changes', () => {
+    const { result } = renderHook(() => useInspections())
+    let outcome
+    act(() => { outcome = result.current.addInspection({ colonyId: 'a', harvest: -1 }) })
+    expect(outcome).toMatchObject({ ok: false, error: 'validation' })
+    expect(result.current.inspections).toEqual([])
+    expect(localStorage.getItem('apiario-inspections')).toBeNull()
+    act(() => result.current.addInspection({ colonyId: 'a', queenStatus: 'seen', date: false }))
+    const before = localStorage.getItem('apiario-inspections')
+    act(() => { outcome = result.current.updateInspection(result.current.inspections[0].id, { harvest: Infinity }) })
+    expect(outcome).toMatchObject({ ok: false, error: 'validation' })
+    expect(localStorage.getItem('apiario-inspections')).toBe(before)
+    expect(result.current.inspections[0].harvest).toBeUndefined()
+  })
+
+  it('rejects a move into a full Colony without deleting either history', () => {
+    const existing = Array.from({ length: MAX_INSPECTIONS_PER_COLONY }, (_, i) => ({
+      id: `full-${i}`, colonyId: 'full', date: '2026-05-01', queenStatus: 'seen',
+    }))
+    existing.push({ id: 'moving', colonyId: 'source', date: 'bad-but-recoverable', createdAt: 'original' })
+    localStorage.setItem('apiario-inspections', JSON.stringify(existing))
+    const { result } = renderHook(() => useInspections())
+    let outcome
+    act(() => { outcome = result.current.updateInspection('moving', { colonyId: 'full' }) })
+    expect(outcome).toMatchObject({ ok: false, messageKey: 'insp_colony_full' })
+    expect(result.current.inspections).toEqual(existing)
+    expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual(existing)
+    act(() => result.current.updateInspection('moving', { notes: 'Retained', id: 'changed', createdAt: 'changed' }))
+    expect(result.current.inspections.at(-1)).toMatchObject({ id: 'moving', createdAt: 'original', notes: 'Retained' })
+  })
+
+  it('keeps structurally unsafe source data recoverable instead of overwriting it on edits or retry', () => {
+    const raw = JSON.stringify([null, { id: 'recover', colonyId: 'a', date: false }])
+    localStorage.setItem('apiario-inspections', raw)
+    const { result } = renderHook(() => useInspections())
+    expect(result.current.persistenceError).toMatchObject({ messageKey: 'storage_invalid' })
+    act(() => result.current.addInspection({ colonyId: 'a', queenStatus: 'seen' }))
+    act(() => result.current.retrySave())
+    expect(localStorage.getItem('apiario-inspections')).toBe(raw)
+  })
+
+  it('allows moving into available space and preserves all other records and safe invalid dates', () => {
+    const existing = [
+      { id: 'moving', colonyId: 'source', date: false, createdAt: 'old', extra: { retained: true } },
+      { id: 'other', colonyId: 'other', date: '2026-05-01' },
+    ]
+    localStorage.setItem('apiario-inspections', JSON.stringify(existing))
+    const { result } = renderHook(() => useInspections())
+    act(() => result.current.updateInspection('moving', { colonyId: 'target' }))
+    expect(result.current.inspections).toEqual([{ ...existing[0], colonyId: 'target' }, existing[1]])
+    expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual(result.current.inspections)
+  })
+
   it('starts with empty inspections', () => {
     const { result } = renderHook(() => useInspections())
     expect(result.current.inspections).toEqual([])

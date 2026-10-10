@@ -15,6 +15,7 @@ vi.mock('./useVoice', () => ({
 beforeEach(() => {
   vi.useFakeTimers()
   vi.clearAllMocks()
+  startListening.mockImplementation((_command, _error, options) => options.onStart())
 })
 
 afterEach(() => {
@@ -29,7 +30,7 @@ describe('useHandsFreeSession', () => {
 
     expect(result.current.isActive).toBe(true)
     expect(speak).toHaveBeenCalledWith(VOICE_CONFIG.de.greeting, { lang: 'de-DE' })
-    expect(startListening).toHaveBeenCalledWith(expect.any(Function), expect.any(Function), { lang: 'de-DE' })
+    expect(startListening).toHaveBeenCalledWith(expect.any(Function), expect.any(Function), expect.objectContaining({ lang: 'de-DE' }))
   })
 
   it('dispatches navigation commands through the caller seam', () => {

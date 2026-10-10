@@ -31,6 +31,27 @@ function failWritesFor(storageKey) {
   })
 }
 
+it.each(['apiario-profile', 'apiario-inspections'])('restores visible Colony/history after failed deletion (%s) and retries the latest records', async (key) => {
+  const history = [{ id: 'i', colonyId: 'a', date: '2026-04-15', queenStatus: 'seen' }]
+  localStorage.setItem('apiario-inspections', JSON.stringify(history))
+  const before = [localStorage.getItem('apiario-profile'), localStorage.getItem('apiario-inspections')]
+  vi.spyOn(window, 'confirm').mockReturnValue(true)
+  render(<App />)
+  await screen.findByRole('region', { name: 'Next actions' })
+  fireEvent.click(within(screen.getByRole('navigation')).getByRole('button', { name: /My Hive/ }))
+  const deleteButton = await screen.findByRole('button', { name: /^Remove$/ })
+  const writes = failWritesFor(key)
+  fireEvent.click(deleteButton)
+  expect(await screen.findByRole('button', { name: 'Retry deletion' })).toBeInTheDocument()
+  expect(screen.getByRole('heading', { name: /Apple/ })).toBeInTheDocument()
+  expect([localStorage.getItem('apiario-profile'), localStorage.getItem('apiario-inspections')]).toEqual(before)
+  writes.mockRestore()
+  fireEvent.click(screen.getByRole('button', { name: 'Retry deletion' }))
+  expect(screen.queryByRole('heading', { name: /Apple/ })).not.toBeInTheDocument()
+  expect(JSON.parse(localStorage.getItem('apiario-profile')).colonies).toEqual([])
+  expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual([])
+}, 15000)
+
 it('shows unsaved Inspection feedback in both languages and retries without duplicating records', async () => {
   render(<StrictMode><App /></StrictMode>)
   await screen.findByRole('region', { name: 'Next actions' })
