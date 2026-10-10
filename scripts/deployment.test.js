@@ -35,7 +35,7 @@ it.each([
     writeFileSync(join(root, 'gh'), '#!/bin/sh\necho "$*" >> "$CALL_LOG"\nprintf "%s\\n" "$CURRENT_SHA"\n', { mode: 0o700 })
     const result = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
       encoding: 'utf8',
-      env: { ...process.env, PATH: `${root}:${process.env.PATH}`, GITHUB_OUTPUT: output, CALL_LOG: calls,
+      env: { ...process.env, PATH: `${root}:${process.env.PATH}`, GITHUB_OUTPUT: output, GITHUB_STEP_SUMMARY: join(root, 'summary'), CALL_LOG: calls,
         CURRENT_SHA: current, EXPECTED_SHA: expected, EVENT_NAME: event, PR_NUMBER: '123', REPO: 'Paaaddy/apiario' },
     })
     expect(result.status, result.stderr).toBe(0)

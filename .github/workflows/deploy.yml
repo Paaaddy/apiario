@@ -49,6 +49,8 @@ jobs:
 
   cloudflare:
     needs: build
+    outputs:
+      deployed: ${{ steps.deployment.outcome == 'success' }}
     # Never deploy forks, Dependabot (secrets are unavailable), or manually
     # dispatched non-master refs. PR branch names are not shell inputs.
     if: >-
@@ -71,7 +73,28 @@ jobs:
         with:
           name: cloudflare-pages
           path: dist
+      - name: Check deployment freshness
+        id: freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ "$EVENT_NAME" = 'pull_request' ]; then
+            current_sha=$(gh api "repos/$REPO/pulls/$PR_NUMBER" --jq '.head.sha')
+          else
+            current_sha=$(gh api "repos/$REPO/branches/master" --jq '.commit.sha')
+          fi
+          if [ "$EXPECTED_SHA" = "$current_sha" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'current=false' >> "$GITHUB_OUTPUT"
+            echo 'Skipping superseded deployment.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Check Cloudflare credentials
+        if: steps.freshness.outputs.current == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -87,6 +110,7 @@ jobs:
             "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/apiario" \
             | jq -e '.success == true and .result.subdomain == "apiario.pages.dev" and .result.production_branch == "master"' > /dev/null
       - name: Deploy verified assets
+        if: steps.freshness.outputs.current == 'true'
         id: deployment
         uses: cloudflare/wrangler-action@v4
         with:
@@ -94,6 +118,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=apiario --branch=${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'master' }}
       - name: Report deployment URL
+        if: steps.freshness.outputs.current == 'true'
         env:
           DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
         run: echo "Cloudflare Pages deployment — $DEPLOYMENT_URL" >> "$GITHUB_STEP_SUMMARY"
@@ -102,10 +127,11 @@ jobs:
   # Publish the migration notice only once its destination is deployed.
   deploy:
     needs: [build, cloudflare]
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master' && needs.cloudflare.outputs.deployed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
+      contents: read
       pages: write
       id-token: write
     concurrency:
@@ -115,5 +141,20 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Check legacy deployment freshness
+        id: freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          current_sha=$(gh api "repos/$REPO/branches/master" --jq '.commit.sha')
+          if [ "$EXPECTED_SHA" = "$current_sha" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'current=false' >> "$GITHUB_OUTPUT"
+            echo 'Skipping superseded legacy deployment.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/deploy-pages@v5
+        if: steps.freshness.outputs.current == 'true'
         id: deployment

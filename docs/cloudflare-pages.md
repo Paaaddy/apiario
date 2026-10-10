@@ -36,6 +36,8 @@ Repository changes alone do not activate hosting; complete the account setup fir
 - The verified `dist` artifact is uploaded to Cloudflare by a separate job.
   That job does not check out PR source or install the app with credentials.
   Before upload, it validates the project hostname and production branch via API.
+  Within each deployment queue, it checks the current source SHA and skips
+  superseded production/PR runs. Legacy deployment rechecks `master` too.
 - Production uses `--branch=master`. Trusted PRs use `--branch=pr-<number>`;
   the deployment URL appears in the GitHub environment and job summary.
   Manual dispatch from a non-master ref verifies but does not deploy.
