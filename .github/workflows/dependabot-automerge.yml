@@ -9,7 +9,7 @@ on:
   workflow_run:
     # Must match the `name:` of deploy.yml exactly. Renaming that workflow
     # silently disables this one.
-    workflows: ["Deploy to GitHub Pages"]
+    workflows: ["Deploy to Cloudflare Pages"]
     types: [completed]
 
 permissions:

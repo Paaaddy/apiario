@@ -4,7 +4,7 @@ const checks = [
   ['lint'],
   ['test:run'],
   ['test:timezone'],
-  ['build', '--', '--base', '/apiario/'],
+  ['build', '--', '--base', '/'],
 ]
 let failed = false
 for (const args of checks) {

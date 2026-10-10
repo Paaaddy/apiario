@@ -21,7 +21,7 @@ Add `?debug` in dev mode (`npm run dev`) to open the debug panel (shows localSto
 
 ## What this is
 
-**Apiario** — an offline-first PWA for beginner beekeepers. No backend, no account, no network required after first load. All content is static JSON bundled into the app. Fonts are self-hosted via `@fontsource` and precached by Workbox, so the app works fully offline from the very first visit. Deployed at: https://paaaddy.github.io/apiario/
+**Apiario** — an offline-first PWA for beginner beekeepers. No backend, no account, no network required after first load. All content is static JSON bundled into the app. Fonts are self-hosted via `@fontsource` and precached by Workbox, so the app works fully offline from the very first visit. Target hosting: https://apiario.pages.dev/; legacy export site: https://paaaddy.github.io/apiario/. See `docs/cloudflare-pages.md` for activation.
 
 ## Architecture
 
@@ -114,11 +114,11 @@ Use `findByText` (not `getByText`) for post-interaction assertions to avoid Reac
 
 ## Deployment
 
-GitHub Actions deploys to GitHub Pages on every push to `master`. Build uses `--base /apiario/`. No staging environment — verify locally (lint + `npm run test:run` + build) before pushing.
+GitHub Actions targets Cloudflare Pages on every push to `master`, with trusted PR previews. The primary build uses `/`; the transitional GitHub Pages build retains `/apiario/` and a migration notice. Setup and go-live checks: `docs/cloudflare-pages.md`.
 
-CI gates: the `build` job runs `npm run test:run` then `npm run build -- --base /apiario/`, and is a required status check on pull requests targeting `master`. A pre-commit hook runs `npm run lint` + `npm run test:run` (gated via `git config core.hooksPath hooks`).
+CI gates: the `build` job runs `npm run verify`, and remains the required status check on pull requests targeting `master`. A pre-commit hook runs `npm run lint` + `npm run test:run` (gated via `git config core.hooksPath hooks`).
 
-Dependency automation: `dependabot-automerge.yml` squash-merges Dependabot patch and minor PRs reactively (on `workflow_run` after **Deploy to GitHub Pages** succeeds); major bumps and grouped updates containing a major are left open for review. `weekly-dependabot-audit.yml` runs Thursdays at 03:00 UTC, requests rebases on conflicting PRs, and files a labelled audit issue. See the Automation section of README.md.
+Dependency automation: `dependabot-automerge.yml` squash-merges Dependabot patch and minor PRs reactively (on `workflow_run` after **Deploy to Cloudflare Pages** succeeds); major bumps and grouped updates containing a major are left open for review. `weekly-dependabot-audit.yml` runs Thursdays at 03:00 UTC, requests rebases on conflicting PRs, and files a labelled audit issue. See the Automation section of README.md.
 
 ## Repo conventions / rules of thumb
 

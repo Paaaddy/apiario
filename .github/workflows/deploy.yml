@@ -1,101 +1,142 @@
-name: Deploy to GitHub Pages
+name: Deploy to Cloudflare Pages
 
 on:
   push:
     branches: [master]
-    paths:
-      - 'src/**'
-      - 'public/**'
-      - 'index.html'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'vite.config.*'
-      - 'tailwind.config.*'
-      - 'postcss.config.*'
-      - 'scripts/**'
-      - 'eslint.config.*'
-  # Run the `build` job on PRs targeting master too so branch
-  # protection's required check is satisfied. The `deploy` job below
-  # is gated on `github.event_name == 'push'`, so PR builds verify
-  # the artifact compiles without shipping anything to Pages.
   pull_request:
     branches: [master]
-    paths:
-      - 'src/**'
-      - 'public/**'
-      - 'index.html'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'vite.config.*'
-      - 'tailwind.config.*'
-      - 'postcss.config.*'
-      - 'scripts/**'
-      - 'eslint.config.*'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
+  # Keep the required PR check named build. Even fork and Dependabot PRs
+  # verify, without deployment credentials or write permissions.
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Scoped per ref rather than sharing the single global `pages` group with
-    # the deploy job below. Under one shared group, two open PRs (and any
-    # push to master) queued behind each other for no reason — a PR build
-    # ships nothing, so it has no bearing on the Pages environment.
-    # Superseded PR builds are cancelled; master builds are left to finish
-    # because a deploy depends on them.
     concurrency:
       group: build-${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v7
-
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
-          # Current active LTS. Node 20 is still supported but 22 is
-          # the version everything in this repo targets today.
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
-
-      # --no-audit --no-fund silences the audit summary and funding
-      # footer that were showing up as warnings in CI. --prefer-offline
-      # is harmless when the npm cache is cold and speeds up the step
-      # when it is warm.
       - run: npm ci --no-fund --prefer-offline
-
-      # Audit gate: fail on high/critical vulnerabilities in production deps.
-      # Runs after install but before tests so CI fails fast on supply-chain issues.
       - run: npm audit --omit=dev --audit-level=high
-
-      # Tests gate the deploy. Without this, a compromised dependency that
-      # builds cleanly would auto-merge via dependabot-automerge.yml and
-      # ship to every installed PWA via the autoUpdate service worker.
       - run: npm run verify
-
-      # Only ship the artifact when this run was triggered by a push to
-      # master (or a manual dispatch). PR builds stop at the build step
-      # — they verify the artifact compiles, nothing more.
-      - if: github.event_name != 'pull_request'
+      - uses: actions/upload-artifact@v6
+        with:
+          name: cloudflare-pages
+          path: dist
+          if-no-files-found: error
+          retention-days: 1
+      # Separate output prevents the legacy subpath/SW entering Cloudflare.
+      - if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+        run: npm run build -- --base /apiario/ --outDir dist-legacy
+        env:
+          VITE_LEGACY_HOST: 'true'
+      - if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
         uses: actions/upload-pages-artifact@v5
         with:
-          path: dist
+          path: dist-legacy
 
-  deploy:
+  cloudflare:
     needs: build
-    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      deployed: ${{ steps.deployment.outcome == 'success' }}
+    # Never deploy forks, Dependabot (secrets are unavailable), or manually
+    # dispatched non-master refs. PR branch names are not shell inputs.
+    if: >-
+      (github.event_name != 'pull_request' && github.ref == 'refs/heads/master') ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.user.login != 'dependabot[bot]' &&
+       github.actor != 'dependabot[bot]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: cloudflare-${{ github.event.pull_request.number || 'production' }}
+      cancel-in-progress: false
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'cloudflare-preview' || 'cloudflare-production' }}
+      url: ${{ steps.deployment.outputs.deployment-url }}
+    steps:
+      # No PR source checkout or project install in the credentialed job.
+      - uses: actions/download-artifact@v7
+        with:
+          name: cloudflare-pages
+          path: dist
+      - name: Check deployment freshness
+        id: freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ "$EVENT_NAME" = 'pull_request' ]; then
+            current_sha=$(gh api "repos/$REPO/pulls/$PR_NUMBER" --jq '.head.sha')
+          else
+            current_sha=$(gh api "repos/$REPO/branches/master" --jq '.commit.sha')
+          fi
+          if [ "$EXPECTED_SHA" = "$current_sha" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'current=false' >> "$GITHUB_OUTPUT"
+            echo 'Skipping superseded deployment.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Check Cloudflare credentials
+        if: steps.freshness.outputs.current == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo 'Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in GitHub Actions secrets.' >&2
+            exit 1
+          fi
+          # Refuse a suffixed hostname or incorrect production branch rather
+          # than publish a migration notice pointing at another project's app.
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/apiario" \
+            | jq -e '.success == true and .result.subdomain == "apiario.pages.dev" and .result.production_branch == "master"' > /dev/null
+      - name: Deploy verified assets
+        if: steps.freshness.outputs.current == 'true'
+        id: deployment
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=apiario --branch=${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'master' }}
+      - name: Report deployment URL
+        if: steps.freshness.outputs.current == 'true'
+        env:
+          DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
+        run: echo "Cloudflare Pages deployment — $DEPLOYMENT_URL" >> "$GITHUB_STEP_SUMMARY"
+
+  # Transitional only: do not remove until the owner approves retirement.
+  # Publish the migration notice only once its destination is deployed.
+  deploy:
+    needs: [build, cloudflare]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master' && needs.cloudflare.outputs.deployed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    # GitHub's official recommendation for the `pages` concurrency group: do
-    # NOT cancel in-progress deployments — cancelling one can leave the
-    # environment half-applied. Keep it false and let the queue drain. This
-    # now sits on the deploy job, which is what actually touches Pages,
-    # instead of on the whole workflow.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     concurrency:
       group: pages
       cancel-in-progress: false
@@ -103,5 +144,20 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Check legacy deployment freshness
+        id: freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          current_sha=$(gh api "repos/$REPO/branches/master" --jq '.commit.sha')
+          if [ "$EXPECTED_SHA" = "$current_sha" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'current=false' >> "$GITHUB_OUTPUT"
+            echo 'Skipping superseded legacy deployment.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/deploy-pages@v5
+        if: steps.freshness.outputs.current == 'true'
         id: deployment
