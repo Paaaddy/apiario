@@ -1,5 +1,6 @@
 import { hasValidBackupRecords } from './backupValidation'
 import { MAX_BACKUP_BYTES } from './backupLimits'
+import { hasStorageRecovery, subscribeStorageRecovery, recoverStorageTransaction, writeStorageTransaction } from './storageTransaction'
 
 const PROFILE_KEY = 'apiario-profile'
 const INSPECTIONS_KEY = 'apiario-inspections'
@@ -8,24 +9,8 @@ const LOG_KEY = 'apiario-log'
 const FORMAT = 'apiario-backup'
 const SCHEMA_VERSION = 2
 
-// Recovery belongs to the Backup boundary, not a particular mounted screen.
-// Retain it for this session only; localStorage is not a crash-safe transaction.
-let recoverySnapshot = null
-const recoveryListeners = new Set()
-
-export function hasBackupRecovery() {
-  return recoverySnapshot !== null
-}
-
-export function subscribeBackupRecovery(listener) {
-  recoveryListeners.add(listener)
-  return () => recoveryListeners.delete(listener)
-}
-
-function retainRecovery(snapshot) {
-  recoverySnapshot = snapshot
-  recoveryListeners.forEach((listener) => listener())
-}
+export const hasBackupRecovery = hasStorageRecovery
+export const subscribeBackupRecovery = subscribeStorageRecovery
 
 export const BACKUP_MESSAGE_KEYS = {
   exported: 'data_exported',
@@ -121,27 +106,12 @@ export function restoreBackup(raw) {
   const result = parseBackup(raw)
   if (!result.ok) return result
 
-  let snapshot
-  let prepared
-  try {
-    snapshot = [PROFILE_KEY, INSPECTIONS_KEY, LOG_KEY].map((key) => [key, localStorage.getItem(key)])
-    prepared = [result.data.profile, result.data.inspections, result.data.log].map((value) => JSON.stringify(value))
-  } catch {
-    return backupErrorOutcome('unexpected')
-  }
-
-  const written = []
-  try {
-    snapshot.forEach(([key, previous], index) => {
-      localStorage.setItem(key, prepared[index])
-      written.push([key, previous])
-    })
-  } catch {
-    written.reverse()
-    if (restoreSnapshot(written)) return backupErrorOutcome('unexpected')
-    retainRecovery(written)
-    return backupErrorOutcome('recovery')
-  }
+  const outcome = writeStorageTransaction([
+    [PROFILE_KEY, result.data.profile],
+    [INSPECTIONS_KEY, result.data.inspections],
+    [LOG_KEY, result.data.log],
+  ], 'backup')
+  if (!outcome.ok) return backupErrorOutcome(outcome.error === 'recovery' ? 'recovery' : 'unexpected')
 
   return {
     ok: true,
@@ -151,23 +121,9 @@ export function restoreBackup(raw) {
   }
 }
 
-function restoreSnapshot(snapshot) {
-  let failed = false
-  for (const [key, previous] of snapshot) {
-    try {
-      if (previous == null) localStorage.removeItem(key)
-      else localStorage.setItem(key, previous)
-    } catch {
-      failed = true
-    }
-  }
-  return !failed
-}
-
 export function recoverBackup() {
   if (!hasBackupRecovery()) return backupErrorOutcome('unexpected')
-  if (!restoreSnapshot(recoverySnapshot)) return backupErrorOutcome('recovery')
-  retainRecovery(null)
+  if (!recoverStorageTransaction().ok) return backupErrorOutcome('recovery')
   return { ok: true, messageKey: 'data_import_recovered', requiresReload: false }
 }
 

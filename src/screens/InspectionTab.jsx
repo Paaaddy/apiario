@@ -50,9 +50,9 @@ export default function InspectionTab({
 
   function handleSave(data) {
     if (editTarget) {
-      onUpdate(editTarget.id, data)
+      return onUpdate(editTarget.id, data)
     } else {
-      onAdd(data)
+      return onAdd(data)
     }
   }
 

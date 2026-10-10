@@ -7,6 +7,15 @@ export const strings = {
     en: 'Changes are not saved. Keep the app open and retry saving.',
   },
   storage_retry: { de: 'Speichern erneut versuchen', en: 'Retry saving' },
+  record_invalid: { de: 'Einige Angaben sind ungültig. Prüfe deine Eingaben; es wurde nichts geändert.', en: 'Some fields are invalid. Check your entries; nothing was changed.' },
+  storage_invalid: { de: 'Gespeicherte Daten sind beschädigt oder nicht sicher lesbar. Die Originaldaten bleiben unverändert; neue Änderungen können nicht gespeichert werden.', en: 'Stored data is damaged or cannot be read safely. The original data is unchanged; new changes cannot be saved.' },
+  storage_recovery: { de: 'Speichern und Rücksicherung fehlgeschlagen. Nicht neu laden; sichere zuerst deine bisherigen Einträge zurück.', en: 'Saving and recovery failed. Do not reload; recover your previous records first.' },
+  colony_delete_failed: { de: 'Das Volk wurde nicht entfernt. Volk und Kontrollverlauf bleiben sichtbar. Versuche das Entfernen erneut.', en: 'The colony was not removed. Its records and inspection history remain visible. Retry deletion.' },
+  colony_delete_retry: { de: 'Entfernen erneut versuchen', en: 'Retry deletion' },
+  insp_colony_full: { de: 'Dieses Volk hat bereits 500 Kontrollen. Die Kontrolle wurde nicht verschoben; es wurden keine Einträge entfernt.', en: 'This colony already has 500 inspections. The inspection was not moved; no records were removed.' },
+  update_deferred: { de: 'Update wartet: Speichere oder verwerfe offene Eingaben und sichere gegebenenfalls deine Einträge zurück.', en: 'Update waiting: save or discard open drafts and recover any pending records.' },
+  update_ready: { de: 'Update bereit. Du kannst die App jetzt neu laden.', en: 'Update ready. You can reload the app now.' },
+  update_apply: { de: 'Update laden', en: 'Apply update' },
   diagnose_unavailable: {
     de: 'Die Diagnosehinweise sind nicht verfügbar. Versuche einen Neustart oder wechsle zu einem anderen Tab.',
     en: 'Diagnosis guidance is unavailable. Try restarting or return to another tab.',
@@ -136,6 +145,11 @@ export const strings = {
 
   // Voice overlay
   voice_title:             { de: 'Freisprechmodus aktiv',    en: 'Hands-free mode active'    },
+  voice_starting: { de: 'Mikrofon wird gestartet…', en: 'Starting microphone...' },
+  voice_ended: { de: 'Das Mikrofon hört nicht mehr zu. Starte den Freisprechmodus bei Bedarf erneut.', en: 'The microphone stopped listening. Restart hands-free mode when ready.' },
+  voice_unsupported: { de: 'Dieser Browser unterstützt keine Spracherkennung. Du kannst die App weiterhin per Hand bedienen.', en: 'This browser does not support speech recognition. You can still use the app without voice.' },
+  voice_error: { de: 'Spracherkennung fehlgeschlagen. Du kannst sie erneut starten oder die App per Hand bedienen.', en: 'Speech recognition failed. You can restart it or use the app without voice.' },
+  voice_restart: { de: 'Freisprechmodus erneut starten', en: 'Restart hands-free' },
   voice_listening:         { de: 'Auf Befehle hörend…',      en: 'Listening for commands...' },
   voice_cmd_diagnose:      { de: '"diagnose"',                en: '"diagnose"'                },
   voice_cmd_diagnose_desc: { de: 'zum Diagnose-Tab wechseln', en: 'go to diagnose tab'       },

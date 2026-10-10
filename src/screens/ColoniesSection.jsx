@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import InspectionForm from '../components/InspectionForm'
+import { useDraftProtection } from '../hooks/useDraftProtection'
 
 function lastInspectedLabel(status, t) {
   if (!status || status.kind === 'never') return t(s.insp_never)
@@ -21,6 +22,8 @@ export default function ColoniesSection({
   onSelectColony,
 }) {
   const { t } = useLanguage()
+  const { markDraft: markAddDraft, clearDraft: clearAddDraft } = useDraftProtection()
+  const { markDraft: markEditDraft, clearDraft: clearEditDraft } = useDraftProtection()
   const records = colonyRecords ?? colonies.map((colony) => ({
     colony,
     lastInspected: { kind: 'never' },
@@ -42,15 +45,18 @@ export default function ColoniesSection({
     setDraftName('')
     setDraftNotes('')
     setIsAdding(false)
+    clearAddDraft()
   }
 
   function cancelAdd() {
+    clearAddDraft()
     setDraftName('')
     setDraftNotes('')
     setIsAdding(false)
   }
 
   function beginEdit(colony) {
+    clearEditDraft()
     setEditingId(colony.id)
     setEditName(colony.name)
     setEditNotes(colony.notes ?? '')
@@ -61,9 +67,11 @@ export default function ColoniesSection({
     if (!name) return
     onUpdate?.(editingId, { name, notes: editNotes.trim() })
     setEditingId(null)
+    clearEditDraft()
   }
 
   function cancelEdit() {
+    clearEditDraft()
     setEditingId(null)
     setEditName('')
     setEditNotes('')
@@ -95,6 +103,7 @@ export default function ColoniesSection({
           return editingId === colony.id ? (
             <li
               key={colony.id}
+              onChangeCapture={markEditDraft}
               className="bg-white border border-honey rounded-xl p-3 shadow-sm"
             >
               <input
@@ -198,7 +207,7 @@ export default function ColoniesSection({
       </ul>
 
       {isAdding ? (
-        <div className="bg-white border border-honey rounded-xl p-3 shadow-sm">
+        <div onChangeCapture={markAddDraft} className="bg-white border border-honey rounded-xl p-3 shadow-sm">
           <input
             type="text"
             maxLength={100}
@@ -250,8 +259,7 @@ export default function ColoniesSection({
           colonies={inspectTarget ? [inspectTarget] : colonyList}
           initial={inspectTarget ? { colonyId: inspectColonyId } : null}
           onSave={(data) => {
-            onAddInspection?.(data)
-            setInspectColonyId(null)
+            return onAddInspection?.(data)
           }}
           onClose={() => setInspectColonyId(null)}
         />

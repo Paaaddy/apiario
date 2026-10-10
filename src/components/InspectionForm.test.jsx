@@ -1,9 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent, renderHook } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { LanguageProvider } from '../context/LanguageContext'
 import { ThemeProvider } from '../context/ThemeContext'
 import InspectionForm from './InspectionForm'
+import { useInspections } from '../hooks/useInspections'
+
+function StoredInspectionForm({ onClose }) {
+  const { addInspection } = useInspections()
+  return <InspectionForm colonies={colonies} onSave={addInspection} onClose={onClose} />
+}
 
 beforeEach(() => { localStorage.setItem('apiario-locale', 'en') })
 afterEach(() => { localStorage.clear() })
@@ -15,6 +21,37 @@ function wrap(ui) {
 }
 
 describe('InspectionForm', () => {
+  it.each(['en', 'de'])('rejects negative harvest without losing the draft and saves a reloadable correction in %s', async (locale) => {
+    localStorage.setItem('apiario-locale', locale)
+    const onClose = vi.fn()
+    const form = wrap(<StoredInspectionForm onClose={onClose} />)
+    fireEvent.click(screen.getByRole('button', { name: locale === 'en' ? '👑 Seen' : '👑 Gesehen' }))
+    fireEvent.change(screen.getByLabelText(locale === 'en' ? 'Honey harvest' : 'Honigernte'), { target: { value: '-1' } })
+    fireEvent.click(screen.getByRole('button', { name: locale === 'en' ? 'Save' : 'Speichern', exact: true }))
+    expect(await screen.findByRole('alert')).toHaveTextContent(locale === 'en' ? 'Some fields are invalid' : 'Einige Angaben sind ungültig')
+    expect(onClose).not.toHaveBeenCalled()
+    expect(screen.getByDisplayValue('-1')).toBeInTheDocument()
+    expect(localStorage.getItem('apiario-inspections')).toBeNull()
+    fireEvent.change(screen.getByLabelText(locale === 'en' ? 'Honey harvest' : 'Honigernte'), { target: { value: '2.5' } })
+    fireEvent.click(screen.getByRole('button', { name: locale === 'en' ? 'Save' : 'Speichern', exact: true }))
+    expect(onClose).toHaveBeenCalledOnce()
+    form.unmount()
+    const loaded = renderHook(() => useInspections())
+    expect(loaded.result.current.persistenceError).toBeNull()
+    expect(loaded.result.current.inspections[0].harvest).toBe(2.5)
+  })
+
+  it('keeps the form and draft open when the destination Colony is full', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    wrap(<InspectionForm colonies={colonies} initial={{ id: 'i', colonyId: 'c1', queenStatus: 'seen', notes: 'Keep this draft' }}
+      onSave={() => ({ ok: false, messageKey: 'insp_colony_full' })} onClose={onClose} />)
+    await user.click(screen.getByRole('button', { name: /^Save$/ }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('This colony already has 500 inspections')
+    expect(onClose).not.toHaveBeenCalled()
+    expect(screen.getByDisplayValue('Keep this draft')).toBeInTheDocument()
+  })
+
   it('renders the add title', () => {
     wrap(<InspectionForm colonies={colonies} onSave={() => {}} onClose={() => {}} />)
     expect(screen.getByText(/new inspection/i)).toBeInTheDocument()

@@ -5,6 +5,7 @@ import { strings as s } from '../i18n/strings'
 import InspectionScaleInput from './InspectionScaleInput'
 import { themeColors } from '../utils/themeTokens'
 import { localDateString } from '../utils/inspections'
+import { useDraftProtection } from '../hooks/useDraftProtection'
 
 const QUEEN_OPTIONS = [
   { value: 'seen',     emoji: '👑', key: 'insp_queen_seen'     },
@@ -37,6 +38,8 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
   const { t } = useLanguage()
   const { theme } = useTheme()
   const dialogRef = useRef(null)
+  const { markDraft, clearDraft } = useDraftProtection()
+  const [saveError, setSaveError] = useState(null)
 
   useEffect(() => {
     const el = dialogRef.current
@@ -88,7 +91,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
 
   function handleSave() {
     if (!canSave) return
-    onSave({
+    const outcome = onSave({
       colonyId,
       date,
       queenStatus,
@@ -102,11 +105,20 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
       harvest: harvest.trim() ? Number(harvest) : null,
       notes: notes.trim() || null,
     })
+    // Failed durable writes remain ordinary drafts managed by persistence;
+    // rejected moves must keep this form open because no mutation was applied.
+    if (outcome?.ok === false && (outcome.error === 'validation' || outcome.messageKey === 'insp_colony_full')) {
+      setSaveError(outcome.messageKey)
+      return
+    }
+    clearDraft()
     onClose()
   }
 
   return (
-    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="insp-form-title" style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', flexDirection: 'column', background: bg }}>
+    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="insp-form-title" onChangeCapture={markDraft} onClickCapture={(event) => {
+      if (event.target.closest('button')) markDraft()
+    }} style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', flexDirection: 'column', background: bg }}>
       {/* sticky header */}
       <div style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: `1px solid ${border}`, position: 'sticky', top: 0, background: bg, zIndex: 1 }}>
         <h2 id="insp-form-title" style={{ margin: 0, fontSize: 18, fontWeight: 700, color: ink, fontFamily: headFont }}>
@@ -319,6 +331,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
 
       {/* sticky save bar */}
       <div style={{ padding: '12px 16px', borderTop: `1px solid ${border}`, background: bg, position: 'sticky', bottom: 0 }}>
+        {saveError && <p role="alert" className="mb-2 text-sm font-semibold" style={{ color: ink }}>{t(s[saveError])}</p>}
         <button
           type="button"
           onClick={handleSave}

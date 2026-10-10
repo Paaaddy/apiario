@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { OnboardingProvider, useOnboarding } from '@onboardjs/react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useBackupRestoreController } from '../hooks/useBackupRestoreController'
+import { useDraftProtection } from '../hooks/useDraftProtection'
 import { strings as s } from '../i18n/strings'
 import LanguageToggle from '../components/LanguageToggle'
 import HexWatermark from '../components/HexWatermark'
@@ -343,6 +344,7 @@ function buildSteps(onAnswer, onFinish) {
 
 export default function Onboarding({ onComplete }) {
   const answersRef = useRef({})
+  const { markDraft, clearDraft } = useDraftProtection()
 
   // Stable ref so the steps array (created once) can call the latest onComplete.
   // Kept fresh in an effect (not during render) per `react-hooks/refs`; the
@@ -353,9 +355,13 @@ export default function Onboarding({ onComplete }) {
   }, [onComplete])
 
   const onAnswer = (key, value) => {
+    markDraft()
     answersRef.current = { ...answersRef.current, [key]: value }
   }
-  const onFinish = () => onCompleteRef.current(answersRef.current)
+  const onFinish = () => {
+    onCompleteRef.current(answersRef.current)
+    clearDraft()
+  }
 
   // Created once via lazy initializer so the steps array reference stays stable
   // across renders (OnboardingProvider re-initialises if the reference changes).
