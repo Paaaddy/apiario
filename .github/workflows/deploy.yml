@@ -49,6 +49,9 @@ jobs:
 
   cloudflare:
     needs: build
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       deployed: ${{ steps.deployment.outcome == 'success' }}
     # Never deploy forks, Dependabot (secrets are unavailable), or manually
