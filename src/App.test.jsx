@@ -43,6 +43,7 @@ describe('Hosting migration', () => {
     const savedProfile = localStorage.getItem('apiario-profile')
     render(<App />)
     const notice = await screen.findByRole('region', { name: 'Moving to Cloudflare Pages' })
+    fireEvent.click(within(notice).getByText('Moving to Cloudflare Pages'))
     expect(notice).toHaveTextContent('My Hive → Profile → Data & backup')
     expect(notice).toHaveTextContent('do not move automatically')
     expect(within(notice).getByRole('link')).toHaveAttribute('href', 'https://apiario.pages.dev/')
@@ -50,7 +51,7 @@ describe('Hosting migration', () => {
     expect(await screen.findByRole('heading', { name: /Apple/ })).toBeInTheDocument()
     expect(localStorage.getItem('apiario-profile')).toBe(savedProfile)
     fireEvent.click(screen.getByRole('button', { name: 'DE', exact: true }))
-    expect(await screen.findByRole('region', { name: 'Umzug zu Cloudflare Pages' })).toHaveTextContent('Meine Bienen → Profil → Daten & Backup')
+    expect(await screen.findByRole('region', { name: 'Umzug zu Cloudflare Pages' })).toHaveTextContent('Mein Stock → Profil → Datensicherung')
   })
 
   it('does not show the legacy notice on the new deployment', async () => {

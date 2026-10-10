@@ -2,7 +2,9 @@
 
 A progressive web app for beginner beekeepers. Delivers seasonal task guidance, a guided hive diagnosis wizard, an inspection journal, and a curated knowledge library — no internet required after the first load.
 
-**Live:** https://paaaddy.github.io/apiario/
+**Target production:** https://apiario.pages.dev/ (activation requires the [Cloudflare setup](docs/cloudflare-pages.md)).
+
+**Legacy app / data export:** https://paaaddy.github.io/apiario/
 
 ---
 
@@ -37,7 +39,7 @@ unsaved-change retry, and failed-restore recovery.
 | State | React context + localStorage |
 | Voice | Web Speech API |
 | Tests | Vitest + Testing Library |
-| Deploy | GitHub Actions → GitHub Pages |
+| Deploy | GitHub Actions → Cloudflare Pages (GitHub Pages retained during migration) |
 
 ---
 
@@ -79,7 +81,7 @@ Four GitHub Actions workflows run this repo:
 
 | Workflow | Trigger | What it does |
 |---|---|---|
-| `deploy.yml` | push / PR to `master` | Installs, audits production deps, runs tests, builds, deploys to Pages (push only) |
+| `deploy.yml` | push / PR to `master` | Verifies, deploys production / trusted PR previews to Cloudflare, retains legacy GitHub Pages |
 | `release.yml` | push to `master` | Release Please — maintains the release PR, CHANGELOG, and tags |
 | `dependabot-automerge.yml` | `workflow_run` after deploy | Squash-merges Dependabot patch/minor PRs once CI is green |
 | `weekly-dependabot-audit.yml` | Thursdays 03:00 UTC + manual | Nudges conflicting PRs to rebase and files an audit issue |
@@ -87,7 +89,7 @@ Four GitHub Actions workflows run this repo:
 ### Dependabot auto-merge
 
 Dependabot opens PRs weekly on Monday (`.github/dependabot.yml`). Auto-merge is
-*reactive*: it triggers on `workflow_run` when **Deploy to GitHub Pages**
+*reactive*: it triggers on `workflow_run` when **Deploy to Cloudflare Pages**
 completes, and only acts when that run succeeded, was for a `pull_request`, and
 has an associated PR.
 
