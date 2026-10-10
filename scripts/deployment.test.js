@@ -51,6 +51,7 @@ it('deploys verified root assets to Cloudflare with a consistent automation name
   expect(automerge).toContain('workflows: ["Deploy to Cloudflare Pages"]')
   expect(workflow).toContain('npm run verify')
   expect(workflow).toContain('needs: build')
+  expect(workflow).toContain('pull-requests: read')
   expect(workflow).toContain('pages deploy dist --project-name=apiario')
   expect(workflow).toContain('github.event.pull_request.head.repo.full_name == github.repository')
   expect(workflow).not.toContain('pull_request_target:')
