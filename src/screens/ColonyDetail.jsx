@@ -69,8 +69,7 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
   const border = c.border
 
   function handleSaveEdit(data) {
-    onUpdateInspection?.(editTarget.id, data)
-    setEditTarget(null)
+    return onUpdateInspection?.(editTarget.id, data)
   }
 
   const colonyRecord = useMemo(

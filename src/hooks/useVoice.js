@@ -13,13 +13,20 @@ export function useVoice() {
   const recognitionRef = useRef(null)
   const isSupported = typeof speechSynthesis !== 'undefined'
 
+  const stopListening = useCallback(() => {
+    const recognition = recognitionRef.current
+    recognitionRef.current = null
+    if (!recognition) return
+    recognition.onstart = recognition.onend = recognition.onerror = recognition.onresult = null
+    try { recognition.stop() } catch { /* Already stopped by the browser. */ }
+  }, [])
+
   useEffect(() => {
     return () => {
       if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel()
-      recognitionRef.current?.stop()
-      recognitionRef.current = null
+      stopListening()
     }
-  }, [])
+  }, [stopListening])
 
   const speak = useCallback((text, opts = {}) => {
     if (!isSupported) return
@@ -35,28 +42,40 @@ export function useVoice() {
   }, [isSupported])
 
   const startListening = useCallback((onCommand, onError, opts = {}) => {
+    stopListening()
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition
-    if (!Recognition) return
-    const recognition = new Recognition()
-    recognition.continuous = true
-    recognition.lang = opts.lang ?? 'en-GB'
-    recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
-      onCommand(transcript)
+    if (!Recognition) {
+      onError?.('unsupported')
+      return
     }
-    recognition.onerror = (event) => {
-      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-        if (onError) onError(event.error)
+    try {
+      const recognition = new Recognition()
+      recognitionRef.current = recognition
+      const isCurrent = () => recognitionRef.current === recognition
+      recognition.continuous = true
+      recognition.lang = opts.lang ?? 'en-GB'
+      recognition.onstart = () => { if (isCurrent()) opts.onStart?.() }
+      recognition.onend = () => {
+        if (!isCurrent()) return
+        recognitionRef.current = null
+        opts.onEnd?.()
       }
+      recognition.onresult = (event) => {
+        if (!isCurrent()) return
+        const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim()
+        onCommand(transcript)
+      }
+      recognition.onerror = (event) => {
+        if (!isCurrent()) return
+        stopListening()
+        onError?.(event.error)
+      }
+      recognition.start()
+    } catch {
+      stopListening()
+      onError?.('start-failed')
     }
-    recognition.start()
-    recognitionRef.current = recognition
-  }, [])
-
-  const stopListening = useCallback(() => {
-    recognitionRef.current?.stop()
-    recognitionRef.current = null
-  }, [])
+  }, [stopListening])
 
   return { speak, stopSpeaking, startListening, stopListening, isSupported }
 }

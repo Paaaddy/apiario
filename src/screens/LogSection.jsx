@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import { formatShortDate } from '../utils/format'
+import { useDraftProtection } from '../hooks/useDraftProtection'
 
 function formatMonthHeading(isoDate, locale) {
   if (!isoDate) return ''
@@ -29,6 +30,7 @@ function groupByMonth(log) {
 
 export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
   const { t, locale } = useLanguage()
+  const { markDraft, clearDraft } = useDraftProtection()
   const [showForm, setShowForm] = useState(false)
   const [formText, setFormText] = useState('')
   const [formDate, setFormDate] = useState(new Date().toISOString().split('T')[0])
@@ -39,6 +41,14 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
     setFormText('')
     setFormDate(new Date().toISOString().split('T')[0])
     setShowForm(false)
+    clearDraft()
+  }
+
+  function cancelForm() {
+    setShowForm(false)
+    setFormText('')
+    setFormDate(new Date().toISOString().split('T')[0])
+    clearDraft()
   }
 
   const grouped = useMemo(() => groupByMonth(log), [log])
@@ -48,7 +58,7 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-serif text-base font-semibold text-brown">{t(s.log_title)}</h2>
         <button
-          onClick={() => setShowForm((v) => !v)}
+          onClick={() => { if (showForm) cancelForm(); else setShowForm(true) }}
           className="text-xs font-medium text-brown-mid border border-amber-200 px-3 py-1.5 rounded-full bg-white active:bg-amber-50 transition-colors"
         >
           {t(s.log_custom_btn)}
@@ -56,7 +66,7 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
       </div>
 
       {showForm && (
-        <div className="mb-4 bg-white rounded-xl p-4 border border-amber-100 shadow-sm flex flex-col gap-3">
+        <div onChangeCapture={markDraft} className="mb-4 bg-white rounded-xl p-4 border border-amber-100 shadow-sm flex flex-col gap-3">
           <textarea
             className="w-full text-sm text-brown border border-amber-100 rounded-lg px-3 py-2 resize-none outline-none focus:border-honey"
             rows={2}
@@ -82,7 +92,7 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
               {t(s.log_save)}
             </button>
             <button
-              onClick={() => setShowForm(false)}
+              onClick={cancelForm}
               className="flex-1 bg-amber-50 text-brown-mid text-sm font-medium py-2 rounded-lg active:bg-amber-100 transition-colors"
             >
               {t(s.log_cancel)}

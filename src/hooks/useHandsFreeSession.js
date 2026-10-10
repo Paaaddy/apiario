@@ -8,6 +8,9 @@ function isPermissionBlocked(error) {
 
 export function useHandsFreeSession(locale, onNavigate) {
   const [isActive, setIsActive] = useState(false)
+  const [isStarting, setIsStarting] = useState(false)
+  const [feedback, setFeedback] = useState(null)
+  const runningRef = useRef(false)
   const [lastCommand, setLastCommand] = useState('')
   const [permissionBlocked, setPermissionBlocked] = useState(false)
   const { speak, stopSpeaking, startListening, stopListening } = useVoice()
@@ -16,7 +19,10 @@ export function useHandsFreeSession(locale, onNavigate) {
   useEffect(() => { onNavigateRef.current = onNavigate }, [onNavigate])
 
   const stop = useCallback(() => {
+    runningRef.current = false
     setIsActive(false)
+    setIsStarting(false)
+    setFeedback(null)
     setLastCommand('')
     stopSpeaking()
     stopListening()
@@ -26,10 +32,12 @@ export function useHandsFreeSession(locale, onNavigate) {
   useEffect(() => { stopRef.current = stop }, [stop])
 
   const start = useCallback(() => {
-    if (isActive) return
+    if (runningRef.current) return
+    runningRef.current = true
     const config = VOICE_CONFIG[locale] ?? VOICE_CONFIG.en
-    setIsActive(true)
-    speak(config.greeting, { lang: config.lang })
+    setIsStarting(true)
+    setFeedback(null)
+    setPermissionBlocked(false)
     startListening(
       (transcript) => {
         setLastCommand(transcript)
@@ -45,15 +53,30 @@ export function useHandsFreeSession(locale, onNavigate) {
         stopRef.current()
         if (isPermissionBlocked(error)) {
           setPermissionBlocked(true)
+        } else {
+          setFeedback(error === 'unsupported' ? 'unsupported' : 'error')
         }
       },
-      { lang: config.lang }
+      {
+        lang: config.lang,
+        onStart: () => {
+          if (!runningRef.current) return
+          setIsStarting(false)
+          setIsActive(true)
+          speak(config.greeting, { lang: config.lang })
+        },
+        onEnd: () => {
+          if (!runningRef.current) return
+          stopRef.current()
+          setFeedback('ended')
+        },
+      }
     )
-  }, [isActive, locale, speak, startListening])
+  }, [locale, speak, startListening])
 
   const retryPermission = useCallback(() => {
     setPermissionBlocked(false)
-    setTimeout(() => start(), 0)
+    start()
   }, [start])
 
   const dismissPermission = useCallback(() => {
@@ -62,6 +85,9 @@ export function useHandsFreeSession(locale, onNavigate) {
 
   return {
     isActive,
+    isStarting,
+    feedback,
+    dismissFeedback: () => setFeedback(null),
     lastCommand,
     permissionBlocked,
     start,
