@@ -88,6 +88,14 @@ export const strings = {
   exp_1:            { de: '1–3 Saisons',                      en: '1–3 seasons'                   },
   exp_2:            { de: 'Erfahren (4+ Jahre)',              en: 'Experienced (4+ years)'        },
 
+  // About the project
+  about_title: { de: 'Über Apiario', en: 'About Apiario' },
+  about_body: {
+    de: 'Apiario ist ein kleines, persönliches Projekt für Imkerei-Aufzeichnungen. Für mich selbst entwickelt und mit Freunden geteilt.',
+    en: 'Apiario is a small, personal project for keeping beekeeping records. Built for myself and shared with friends.',
+  },
+  about_creator: { de: 'Entwickelt von @Paaaddy', en: 'Created by @Paaaddy' },
+
   // Data backup / export-import
   data_title:       { de: 'Datensicherung',                          en: 'Data & backup'                  },
   data_hint:        { de: 'Exportiere deine Daten als Backup oder stelle sie aus einer Datei wieder her.', en: 'Export your data as a backup or restore it from a file.' },

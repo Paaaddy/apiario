@@ -13,6 +13,7 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance, 
 - **Inspect tab** — standalone inspection journal across all colonies: queen status, varroa count, brood pattern, honey stores, queen introduction year, and harvest (kg)
 - **Learn tab** — bilingual knowledge library backed by verified sources (varroa thresholds, AFB ropiness test, honey moisture, and more), with search and difficulty levels
 - **My Hive tab** — four sub-tabs: Colonies (named hives with add/edit/delete; tap a hive to drill into a detail view with trend sparklines and total harvest), Inspections, Log (activity history + custom entries), and Profile
+- **About Apiario** — static German/English project description and GitHub creator credit in My Hive → Profile, below Data & backup
 - **Data & backup** — export your data as a JSON file or restore it from one; privacy-first onboarding step explains that all data lives on-device only (no accounts, no cloud)
 - **Three visual themes** — Honeycomb (default), Field Notebook, and Seasonal Light; switch in My Hive → Profile, persisted across sessions
 - **DE / EN toggle** — full German and English support, switch instantly in any screen
