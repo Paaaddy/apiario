@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.6.0](https://github.com/Paaaddy/apiario/compare/v2.5.2...v2.6.0) (2026-10-10)
+
+
+### Features
+
+* migrate hosting to Cloudflare Pages ([#139](https://github.com/Paaaddy/apiario/issues/139)) ([48406ef](https://github.com/Paaaddy/apiario/commit/48406efd82f8b9dc01c7e65e49f64fcdf14a8912))
+
+
+### Bug Fixes
+
+* deepen persistence and browser lifetime safety ([#136](https://github.com/Paaaddy/apiario/issues/136)) ([1dfe850](https://github.com/Paaaddy/apiario/commit/1dfe850fb48685feacffdc3a21d7e1d150dfbecf))
+
 ## [2.5.2](https://github.com/Paaaddy/apiario/compare/v2.5.1...v2.5.2) (2026-10-08)
 
 
