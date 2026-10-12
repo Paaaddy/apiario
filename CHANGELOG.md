@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.6.0](https://github.com/Paaaddy/apiario/compare/v2.5.2...v2.6.0) (2026-10-11)
+
+
+### Features
+
+* add bilingual About Apiario section ([#140](https://github.com/Paaaddy/apiario/issues/140)) ([f7a9bc1](https://github.com/Paaaddy/apiario/commit/f7a9bc1e72af63f6d06f61493c37c8bfabd65ac0))
+* migrate hosting to Cloudflare Pages ([#139](https://github.com/Paaaddy/apiario/issues/139)) ([48406ef](https://github.com/Paaaddy/apiario/commit/48406efd82f8b9dc01c7e65e49f64fcdf14a8912))
+
+
+### Bug Fixes
+
+* deepen persistence and browser lifetime safety ([#136](https://github.com/Paaaddy/apiario/issues/136)) ([1dfe850](https://github.com/Paaaddy/apiario/commit/1dfe850fb48685feacffdc3a21d7e1d150dfbecf))
+
 ## [2.5.2](https://github.com/Paaaddy/apiario/compare/v2.5.1...v2.5.2) (2026-10-08)
 
 

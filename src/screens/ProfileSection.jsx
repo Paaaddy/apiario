@@ -212,6 +212,17 @@ export default function ProfileSection({ profile, onUpdate }) {
         theme={theme}
       />
       <DataPrivacyCollapse theme={theme} />
+      <section aria-labelledby="about-apiario-title" style={{ marginBottom: 24 }}>
+        <h3 id="about-apiario-title" style={{ fontFamily: 'var(--theme-font-head, serif)', fontSize: 12, fontWeight: 600, color: 'var(--theme-ink-mid)', textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 8px' }}>
+          {t(s.about_title)}
+        </h3>
+        <p style={{ margin: '0 0 8px', fontSize: 12.5, color: 'var(--theme-ink-mid)', lineHeight: 1.4 }}>
+          {t(s.about_body)}
+        </p>
+        <a href="https://github.com/Paaaddy" target="_blank" rel="noopener noreferrer" style={{ fontSize: 12.5, color: 'var(--theme-ink)', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+          {t(s.about_creator)}
+        </a>
+      </section>
     </div>
   )
 }

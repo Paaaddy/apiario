@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-legacy/
 .superpowers/
 # Keep the personal/local settings layer out of version control, but allow
 # the shared .claude/settings.json (safe permission allow-list) to be committed.
