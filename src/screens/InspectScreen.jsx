@@ -76,7 +76,7 @@ export default function InspectScreen({
   // Theme A: Honeycomb
   return (
     <div className="relative flex flex-col min-h-full">
-      <div className="bg-honey px-6 pt-10 pb-4 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-10 pb-4 sticky top-0 z-20 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <h1 className="font-serif text-2xl font-bold text-brown">📋 {t(s.nav_inspect)}</h1>

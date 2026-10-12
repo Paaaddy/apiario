@@ -66,9 +66,9 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
       </div>
 
       {showForm && (
-        <div onChangeCapture={markDraft} className="mb-4 bg-white rounded-xl p-4 border border-amber-100 shadow-sm flex flex-col gap-3">
+        <div onChangeCapture={markDraft} className="mb-4 bg-white rounded-xl p-4 border border-amber-100 shadow-xs flex flex-col gap-3">
           <textarea
-            className="w-full text-sm text-brown border border-amber-100 rounded-lg px-3 py-2 resize-none outline-none focus:border-honey"
+            className="w-full text-sm text-brown border border-amber-100 rounded-lg px-3 py-2 resize-none outline-hidden focus:border-honey"
             rows={2}
             maxLength={500}
             placeholder={t(s.log_placeholder)}
@@ -79,7 +79,7 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
             <label className="text-xs text-brown-mid shrink-0">{t(s.log_date_label)}</label>
             <input
               type="date"
-              className="text-sm text-brown border border-amber-100 rounded-lg px-2 py-1 outline-none focus:border-honey flex-1"
+              className="text-sm text-brown border border-amber-100 rounded-lg px-2 py-1 outline-hidden focus:border-honey flex-1"
               value={formDate}
               onChange={(e) => setFormDate(e.target.value)}
             />
@@ -114,7 +114,7 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
                 {entries.map((entry) => (
                   <div
                     key={entry.id}
-                    className={`relative bg-white rounded-xl px-4 py-3 border-l-4 shadow-sm ${
+                    className={`relative bg-white rounded-xl px-4 py-3 border-l-4 shadow-xs ${
                       entry.type === 'task' ? 'border-green-400' : 'border-brown-mid'
                     }`}
                   >

@@ -50,7 +50,7 @@ export default function DebugPanel() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-24 left-2 z-50 bg-gray-900 text-green-400 text-xs font-mono px-2 py-1 rounded opacity-70"
+        className="fixed bottom-24 left-2 z-50 bg-gray-900 text-green-400 text-xs font-mono px-2 py-1 rounded-sm opacity-70"
       >
         debug
       </button>
@@ -71,38 +71,38 @@ export default function DebugPanel() {
         <div className="flex flex-wrap gap-1.5">
           <button
             onClick={() => reloadAfter([KEYS.profile])}
-            className="bg-red-800 text-red-200 px-2 py-1 rounded text-xs"
+            className="bg-red-800 text-red-200 px-2 py-1 rounded-sm text-xs"
           >
             Reset onboarding
           </button>
           <button
             onClick={() => reloadAfter([KEYS.log])}
-            className="bg-yellow-800 text-yellow-200 px-2 py-1 rounded text-xs"
+            className="bg-yellow-800 text-yellow-200 px-2 py-1 rounded-sm text-xs"
           >
             Clear log
           </button>
           <button
             onClick={() => reloadAfter(Object.values(KEYS))}
-            className="bg-red-900 text-red-300 px-2 py-1 rounded text-xs font-bold"
+            className="bg-red-900 text-red-300 px-2 py-1 rounded-sm text-xs font-bold"
           >
             Reset all
           </button>
           <button
             onClick={() => setData(readAll())}
-            className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs"
+            className="bg-gray-700 text-gray-300 px-2 py-1 rounded-sm text-xs"
           >
             Refresh
           </button>
           <button
             onClick={testVibration}
-            className="bg-purple-800 text-purple-200 px-2 py-1 rounded text-xs"
+            className="bg-purple-800 text-purple-200 px-2 py-1 rounded-sm text-xs"
           >
             Test vibration
           </button>
         </div>
 
         {vibrateResult && (
-          <div className="text-[10px] leading-relaxed bg-gray-800 rounded p-2 text-gray-200">
+          <div className="text-[10px] leading-relaxed bg-gray-800 rounded-sm p-2 text-gray-200">
             <p>
               <span className="text-gray-400">supported:</span>{' '}
               <span className={vibrateResult.supported ? 'text-green-300' : 'text-red-300'}>

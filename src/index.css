@@ -1,71 +1,138 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* ── Theme A: Honeycomb (default) ─── */
-:root, [data-theme="a"] {
-  --theme-bg: #fffbeb;
-  --theme-header-bg: #f5a623;
-  --theme-ink: #3d1f00;
-  --theme-ink-mid: #92400e;
-  --theme-ink-light: #7a3f00;
-  --theme-accent: #f5a623;
-  --theme-accent-dark: #e8890c;
-  --theme-rule: #f0e4c2;
-  --theme-card-bg: #ffffff;
-  --theme-nav-bg: #ffffff;
-  --theme-nav-border: #fde68a;
-  --theme-font-head: "Playfair Display", Georgia, serif;
-  --theme-font-mono: system-ui, sans-serif;
-  --theme-body-bg: #fffbeb;
+@theme {
+  --color-honey: #f5a623;
+  --color-honey-dark: #e8890c;
+  --color-honey-light: #f7c948;
+
+  --color-brown: #3d1f00;
+  --color-brown-mid: #92400e;
+  --color-brown-light: #7a3f00;
+
+  --color-cream: #fffbeb;
+  --color-cream-dark: #fff8e7;
+
+  --color-paper: #f4ecd8;
+  --color-paper-dark: #e9dcb8;
+
+  --color-ink: #2b1d0e;
+  --color-ink-mid: #6b5838;
+  --color-ink-light: #98876b;
+
+  --color-sage: #6f7f56;
+  --color-sage-bg: #dde2c7;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: Inter, system-ui, sans-serif;
+
+  --animate-bob: bob 2s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 1.5s ease-in-out infinite;
+
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 12px rgba(245, 166, 35, 0);
+    }
+  }
 }
 
-/* ── Theme B: Field Notebook ─── */
-[data-theme="b"] {
-  --theme-bg: #f4ecd8;
-  --theme-header-bg: #f4ecd8;
-  --theme-ink: #2b1d0e;
-  --theme-ink-mid: #6b5838;
-  --theme-ink-light: #98876b;
-  --theme-accent: #c98a1e;
-  --theme-accent-dark: #a57018;
-  --theme-rule: #c8b890;
-  --theme-card-bg: transparent;
-  --theme-nav-bg: #f4ecd8;
-  --theme-nav-border: #c8b890;
-  --theme-font-head: "Fraunces", "Playfair Display", Georgia, serif;
-  --theme-font-mono: "JetBrains Mono", "Courier New", monospace;
-  --theme-body-bg: #f4ecd8;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-/* ── Theme C: Seasonal Light ─── */
-[data-theme="c"] {
-  --theme-bg: #faf6ee;
-  --theme-header-bg: transparent;
-  --theme-ink: #1c1410;
-  --theme-ink-mid: #6b5843;
-  --theme-ink-light: #9b8b7a;
-  --theme-accent: #f5a623;
-  --theme-accent-dark: #d4800a;
-  --theme-rule: rgba(28,20,16,0.1);
-  --theme-card-bg: rgba(255,251,240,0.72);
-  --theme-nav-bg: transparent;
-  --theme-nav-border: transparent;
-  --theme-font-head: "Playfair Display", Georgia, serif;
-  --theme-font-mono: system-ui, sans-serif;
-  --theme-body-bg: #faf6ee;
-}
+@layer utilities {
+  /* ── Theme A: Honeycomb (default) ─── */
+  :root,
+  [data-theme='a'] {
+    --theme-bg: #fffbeb;
+    --theme-header-bg: #f5a623;
+    --theme-ink: #3d1f00;
+    --theme-ink-mid: #92400e;
+    --theme-ink-light: #7a3f00;
+    --theme-accent: #f5a623;
+    --theme-accent-dark: #e8890c;
+    --theme-rule: #f0e4c2;
+    --theme-card-bg: #ffffff;
+    --theme-nav-bg: #ffffff;
+    --theme-nav-border: #fde68a;
+    --theme-font-head: 'Playfair Display', Georgia, serif;
+    --theme-font-mono: system-ui, sans-serif;
+    --theme-body-bg: #fffbeb;
+  }
 
-[data-theme="b"] html,
-[data-theme="b"] body,
-[data-theme="b"] #root {
-  background-color: #f4ecd8 !important;
-}
+  /* ── Theme B: Field Notebook ─── */
+  [data-theme='b'] {
+    --theme-bg: #f4ecd8;
+    --theme-header-bg: #f4ecd8;
+    --theme-ink: #2b1d0e;
+    --theme-ink-mid: #6b5838;
+    --theme-ink-light: #98876b;
+    --theme-accent: #c98a1e;
+    --theme-accent-dark: #a57018;
+    --theme-rule: #c8b890;
+    --theme-card-bg: transparent;
+    --theme-nav-bg: #f4ecd8;
+    --theme-nav-border: #c8b890;
+    --theme-font-head: 'Fraunces', 'Playfair Display', Georgia, serif;
+    --theme-font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    --theme-body-bg: #f4ecd8;
+  }
 
-[data-theme="c"] html,
-[data-theme="c"] body,
-[data-theme="c"] #root {
-  background-color: #faf6ee !important;
+  /* ── Theme C: Seasonal Light ─── */
+  [data-theme='c'] {
+    --theme-bg: #faf6ee;
+    --theme-header-bg: transparent;
+    --theme-ink: #1c1410;
+    --theme-ink-mid: #6b5843;
+    --theme-ink-light: #9b8b7a;
+    --theme-accent: #f5a623;
+    --theme-accent-dark: #d4800a;
+    --theme-rule: rgba(28, 20, 16, 0.1);
+    --theme-card-bg: rgba(255, 251, 240, 0.72);
+    --theme-nav-bg: transparent;
+    --theme-nav-border: transparent;
+    --theme-font-head: 'Playfair Display', Georgia, serif;
+    --theme-font-mono: system-ui, sans-serif;
+    --theme-body-bg: #faf6ee;
+  }
+
+  [data-theme='b'] html,
+  [data-theme='b'] body,
+  [data-theme='b'] #root {
+    background-color: #f4ecd8 !important;
+  }
+
+  [data-theme='c'] html,
+  [data-theme='c'] body,
+  [data-theme='c'] #root {
+    background-color: #faf6ee !important;
+  }
 }
 
 @layer base {

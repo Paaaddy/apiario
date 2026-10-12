@@ -30,7 +30,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
   if (flow.isInvalid) {
     return (
       <div className="relative flex flex-col min-h-full">
-        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
+        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
           <HexWatermark />
           <div className="relative flex items-start justify-between gap-3">
             <h1 className="min-w-0 flex-1 font-serif text-2xl font-bold text-brown">🔎 {t(s.diagnose_title)}</h1>
@@ -200,7 +200,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
   if (node.type === 'outcome') {
     return (
       <div className="relative flex flex-col min-h-full">
-        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
+        <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
           <HexWatermark />
           <div className="relative flex items-start justify-between gap-3">
             <h1 className="min-w-0 flex-1 font-serif text-2xl font-bold text-brown">🔎 {t(s.diagnose_title)}</h1>
@@ -214,7 +214,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
 
   return (
     <div className="relative flex flex-col min-h-full">
-      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -249,7 +249,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
           <button
             key={option.next}
             onClick={() => flow.select(option.next)}
-            className="w-full text-left bg-white rounded-xl px-5 py-4 border border-amber-100 text-brown text-sm font-medium shadow-sm active:bg-amber-50 transition-colors leading-snug"
+            className="w-full text-left bg-white rounded-xl px-5 py-4 border border-amber-100 text-brown text-sm font-medium shadow-xs active:bg-amber-50 transition-colors leading-snug"
           >
             {t(option.label)}
           </button>
