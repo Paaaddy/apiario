@@ -66,7 +66,7 @@ export default function DiagnosisResult({ node, onReset }) {
         </h3>
         <ol className="flex flex-col gap-2">
           {node.actions.map((action, i) => (
-            <li key={i} className="flex gap-3 bg-white rounded-xl p-4 border border-amber-100 shadow-sm">
+            <li key={i} className="flex gap-3 bg-white rounded-xl p-4 border border-amber-100 shadow-xs">
               <span className="text-honey font-bold text-sm shrink-0">{i + 1}.</span>
               <span className="text-sm text-brown-mid leading-relaxed">{t(action)}</span>
             </li>

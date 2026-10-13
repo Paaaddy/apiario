@@ -16,8 +16,8 @@ export default function PwaInstallHint({
   if (isInstalled || dismissed) return null
 
   const cardClass = floating
-    ? 'fixed bottom-24 left-4 right-4 z-30 max-w-md mx-auto bg-white/95 backdrop-blur border border-amber-200 rounded-2xl shadow-lg p-3'
-    : `bg-white border border-amber-200 rounded-2xl shadow-sm ${compact ? 'p-4' : 'p-5'}`
+    ? 'fixed bottom-24 left-4 right-4 z-30 max-w-md mx-auto bg-white/95 backdrop-blur-sm border border-amber-200 rounded-2xl shadow-lg p-3'
+    : `bg-white border border-amber-200 rounded-2xl shadow-xs ${compact ? 'p-4' : 'p-5'}`
 
   return (
     <section

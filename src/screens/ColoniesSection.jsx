@@ -104,7 +104,7 @@ export default function ColoniesSection({
             <li
               key={colony.id}
               onChangeCapture={markEditDraft}
-              className="bg-white border border-honey rounded-xl p-3 shadow-sm"
+              className="bg-white border border-honey rounded-xl p-3 shadow-xs"
             >
               <input
                 type="text"
@@ -145,7 +145,7 @@ export default function ColoniesSection({
             <li
               key={colony.id}
               onClick={() => onSelectColony(colony.id)}
-              className="bg-white border border-amber-100 rounded-xl p-3 shadow-sm cursor-pointer hover:border-honey transition-colors"
+              className="bg-white border border-amber-100 rounded-xl p-3 shadow-xs cursor-pointer hover:border-honey transition-colors"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
@@ -207,7 +207,7 @@ export default function ColoniesSection({
       </ul>
 
       {isAdding ? (
-        <div onChangeCapture={markAddDraft} className="bg-white border border-honey rounded-xl p-3 shadow-sm">
+        <div onChangeCapture={markAddDraft} className="bg-white border border-honey rounded-xl p-3 shadow-xs">
           <input
             type="text"
             maxLength={100}

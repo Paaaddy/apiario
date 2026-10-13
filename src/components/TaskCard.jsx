@@ -107,7 +107,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
   const borderClass = isChecked ? 'border-green-400' : isSecret ? 'border-purple-400' : style.border
 
   return (
-    <div className={`bg-white rounded-xl p-4 border-l-4 ${borderClass} shadow-sm`}>
+    <div className={`bg-white rounded-xl p-4 border-l-4 ${borderClass} shadow-xs`}>
       <div className="flex items-start gap-3">
         {onToggle && (
           <button

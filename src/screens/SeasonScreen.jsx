@@ -204,7 +204,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
     return (
       <div key={task.id} role="group" aria-label={t(task.name)} tabIndex={-1}
         ref={(element) => { if (element) taskElements.current.set(task.id, element); else taskElements.current.delete(task.id) }}
-        className="rounded-xl focus:outline-none focus:ring-2 focus:ring-honey" style={{ scrollMarginTop: 180 }}>
+        className="rounded-xl focus:outline-hidden focus:ring-2 focus:ring-honey" style={{ scrollMarginTop: 180 }}>
         <TaskCard task={task} isChecked={completedTaskIds?.has(task.id) ?? false} checkedDate={logEntry?.completedAt ?? null}
           onToggle={onToggleTask ? () => onToggleTask(task) : undefined} inGlassContainer={inGlassContainer} />
       </div>
@@ -295,7 +295,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   // ── Theme A: Honeycomb (default) ─────────────────────────────────
   return (
     <div className="relative flex flex-col min-h-full">
-      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-10 pb-6 sticky top-0 z-20 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">

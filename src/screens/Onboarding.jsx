@@ -14,7 +14,7 @@ function WelcomeStep() {
   const { next } = useOnboarding()
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -29,7 +29,7 @@ function WelcomeStep() {
         <div className="text-8xl mb-10 animate-bob">🐝</div>
         <button
           onClick={() => next()}
-          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-sm active:opacity-80 transition-opacity"
+          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-xs active:opacity-80 transition-opacity"
         >
           {t(s.onboarding_lets_go)}
         </button>
@@ -50,7 +50,7 @@ function FeaturesStep() {
   ]
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -64,7 +64,7 @@ function FeaturesStep() {
         {features.map(({ icon, label, desc }) => (
           <div
             key={label}
-            className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-sm flex items-start gap-4"
+            className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-xs flex items-start gap-4"
           >
             <span className="text-3xl mt-0.5">{icon}</span>
             <div>
@@ -77,7 +77,7 @@ function FeaturesStep() {
       <div className="px-6 pt-6 pb-10">
         <button
           onClick={() => next()}
-          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-sm active:opacity-80 transition-opacity"
+          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-xs active:opacity-80 transition-opacity"
         >
           {t(s.onboarding_continue)}
         </button>
@@ -96,7 +96,7 @@ function PrivacyStep() {
 
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -107,11 +107,11 @@ function PrivacyStep() {
         </div>
       </div>
       <div className="px-6 pt-6 flex flex-col gap-4">
-        <div className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-sm">
+        <div className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-xs">
           <h2 className="font-semibold text-brown mb-2">{t(s.privacy_title)}</h2>
           <p className="text-sm text-brown-mid">{t(s.onboarding_privacy_step_body)}</p>
         </div>
-        <div className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-sm">
+        <div className="bg-white rounded-xl px-5 py-4 border border-amber-100 shadow-xs">
           <p className="text-sm text-brown-mid mb-3">{t(s.onboarding_privacy_import_prompt)}</p>
           <button
             onClick={() => fileInputRef.current?.click()}
@@ -136,7 +136,7 @@ function PrivacyStep() {
       <div className="px-6 pt-6 pb-10">
         <button
           onClick={() => next()}
-          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-sm active:opacity-80 transition-opacity"
+          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-xs active:opacity-80 transition-opacity"
         >
           {t(s.onboarding_continue)}
         </button>
@@ -159,7 +159,7 @@ function QuestionStep({ payload, onDataChange }) {
 
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -188,7 +188,7 @@ function QuestionStep({ payload, onDataChange }) {
           <button
             key={String(value)}
             onClick={() => handleSelect(value)}
-            className="w-full text-left bg-white rounded-xl px-5 py-4 border border-amber-100 text-brown font-medium shadow-sm active:bg-amber-50 transition-colors"
+            className="w-full text-left bg-white rounded-xl px-5 py-4 border border-amber-100 text-brown font-medium shadow-xs active:bg-amber-50 transition-colors"
           >
             {t(label)}
           </button>
@@ -204,7 +204,7 @@ function CompleteStep({ payload }) {
   const { t } = useLanguage()
   return (
     <div className="min-h-full bg-cream flex flex-col">
-      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-sm shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
+      <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
         <HexWatermark />
         <div className="relative flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -222,7 +222,7 @@ function CompleteStep({ payload }) {
         <p className="text-brown-mid text-sm mb-10">{t(s.onboarding_subtitle)}</p>
         <button
           onClick={payload.onFinish}
-          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-sm active:opacity-80 transition-opacity"
+          className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-xs active:opacity-80 transition-opacity"
         >
           {t(s.onboarding_continue)}
         </button>
