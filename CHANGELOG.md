@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/Paaaddy/apiario/compare/v2.6.0...v2.6.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* **deps:** bump postcss-selector-parser and tailwindcss ([#138](https://github.com/Paaaddy/apiario/issues/138)) ([e8c3866](https://github.com/Paaaddy/apiario/commit/e8c38662b7aa8356a959a9c5dc2d77317131f895))
+
 ## [2.6.0](https://github.com/Paaaddy/apiario/compare/v2.5.2...v2.6.0) (2026-10-11)
 
 
