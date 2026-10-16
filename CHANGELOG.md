@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.7.0](https://github.com/Paaaddy/apiario/compare/v2.6.1...v2.7.0) (2026-10-16)
+
+
+### Features
+
+* **content:** double all three bundled content libraries ([#147](https://github.com/Paaaddy/apiario/issues/147)) ([e04d345](https://github.com/Paaaddy/apiario/commit/e04d3452d28f66e7aa375bd313943e694970d453))
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group with 2 updates ([#144](https://github.com/Paaaddy/apiario/issues/144)) ([e9648a6](https://github.com/Paaaddy/apiario/commit/e9648a69d66c0ee3606f6ac3a28d572a681a5ae0))
+* **deps:** bump actions/download-artifact from 7 to 8 ([#142](https://github.com/Paaaddy/apiario/issues/142)) ([72d8812](https://github.com/Paaaddy/apiario/commit/72d88126e92cdc958e5a17c874d887ed3bf84c52))
+* **deps:** bump actions/upload-artifact from 6 to 7 ([#143](https://github.com/Paaaddy/apiario/issues/143)) ([797aa29](https://github.com/Paaaddy/apiario/commit/797aa2977e1746340479b3e865f7ac17b781716e))
+
 ## [2.6.1](https://github.com/Paaaddy/apiario/compare/v2.6.0...v2.6.1) (2026-10-13)
 
 
