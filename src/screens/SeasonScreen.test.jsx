@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { LanguageProvider } from '../context/LanguageContext'
 import { ThemeProvider } from '../context/ThemeContext'
 import SeasonScreen from './SeasonScreen'
+import seasons from '../data/seasons.json'
 
 beforeEach(() => {
   localStorage.setItem('apiario-locale', 'en')
@@ -143,7 +144,7 @@ describe('Next actions', () => {
       experience: 1,
       colonies: [{ id: 'c1', name: 'Blue Hive' }],
     }
-    const completedTaskIds = new Set(['sp-01', 'sp-02', 'sp-03', 'sp-04', 'sp-05', 'sp-secret-01', 'sp-secret-02'])
+    const completedTaskIds = new Set(seasons.spring.tasks.map((task) => task.id))
 
     wrap(
       <SeasonScreen

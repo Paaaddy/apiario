@@ -282,6 +282,65 @@ Research compiled for the Apiario "learn" feature (offline-first PWA for beginne
 
 ---
 
+## 11. October 2026 content-expansion research (F27–F31)
+
+Backing research for the 2026-10 content expansion (`docs/research/content-expansion-2026-10.md`).
+
+### F27 — Oxalic acid dribble dose per seam **[resolves old flag (2)]**
+- **summary:** The standard oxalic dribble dose is expressed **per seam of bees**, not as a fixed per-colony volume. The old "35 ml per colony" figure in the app is not how the dose is defined in the literature and has been replaced.
+- **key numbers**
+  - **5 ml of 3.2 % oxalic-acid-dihydrate solution (in 1:1 sugar syrup) per seam of bees** — consistent across NC State Extension (Api-Bioxal label method), The Apiarist, Dave Cushman's beekeeping pages, and Scientific Beekeeping. https://content.ces.ncsu.edu/oxalic-acid-for-the-control-of-varroa-mites ; https://theapiarist.org/oxalic-acid-api-bioxal-preparation
+  - **Maximum ~50 ml per colony** (NC State Extension; Varroa Vault calculator). Some commercial operators exceed this in very strong colonies, but 50 ml is the extension-consensus ceiling for hobbyist guidance.
+  - Recipe for 3.2 % w/v in 1:1 syrup: 100 g water + 100 g sugar + 7.5 g oxalic-acid dihydrate (The Apiarist).
+  - Efficacy near 100 % only during broodless periods (kills phoretic mites only) — NC State Extension; consistent with old F6.
+- **source:** NC State Extension; The Apiarist; Scientific Beekeeping; Dave Cushman (perian). Verified live 2026-10.
+- **difficulty:** advanced
+- **tags:** varroa, oxalic-acid, dosage, treatment
+
+### F28 — Swarm biology: queen cells, after-swarms
+- **summary:** Swarming is colony reproduction. The colony builds queen cells, the old queen leaves with the prime swarm roughly when cells are capped, and remaining capped cells can produce **after-swarms (Nachschwärme)** until all but one are destroyed. An artificial swarm (moving the queen to a new box with drawn comb) exploits the same instinct.
+- **key numbers / flags**
+  - Worker brood stage (egg→emergence) **21 days**; queen **16 days**; a queen cell is capped on **day 8** after the egg is laid — standard biology **[consensus — verify URL]**.
+  - The prime swarm typically departs shortly **before or at capping of the first cells (~day 7–9 after the egg)** — **[consensus — verify URL]**.
+  - After-swarm risk persists as long as **two or more sealed queen cells** remain — standard practice; each after-swarm leaves with further workers and further weakens the colony — **[consensus — verify URL]**.
+  - Numbers kept qualitative where not re-verified; the 21/16/8-day figures are taught universally in extension and national-association curricula (DIB, BABE, extension services).
+- **source:** university extension / national associations (consensus frame, EU-relevant).
+- **difficulty:** beginner
+- **tags:** swarm, queen-cells, after-swarm, management
+
+### F29 — Varroa treatment methods overview
+- **summary:** Integrated varroa management rotates treatment classes by season and temperature: **amitraz** (e.g. Apivar strips) for the brooding season; **formic acid** (e.g. MAQS/Amicontrol) for use with supers in late summer within a temperature window; **thymol** (e.g. Thymovar, Apiguard) for late summer/autumn when temperatures are warm enough; **oxalic acid** (dribble or sublimation) for broodless periods (early winter / late summer).
+- **key numbers / flags**
+  - Amitraz leaves wax residues; strips must be removed exactly on label schedule — Penn State IPM; app already carries this warning.
+  - Formic acid is the only treatment that penetrates capped brood; temperature-sensitive (label windows, e.g. ~10–30 °C depending on product) — **[consensus — verify exact window against product label]**.
+  - Oxalic: F27 above; no known resistance documented after decades of use (Jack et al. 2021 review via Varroa Wikipedia Good Article).
+  - Rotation of active substances is a resistance-management requirement — HBHC *Tools for Varroa Management*.
+- **source:** Penn State Extension IPM page; Honey Bee Health Coalition *Tools for Varroa Management*; product labels (authoritative per jurisdiction).
+- **difficulty:** intermediate
+- **tags:** varroa, treatment, IPM, amitraz, formic, thymol, oxalic
+
+### F30 — Winter bee biology
+- **summary:** "Winter bees" (diutinus bees) are physiologically different from summer bees: a much larger **fat body**, high **vitellogenin** stores, and reduced metabolism let them live **4–6 months instead of 5–6 weeks**. Their quality depends heavily on **late-summer/autumn pollen** available while they develop — which ties varroa treatment and nutrition timing to winter survival.
+- **key numbers**
+  - Summer worker lifespan ≈ **5–6 weeks**; winter bee lifespan ≈ **5–6 months (4–5× longer)** — Technology Transfer Program (BC Honey Producers), citing Arrese & Soulages 2010; Bryś et al. 2024. https://www.ttp-bchpa.ca/winterbeebiology
+  - Winter bees live roughly **up to 10× longer** than summer bees in physiological comparisons — Frunze et al. 2024 (PMC11627422). https://pmc.ncbi.nlm.nih.gov/articles/PMC11627422/
+  - Late-summer pollen has higher protein/glycogen/triglyceride content and drives fat-body development — Bryś et al. 2024 via TTP.
+- **source:** TTP (BC Honey Producers); Frunze et al. 2024 (PMC); Arrese & Soulages 2010. Verified live 2026-10.
+- **difficulty:** beginner
+- **tags:** winter-bees, biology, fat-body, nutrition
+
+### F31 — Feeding: syrup vs fondant
+- **summary:** The feed form must match the temperature. **Thick (2:1) syrup** for autumn winter-stores building while it is still warm; **thin (1:1) syrup** for spring build-up/emergency; **fondant, candy or dry sugar** in winter, because clustered bees **cannot process liquid syrup below roughly 10 °C** and cold syrup just molds and adds moisture.
+- **key numbers**
+  - "Sugar syrup should not be fed to bees in cold weather as they cannot process it"; fondant is the winter feed, thick syrup autumn, thin syrup spring — **National Bee Unit (UK) Best Practice Guideline 7a, *Feeding Bees – Sugar***. https://www.nationalbeeunit.com/assets/PDFs/3_Resources_for_beekeepers/Best_practice_guidelines/BPG_7a_Feeding_Bees_-_sugar.pdf
+  - 2:1 syrup is usable down to about **10 °C / 50 °F**; below that use solid feed — Honey Bee Suite. https://www.honeybeesuite.com/syrup-does-not-belong-in-a-cold-hive
+  - Winter feeding is **emergency insurance**, not routine — winter stores should be honey laid in by autumn — Foxhound Bee Company / National Bee Unit consensus.
+- **source:** National Bee Unit BPG 7a; Honey Bee Suite; extension consensus. Verified live 2026-10.
+- **difficulty:** beginner
+- **tags:** feeding, syrup, fondant, winter, stores
+
+---
+
 ## Verification notes on the app's EXISTING claims
 
 | Existing claim | Verdict | Notes / source |
@@ -292,7 +351,7 @@ Research compiled for the Apiario "learn" feature (offline-first PWA for beginne
 | Sugar roll is comparable accuracy and non-lethal | **Verified** | Virginia Tech ENTO-332NP: "replacing alcohol with powdered sugar eliminates bee death… does not impact bees used in sampling long term"; alcohol is "most accurate" but sugar roll is the non-lethal quantitative alternative. |
 | 15–20 kg winter stores (more in northern Europe) | **Verified as a reasonable guideline** | Consistent with national-association guidance (~15–20 kg, more in cold regions). Present as a range with regional note. |
 | 3 mites per 100 bees requires treatment (varroa-suspect outcome) | **Verified** | Mississippi State P4049: **3 mites/100 bees** is the research-based treatment threshold for the growing season (May–Oct). |
-| 35 ml of 3.2% oxalic acid dihydrate syrup per colony, broodless | **Flag — figure not independently verified** | Standard literature doses oxalic dribble **per seam of bees (~5 ml of 3.2% dihydrate per seam)**, not a fixed 35 ml/colony. Verify the exact 35 ml against a product label / national recommendation before presenting as hard fact. |
+| 35 ml of 3.2% oxalic acid dihydrate syrup per colony, broodless | **Resolved 2026-10 — figure replaced in app** | Dose is per seam: **5 ml of 3.2% dihydrate in 1:1 syrup per seam, max ~50 ml/colony** (NC State Extension; The Apiarist; Scientific Beekeeping). `wi-04` updated to the per-seam wording; see F27. |
 | Requeen / queen introduction cage with candy plug 3–5 days | **Plausible; verify exact days** | Queen introduction via cage with a candy plug releases the queen over ~3–5 days as bees eat the plug, allowing acceptance. **[consensus — verify URL]** for the exact day range; the candy-plug mechanism itself is standard. |
 | Queenlessness leads to laying workers after 3–4 weeks | **Reasonable; verify exact window** | A queenless colony that cannot rear a replacement will develop **laying workers** after roughly 3–4 weeks when emergency queen rearing fails — **[consensus — verify URL]**; commonly taught range. |
 
@@ -315,4 +374,4 @@ Research compiled for the Apiario "learn" feature (offline-first PWA for beginne
 - **Honey Bee Health Coalition** — *Tools for Varroa Management* (9th ed.) and varroa resources. https://honeybeehealthcoalition.org/resources/varroa-management/
 - **Wikipedia "Varroa destructor" & "Deformed wing virus"** — used only as aggregators carrying the peer-reviewed citations above (Rosenkranz 2010, Gunn et al. 1999, Lanzi et al. 2006, McMahon et al. 2016, Brettell et al. 2017, Schroeder & Martin 2012, Jack 2021). The app should cite the **underlying papers**, not Wikipedia.
 
-**Not-verified flags to resolve before shipping:** (1) AFB spore "40 years" figure; (2) oxalic acid "35 ml per colony" dose; (3) drone frame removes "10–30%" of mites; (4) exact AMS honey moisture % URL; (5) queen-marking color-code association URL; (6) laying-worker "3–4 weeks" URL; (7) requeening "3–5 days" URL; (8) the "~1s = 1 km" waggle numeric approximation; (9) 12–15 °C inspection temperature live URL.
+**Not-verified flags to resolve before shipping:** (1) AFB spore "40 years" figure; ~~(2) oxalic acid "35 ml per colony" dose~~ **resolved 2026-10 — see F27**; (3) drone frame removes "10–30%" of mites; (4) exact AMS honey moisture % URL; (5) queen-marking color-code association URL; (6) laying-worker "3–4 weeks" URL; (7) requeening "3–5 days" URL; (8) the "~1s = 1 km" waggle numeric approximation; (9) 12–15 °C inspection temperature live URL; (10) F28 swarm-timing day figures (21/16/8-day biology — consensus, URL unverified).
