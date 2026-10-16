@@ -72,7 +72,7 @@ jobs:
       url: ${{ steps.deployment.outputs.deployment-url }}
     steps:
       # No PR source checkout or project install in the credentialed job.
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: cloudflare-pages
           path: dist
