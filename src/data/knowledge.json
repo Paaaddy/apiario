@@ -93,5 +93,119 @@
         "source": "National Honey Board / USDA AMS"
       }
     }
+  },
+  {
+    "id": "f6",
+    "difficulty": "intermediate",
+    "tags": ["queen", "diagnosis", "health"],
+    "content": {
+      "de": {
+        "title": "Weisellos vs. schlechte Königin erkennen",
+        "summary": "Zwei häufige Fehlerbilder sehen ähnlich aus, brauchen aber völlig verschiedene Behandlung: ein Volk ohne Königin und ein Volk mit einer alten, nachlassenden Königin.",
+        "details": "Weisellosigkeit: Nach 3 Wochen ohne Eier entwickeln sich Drohnenbrüter — Eier liegen schief in drohnengroßen Zellen, das Brutnest ist weitgehend verlassen. Bei einer schlechten Königin werden Eier noch gelegt, aber lückenhaft und mit vielen Defektlarven im Randbereich. Der einfachste Unterschied: Weisellose Völker haben nach etwa 3–4 Wochen keine einzige Larve mehr auf der Wabengrundfläche, bei einer schlechten Königin findest du immer ein paar Brutflächen. Behandlung: Weisellos → zügig neue Königin oder Wabe mit Eiern zusetzen. Schlechte Königin → im nächsten Fenster umweiseln.",
+        "source": "Consensus (Univ. Extension Services)"
+      },
+      "en": {
+        "title": "Queenless vs. Failing Queen",
+        "summary": "Two common problems look similar but need completely different responses: a colony with no queen and a colony with an old, declining queen.",
+        "details": "Queenlessness: after 3 weeks without eggs, laying workers develop — eggs sit at an angle in drone-sized cells and the brood nest is largely abandoned. A failing queen still lays, but patchily, with many defective larvae at the edges. Simplest difference: in a queenless colony you will find no larvae at all on the comb after about 3–4 weeks, whereas a failing queen always leaves some brood. Response: queenless → introduce a new queen or a frame of eggs promptly. Failing queen → requeen at the next suitable window.",
+        "source": "Consensus (Univ. Extension Services)"
+      }
+    }
+  },
+  {
+    "id": "f7",
+    "difficulty": "beginner",
+    "tags": ["swarm", "brood", "biology"],
+    "content": {
+      "de": {
+        "title": "Schwarmbiologie: Zellen, Nachschwärme, Auslöser",
+        "summary": "Schwärmen ist die Vermehrung des Volkes: Die Bienen ziehen eine neue Königin, die alte geht mit der Hälfte des Volkes. Weiselzellen sind das Signal, das du erkennen musst.",
+        "details": "Aus einem Ei, das die Königin in eine heruntergebaute Zelle legt, entsteht in 16 Tagen eine neue Königin (Arbeiterinnenbraut: 21 Tage). Die Weiselzelle wird am 8. Tag verdeckelt; kurz davor oder danach schwärmt das Volk mit der alten Königin ab. Solange zwei oder mehr verdeckelte Weiselzellen stehen, drohen Nachschwärme — jeder schwächt das verbleibende Volk weiter. Auslöser sind Überfüllung, Brutneststau und sinkende Königinpheromone.",
+        "source": "Consensus (Univ. Extension Services / national associations)"
+      },
+      "en": {
+        "title": "Swarm Biology: Queen Cells, After-Swarms, Triggers",
+        "summary": "Swarming is colony reproduction: the bees raise a new queen and the old one leaves with half the colony. Queen cells are the signal you must learn to recognise.",
+        "details": "An egg the queen lays in a downward-built cell becomes a new queen in 16 days (worker comb: 21 days). The queen cell is capped on day 8; shortly before or after, the colony absconds with the old queen. As long as two or more sealed queen cells remain, after-swarms are coming — each one weakens the remaining colony further. Triggers are overcrowding, brood-nest congestion and declining queen pheromone.",
+        "source": "Consensus (Univ. Extension Services / national associations)"
+      }
+    }
+  },
+  {
+    "id": "f8",
+    "difficulty": "intermediate",
+    "tags": ["varroa", "treatment", "health"],
+    "content": {
+      "de": {
+        "title": "Varroa-Behandlung im Überblick: Oxal-, Ameisen-, Thymol",
+        "summary": "Integriertes Varroamanagement wechselt die Wirkstoffklasse nach Saison und Temperatur — jede Behandlung hat ihr Fenster.",
+        "details": "Amitraz (z. B. Apivar) für die Brutzeit, wirkt nur auf phoretische Milben und hinterlässt Wachsrückstände. Ameisensäure (z. B. MAQS) dringt als einziger Wirkstoff in verdeckelte Brut ein, ist aber temperaturabhängig. Thymol (z. B. Thymovar) für warme Spätsommer- und Herbstage. Oxalsäure für brutfreie Phasen (Winter, Spätsommer) — nahezu 100 % wirksam, ohne bekannte Resistenzen. Wirkstoffe rotieren, um Resistenzen vorzubeugen; immer die Zulassung und Wartezeit des konkreten Produkts beachten.",
+        "source": "Penn State Extension; Honey Bee Health Coalition — Tools for Varroa Management"
+      },
+      "en": {
+        "title": "Varroa Treatments at a Glance: Oxalic, Formic, Thymol",
+        "summary": "Integrated varroa management rotates treatment classes by season and temperature — every treatment has its window.",
+        "details": "Amitraz (e.g. Apivar) for the brooding season: works only on phoretic mites and leaves wax residues. Formic acid (e.g. MAQS) is the only active that penetrates capped brood, but is temperature-dependent. Thymol (e.g. Thymovar) for warm late-summer and autumn days. Oxalic acid for broodless phases (winter, late summer) — nearly 100 % effective with no known resistance. Rotate active substances to prevent resistance; always follow the specific product's approval and withholding period.",
+        "source": "Penn State Extension; Honey Bee Health Coalition — Tools for Varroa Management"
+      }
+    }
+  },
+  {
+    "id": "f9",
+    "difficulty": "beginner",
+    "tags": ["winter", "biology", "bees"],
+    "content": {
+      "de": {
+        "title": "Winterbienen: warum sie länger leben",
+        "summary": "Winterbienen sind keine normalen Bienen mit weniger zu tun — sie sind physiologisch anders gebaut und leben vier- bis fünffach so lange.",
+        "details": "Sommerbienen leben 5–6 Wochen, Winterbienen 4–6 Monate. Der Unterschied liegt im stark vergrößerten Fettkörper mit Vitellogenin-Speichern und einem gedrosselten Stoffwechsel. Entscheidend ist die Aufzucht: Die Larven müssen im Spätsommer proteinreichen Pollen erhalten, damit der Fettkörper ausreift. Deshalb sind Spätsommer-Tracht und Varroa-Behandlung im August/September in Wahrheit Winterpflege.",
+        "source": "Technology Transfer Program (BC Honey Producers), 2024; Frunze et al. 2024"
+      },
+      "en": {
+        "title": "Winter Bees: Why They Live So Long",
+        "summary": "Winter bees are not ordinary bees with less to do — they are built differently and live four to five times as long.",
+        "details": "Summer bees live 5–6 weeks; winter bees live 4–6 months. The difference is a greatly enlarged fat body with vitellogenin stores and a reduced metabolism. The crucial factor is how they are reared: the larvae must receive protein-rich pollen in late summer for the fat body to develop properly. That is why late-summer forage and varroa treatment in August/September are, in truth, winter care.",
+        "source": "Technology Transfer Program (BC Honey Producers), 2024; Frunze et al. 2024"
+      }
+    }
+  },
+  {
+    "id": "f10",
+    "difficulty": "beginner",
+    "tags": ["feeding", "winter", "management"],
+    "content": {
+      "de": {
+        "title": "Füttern: Sirup vs. Futterteig — wann was",
+        "summary": "Die Futterform muss zur Temperatur passen. Traubende Bienen können unter etwa 10 °C keine flüssige Nahrung aufnehmen.",
+        "details": "Dicker Sirup (2:1) zum Aufbau der Wintervorräte im Herbst, solange Flugwetter herrscht. Dünner Sirup (1:1) für den Frühlingsaufbau. Im Winter nur feste Nahrung: Futterteig, Zuckerwrap oder Wabenkandis direkt über der Traube — flüssiger Sirup würde nur schimmeln und Feuchtigkeit ins Volk bringen. Winterfütterung ist Notfallmaßnahme, keine Routine: Der Winterbestand sollte im Herbst als Honig angelegt sein.",
+        "source": "National Bee Unit (UK) — Best Practice Guideline 7a"
+      },
+      "en": {
+        "title": "Feeding: Syrup vs. Fondant — When to Use Which",
+        "summary": "The feed form must match the temperature. A clustered colony cannot take up liquid feed below roughly 10 °C.",
+        "details": "Thick syrup (2:1) builds winter stores in autumn while flying weather lasts. Thin syrup (1:1) supports spring build-up. In winter, solid feed only: fondant, sugar wrap or candy boards placed directly above the cluster — liquid syrup would just grow mould and add moisture. Winter feeding is emergency action, not routine: winter stores should be laid in as honey during autumn.",
+        "source": "National Bee Unit (UK) — Best Practice Guideline 7a"
+      }
+    }
+  },
+  {
+    "id": "f11",
+    "difficulty": "beginner",
+    "tags": ["forage", "season", "management"],
+    "content": {
+      "de": {
+        "title": "Trachtkalender lesen: wann die Nektarquellen fließen",
+        "summary": "Der Jahreslauf der Trachtpflanzen steuert den Rhythmus des Volkes — Aufbau, Schwarmzeit, Ernte und Wintervorrat folgen den Blüten.",
+        "details": "Frühjahr: Weide, Obstbäume, Raps — starker Aufbau und erste Schwarmneigung. Frühsommer: Klee, Linde, Sommerblumen — Haupterntezeit. Hochsommer: Trachtlücken sind möglich, wenn die Wiesen gemäht und die Linden abgeblüht sind. Spätsommer/Herbst: Baldrian, Heide, Windbestäuber — die Völker legen jetzt den Winterbestand an. Ein eigener Trachtkalender mit Erstdatumsnotizen (Weidenblüte, Lindenerblüte) macht Unterschiede zwischen Jahren sichtbar.",
+        "source": "FAO / extension seasonal beekeeping guides"
+      },
+      "en": {
+        "title": "Reading a Nectar Flow Calendar: When the Sources Run",
+        "summary": "The yearly sequence of forage plants drives the colony's rhythm — build-up, swarm season, harvest and winter stores all follow the blooms.",
+        "details": "Spring: willow, fruit trees, oilseed rape — strong build-up and first swarming pressure. Early summer: clover, linden, summer flowers — main harvest. Mid-summer: nectar gaps appear when meadows are mown and linden has finished. Late summer/autumn: valerian, heather, wind-pollinated plants — the colonies now lay in winter stores. Keeping your own forage calendar with first-date notes (willow bloom, linden bloom) makes year-to-year differences visible.",
+        "source": "FAO / extension seasonal beekeeping guides"
+      }
+    }
   }
 ]

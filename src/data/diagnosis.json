@@ -8,7 +8,14 @@
       { "label": { "de": "Keine Eier oder junge Larven sichtbar", "en": "No eggs or young larvae visible inside" }, "next": "no-brood" },
       { "label": { "de": "Brut sieht falsch aus — verfärbt oder eingesunken", "en": "Brood looks wrong — discoloured or sunken" }, "next": "sick-brood" },
       { "label": { "de": "Bienen hängen außen am Stock (Bartbildung)", "en": "Bees clustering on outside of hive (bearding)" }, "next": "bearding" },
-      { "label": { "de": "Bienen sind ungewöhnlich aggressiv", "en": "Bees are unusually aggressive" }, "next": "aggressive" }
+      { "label": { "de": "Bienen sind ungewöhnlich aggressiv", "en": "Bees are unusually aggressive" }, "next": "aggressive" },
+      { "label": { "de": "Große Kotflecken am Flugloch oder an den Waben", "en": "Large faecal spots on the entrance or combs" }, "next": "nosema-check" },
+      { "label": { "de": "Sichtbare Milben auf Bienen oder Waben", "en": "Visible mites on bees or comb" }, "next": "mites-visible" },
+      { "label": { "de": "Gespinst oder Bohrgänge in Waben", "en": "Webbing or tunnels in comb" }, "next": "comb-webbing" },
+      { "label": { "de": "Königin da, aber sie legt nicht oder nur lückenhaft", "en": "Queen present, but not laying or only patchily" }, "next": "queen-not-laying" },
+      { "label": { "de": "Honig schäumt, gärt oder riecht sauer", "en": "Honey foams, ferments or smells sour" }, "next": "honey-sour" },
+      { "label": { "de": "Brut riecht sauer oder modrig", "en": "Brood smells sour or musty" }, "next": "brood-smell" },
+      { "label": { "de": "Ein Schwarm ist ausgezogen", "en": "A swarm has left" }, "next": "swarm-gone-check" }
     ]
   },
   "few-bees": {
@@ -44,7 +51,8 @@
     "options": [
       { "label": { "de": "Normal aussehend — einfach tot, in einem Haufen", "en": "Normal looking — just dead, in a pile" }, "next": "dead-bees-normal" },
       { "label": { "de": "Deformierte Flügel, verkrüppelte Körper", "en": "Deformed wings, stunted bodies" }, "next": "varroa-confirmed" },
-      { "label": { "de": "Bienen mit ausgestochenen Stacheln, Kampfhaltung", "en": "Bees with stingers out, fighting posture" }, "next": "robbing" }
+      { "label": { "de": "Bienen mit ausgestochenen Stacheln, Kampfhaltung", "en": "Bees with stingers out, fighting posture" }, "next": "robbing" },
+      { "label": { "de": "Nur wenige einzelne Bienen — normales Ableben", "en": "Only a few single bees — normal attrition" }, "next": "attrition-normal" }
     ]
   },
   "dead-bees-normal": {
@@ -82,7 +90,8 @@
     "question": { "de": "Wie lange hast du keine Eier oder Brut mehr gesehen?", "en": "How long since you last saw eggs or brood?" },
     "options": [
       { "label": { "de": "Heute erst bemerkt — kürzlich nicht kontrolliert", "en": "Just noticed today — haven't checked recently" }, "next": "no-brood-check" },
-      { "label": { "de": "Mehr als 3 Wochen keine Brut sichtbar", "en": "More than 3 weeks with no brood visible" }, "next": "queenless" }
+      { "label": { "de": "Mehr als 3 Wochen keine Brut sichtbar", "en": "More than 3 weeks with no brood visible" }, "next": "queenless" },
+      { "label": { "de": "Seit ein paar Wochen nur noch lückenhafte Brut, die Königin ist sichtbar", "en": "For a few weeks only patchy brood; the queen is visible" }, "next": "superseded-queen" }
     ]
   },
   "no-brood-check": {
@@ -293,6 +302,292 @@
       "mitigation": {
         "de": "Nur auf Bienenbreite verengern (5–8 mm), nicht schließen. Ein Räubereigitter oder ein nasses Tuch vor dem Flugloch verwirrt Räuberinnen, ohne die eigenen Sammlerinnen auszusperren.",
         "en": "Reduce to a single bee width (5–8 mm), do not seal. A robbing screen or a wet cloth over the entrance confuses robbers without locking out the colony's own foragers."
+      }
+    },
+    "callExpert": false
+  },
+  "attrition-normal": {
+    "type": "outcome",
+    "diagnosis": { "de": "Normaler Totenfall — altersbedingtes Ableben", "en": "Normal attrition — age-related die-off" },
+    "actions": [
+      { "de": "Einzelne tote Bienen vor dem Stock gehören zum normalen Ableben der Sammlerinnen — sie leben im Sommer nur 5–6 Wochen.", "en": "Single dead bees in front of the hive are normal forager attrition — in summer they live only 5–6 weeks." },
+      { "de": "Flugloch freihalten, damit die Bienen die Toten selbst austragen können.", "en": "Keep the entrance clear so the bees can carry the dead out themselves." },
+      { "de": "Täglich Hunderte neue Tote oder auffällige Bienen (deformierte Flügel, ausgestochene Stacheln)? Dann den passenden Pfad im Diagnosebaum wählen.", "en": "Hundreds of new dead bees daily, or conspicuously affected bees (deformed wings, protruding stingers)? Then follow the matching path in the diagnosis tree." }
+    ],
+    "callExpert": false
+  },
+  "nosema-check": {
+    "type": "question",
+    "question": { "de": "Wie sehen die Flecken aus und wo liegen sie?", "en": "What do the spots look like and where are they?" },
+    "options": [
+      { "label": { "de": "Große, tropfenförmige Flecken mit Spitze — auch an Waben und Innenwänden", "en": "Large drop-shaped spots with a point — also on combs and inner walls" }, "next": "nosema-suspect" },
+      { "label": { "de": "Nur wenige kleine, runde Flecken draußen — an milden Tagen fliegen Bienen zum Reinigen aus", "en": "Only a few small, round spots outside — on mild days bees fly out to cleanse" }, "next": "cleansing-normal" }
+    ]
+  },
+  "nosema-suspect": {
+    "type": "outcome",
+    "diagnosis": { "de": "Mögliche Nosema-Infektion (Krankheit der Bienen)", "en": "Possible nosema infection (a bee gut disease)" },
+    "actions": [
+      { "de": "Mehrere frisch verendete Bienen aus dem Volk sammeln (ca. 30 Stück) und an den lokalen Bienengesundheitsdienst oder ein Labor schicken.", "en": "Collect several freshly dead bees from the colony (about 30) and send them to the local bee health service or a laboratory." },
+      { "de": "Nosema wird nur mikroskopisch sicher diagnostiziert — keine Behandlung ohne Befund.", "en": "Nosema can only be confirmed under a microscope — do not treat without a diagnosis." },
+      { "de": "Alte, dunkle Waben ausschneiden — die Sporen überleben lange im Wachs.", "en": "Cut out old, dark comb — the spores persist in wax for a long time." },
+      { "de": "Junge, leistungsstarke Königin und frische Waben kompensieren den Befall bei vielen Völkern.", "en": "A young, productive queen and fresh comb offset the infection in many colonies." }
+    ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Durchfall allein ist kein Beweis für Nosema — auch zu feuchter Honig oder eine lange Kältepause verursacht ihn.",
+        "en": "Diarrhoea alone is not proof of nosema — overly moist honey or long cold confinement also cause it."
+      },
+      "mitigation": {
+        "de": "Erst den Laborbefund abwarten, dann Maßnahmen ergreifen. Parallel immer: Belüftung verbessern, alte Waben erneuern, Königin beurteilen.",
+        "en": "Wait for the lab result before acting. Meanwhile, always: improve ventilation, renew old comb, assess the queen."
+      }
+    },
+    "callExpert": true
+  },
+  "cleansing-normal": {
+    "type": "outcome",
+    "diagnosis": { "de": "Normale Reinigungsflüge — kein Problem", "en": "Normal cleansing flights — no problem" },
+    "actions": [
+      { "de": "Kleine, runde Kotspuren an Stock oder Waben sind meist harmlos.", "en": "Small, round faecal spots on hive or comb are usually harmless." },
+      { "de": "An einem milden, sonnigen Tag wird das Volk von selbst wieder sauber fliegen.", "en": "On a mild, sunny day the colony will fly clean again on its own." },
+      { "de": "Nur wenn täglich Hunderte neue Tote dazukommen oder die Flecken groß und tropfenförmig werden, weiter im Diagnosepfad prüfen.", "en": "Only if hundreds of new dead bees appear daily, or the spots turn large and drop-shaped, continue down the diagnosis path." }
+    ],
+    "callExpert": false
+  },
+  "mites-visible": {
+    "type": "question",
+    "question": { "de": "Wo genau siehst du die Milben?", "en": "Where exactly do you see the mites?" },
+    "options": [
+      { "label": { "de": "Viele Milben auf Bienen, an Zellwänden oder am Flugloch", "en": "Many mites on bees, cell walls or at the entrance" }, "next": "varroa-heavy" },
+      { "label": { "de": "Einzelne Milben auf einzelnen Bienen", "en": "Single mites on individual bees" }, "next": "varroa-suspect" }
+    ]
+  },
+  "varroa-heavy": {
+    "type": "outcome",
+    "diagnosis": { "de": "Massiver Varroabefall — sofort handeln", "en": "Heavy varroa infestation — act now" },
+    "actions": [
+      { "de": "Sofort eine für die Jahreszeit geeignete Behandlung einleiten — ein massiver Befall kann ein Volk binnen Wochen kollabieren lassen.", "en": "Start a treatment suitable for the season immediately — a heavy infestation can collapse a colony within weeks." },
+      { "de": "Vor der Behandlung Milben zählen (Alkoholwasche oder Zuckerrolle), damit der Erfolg messbar wird.", "en": "Count mites before treating (alcohol wash or sugar roll) so the result can be measured." },
+      { "de": "Nach 4–6 Wochen kontrollieren; bei unzureichendem Milbenabfall den Wirkstoff wechseln.", "en": "Recheck after 4–6 weeks; switch active substance if the mite drop is insufficient." },
+      { "de": "Auch die übrigen Völker im Umkreis zählen — stark befallene Völker stecken die Nachbarn an.", "en": "Count the other colonies nearby too — heavily infested colonies infect their neighbours." }
+    ],
+    "risk": {
+      "level": "warning",
+      "note": {
+        "de": "Hochbefallene Völker verbreiten Milben durch Räuberei und Nachschwärme auf die gesamte Umgebung.",
+        "en": "Heavily infested colonies spread mites to the whole area through robbing and after-swarms."
+      },
+      "mitigation": {
+        "de": "Bei Nachbarn im Umkreis (bis zu 3 km) Räuberei verhindern und im selben Zeitraum mitbehandeln. Honigräume vor der Behandlung entfernen.",
+        "en": "Prevent robbing among neighbours (within 3 km) and treat in the same window. Remove honey supers before treatment."
+      }
+    },
+    "callExpert": true
+  },
+  "comb-webbing": {
+    "type": "question",
+    "question": { "de": "Wo und in welchem Zustand sind die betroffenen Waben?", "en": "Where are the affected combs and in what condition?" },
+    "options": [
+      { "label": { "de": "Offenes oder eingelagertes Volk — Waben mit Gespinst und Bohrgängen, Larven sichtbar", "en": "Active or stored comb — webbing and tunnels, larvae visible" }, "next": "wax-moth" },
+      { "label": { "de": "Eingelagerte Waben werden feucht oder sind schon stark angefressen", "en": "Stored combs are turning moist or are already heavily chewed" }, "next": "storage-advice" }
+    ]
+  },
+  "wax-moth": {
+    "type": "outcome",
+    "diagnosis": { "de": "Wachsmottenbefall", "en": "Wax moth infestation" },
+    "actions": [
+      { "de": "Waben mit sichtbaren Larven aus dem Volk nehmen — sie werden nicht mehr sauber.", "en": "Remove comb with visible larvae from the colony — it will not become clean again." },
+      { "de": "Betroffene Waben über Nacht einfrieren (mindestens 24–48 Stunden), danach kann das Wachs ausgeschmolzen werden.", "en": "Freeze affected comb overnight (at least 24–48 hours), then render the wax." },
+      { "de": "Das Volk stärken — ein starkes Volk hält Wachsmotten selbst fern.", "en": "Strengthen the colony — a strong colony keeps wax moths out on its own." },
+      { "de": "Auf dem nächsten Standortkontrollgang nach neuen Gespinsten im oberen Stockwerk suchen.", "en": "On the next inspection check the upper box for fresh webbing." }
+    ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Wachsmottenlarven zerstören eingelagertes Wachs in wenigen Wochen. Betroffene Waben dürfen nicht auf andere Völker gegeben werden.",
+        "en": "Wax moth larvae destroy stored comb within weeks. Infested comb must not be placed on other colonies."
+      },
+      "mitigation": {
+        "de": "Waben vor dem Einlagern einfrieren. Im Frühjahr nur Waben mit sichtbaren Schäden auf ein starkes Volk geben — dort reparieren die Bienen selbst.",
+        "en": "Freeze comb before storing. In spring, only put visibly damaged comb on a strong colony — the bees repair it themselves there."
+      }
+    },
+    "callExpert": false
+  },
+  "storage-advice": {
+    "type": "outcome",
+    "diagnosis": { "de": "Eingelagerte Waben mottensicher machen", "en": "Store comb wax-moth-proof" },
+    "actions": [
+      { "de": "Waben vor dem Einlagern über Nacht einfrieren (24–48 Stunden), um Eier und Larven abzutöten.", "en": "Freeze comb overnight before storing (24–48 hours) to kill eggs and larvae." },
+      { "de": "Gefrorene Waben vorsichtig behandeln — kaltes Wachs ist brüchig.", "en": "Handle frozen comb carefully — cold wax is brittle." },
+      { "de": "Kühl, trocken und möglichst luftdicht lagern; alle 4 Wochen kurz kontrollieren.", "en": "Store cool, dry and as airtight as possible; check briefly every 4 weeks." },
+      { "de": "Alternative: Waben auf ein starkes Volk geben — die Bienen reparieren Fraßschäden und entfernen die Larven selbst.", "en": "Alternative: put the comb on a strong colony — the bees repair the damage and remove larvae themselves." }
+    ],
+    "callExpert": false
+  },
+  "queen-not-laying": {
+    "type": "question",
+    "question": { "de": "In welcher Situation befindet sich das Volk?", "en": "What situation is the colony in?" },
+    "options": [
+      { "label": { "de": "Jungkönigin erst kürzlich zugesetzt oder begattet", "en": "Young queen recently introduced or mated" }, "next": "virgin-failure" },
+      { "label": { "de": "Alte Königin noch sichtbar, aber spärliche, unregelmäßige Brut", "en": "Old queen still visible, but sparse, irregular brood" }, "next": "superseded-queen" },
+      { "label": { "de": "Keine Königin mehr sichtbar, Eier liegen schief in drohnengroßen Zellen", "en": "No queen visible, eggs laid at an angle in drone-sized cells" }, "next": "laying-workers" }
+    ]
+  },
+  "virgin-failure": {
+    "type": "outcome",
+    "diagnosis": { "de": "Jungkönigin hat noch nicht oder nicht erfolgreich gelegt", "en": "Young queen has not started or failed to lay" },
+    "actions": [
+      { "de": "Jungköniginen brauchen nach dem Schlüpfen 1–2 Wochen bis zur Begattung und weitere Tage bis zum Legebeginn.", "en": "Young queens need 1–2 weeks after emerging to mate, and several more days to start laying." },
+      { "de": "Bei Einweisung im Käfig: Freilassung erst, wenn die Bienen die Königin füttern und nicht angreifen.", "en": "If introduced in a cage: release only once the bees are feeding the queen and not attacking her." },
+      { "de": "Nach 3 Wochen ohne Eier entscheiden: Notweiselzellen ermöglichen (Wabe mit Eiern) oder Königin ersetzen.", "en": "After 3 weeks without eggs, decide: enable emergency queen cells (frame of eggs) or replace the queen." },
+      { "de": "Den Ableger dabei klein halten und zufüttern, bis die Eilage sicher ist.", "en": "Keep the nuc small and feed to support until laying is confirmed." }
+    ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Zu häufiges Kontrollieren stresst die Jungkönigin und kann Begattung und Legebeginn verzögern.",
+        "en": "Checking too often stresses the young queen and can delay mating and the start of laying."
+      },
+      "mitigation": {
+        "de": "Maximal einmal pro Woche kurz nach Eiern schauen. Bei Regen oder kühlem Wetter nicht stören.",
+        "en": "Check for eggs briefly no more than once a week. Do not disturb in rain or cool weather."
+      }
+    },
+    "callExpert": true
+  },
+  "superseded-queen": {
+    "type": "outcome",
+    "diagnosis": { "de": "Königin wird still ausgetauscht (Umweiselung)", "en": "Queen is being quietly replaced (supersedure)" },
+    "actions": [
+      { "de": "Das Volk tauscht die alte Königin natürlich aus — im Brutnest findest du Weiselzellen mit jungen Larven neben der noch sichtbaren Königin.", "en": "The colony is replacing the old queen naturally — in the brood nest you will find queen cells with young larvae next to the still-visible queen." },
+      { "de": "Nichts unternehmen und die neue Königin abwarten — das ist gesunde Verjüngung.", "en": "Take no action and wait for the new queen — this is healthy renewal." },
+      { "de": "Nach dem Schlüpfen der Jungkönigin 3–4 Wochen auf frische Eilage prüfen.", "en": "After the new queen emerges, check for fresh eggs over 3–4 weeks." },
+      { "de": "Wenn die Eilage nach diesem Zeitraum nicht einsetzt, junge Königin zusetzen oder Wabe mit Eiern geben.", "en": "If laying still does not start after that period, introduce a young queen or add a frame of eggs." }
+    ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Während der Umweiselung ist das Brutnest oft lückenhaft — das ist normal und kein Grund zum Eingreifen.",
+        "en": "During supersedure the brood nest is often patchy — this is normal and no reason to intervene."
+      },
+      "mitigation": {
+        "de": "Nur eingreifen, wenn nach der Umweiselung weiterhin keine frischen Larven erscheinen. Waben mit alten, ungleichmäßigen Eiern nicht mit Umwechseln verwechseln.",
+        "en": "Intervene only if no fresh larvae appear after supersedure. Do not confuse old, uneven eggs with a failing replacement."
+      }
+    },
+    "callExpert": false
+  },
+  "laying-workers": {
+    "type": "outcome",
+    "diagnosis": { "de": "Drohnenbrüter — fortgeschrittene Weisellosigkeit", "en": "Laying workers — advanced queenlessness" },
+    "actions": [
+      { "de": "Erkennen: Eier liegen schief am Zellboden, alle Zellen gleich alt, das Brutnest wirkt wie ein Drohnenkuchen.", "en": "Recognition: eggs lie at an angle on the cell floor, every cell the same age, the brood nest looks like a drone loaf." },
+      { "de": "Zuverlässige Lösung: Wabe mit frischen Eiern aus einem starken Volk einhängen, damit Notweiselzellen gezogen werden.", "en": "Reliable fix: add a frame of fresh eggs from a strong colony so emergency queen cells can be reared." },
+      { "de": "Oder: Vereinigung mit einem starken, weiselrichtigen Volk über Zeitungsmethode — oft der pragmatischste Weg.", "en": "Or: combine with a strong queenright colony using the newspaper method — often the most pragmatic path." },
+      { "de": "Werkzeug und Waben nicht unbedesinfiziert zwischen Völkern tauschen.", "en": "Do not move tools and comb between colonies without disinfecting." }
+    ],
+    "risk": {
+      "level": "warning",
+      "note": {
+        "de": "Ohne Eingriff stirbt das Volk innerhalb weniger Wochen — es gibt keine Arbeiterinnenbrut mehr.",
+        "en": "Without intervention the colony dies within weeks — there is no worker brood left."
+      },
+      "mitigation": {
+        "de": "Schnell handeln und nicht auf natürliche Umweiselung warten: Der Eiervorrat der Drohnenbrüterinnen reicht nicht aus, um eine Königin nachzuziehen.",
+        "en": "Act quickly and do not wait for natural supersedure: the laying workers' egg supply is not enough to rear a queen."
+      }
+    },
+    "callExpert": true
+  },
+  "honey-sour": {
+    "type": "question",
+    "question": { "de": "Wo ist der betroffene Honig?", "en": "Where is the affected honey?" },
+    "options": [
+      { "label": { "de": "Frisch geschleudert — gärt im Glas oder Topf", "en": "Freshly extracted — fermenting in jar or tub" }, "next": "fermenting-honey" },
+      { "label": { "de": "Honigwaben aus der Lagerung", "en": "Honey comb from storage" }, "next": "storage-advice" }
+    ]
+  },
+  "fermenting-honey": {
+    "type": "outcome",
+    "diagnosis": { "de": "Honig gärt — Feuchtigkeit zu hoch", "en": "Honey is fermenting — moisture too high" },
+    "actions": [
+      { "de": "Betroffenen Honig zügig verarbeiten (Essig, Backen) — er wird nicht besser, nur sauer.", "en": "Process the affected honey quickly (vinegar, baking) — it will only get more sour, not better." },
+      { "de": "Restliche Waben prüfen: Nur vollständig verdeckelten Honig schleudern.", "en": "Check remaining comb: extract only fully capped honey." },
+      { "de": "Für die nächste Ernte ein Refraktometer anschaffen — erst unter 18 % Feuchtigkeit abfüllen.", "en": "Get a refractometer for the next harvest — jar only below 18 % moisture." },
+      { "de": "Vorräte kühl und luftdicht lagern — Gärung hört bei kühler Lagerung nicht von selbst auf.", "en": "Store supplies cool and airtight — fermentation does not stop on its own when chilled." }
+    ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Gärungsgas kann in dicht verschlossenen Gläsern Druck aufbauen — Gläser vorsichtig öffnen.",
+        "en": "Fermentation gas can build pressure in tightly sealed jars — open carefully."
+      },
+      "mitigation": {
+        "de": "Gärenden Honig sofort in größere, halb geöffnete Gefäße umfüllen und kühl stellen. Niemals erhitzen, solange Gas entweichen kann.",
+        "en": "Transfer fermenting honey into larger, half-open containers and keep cool. Never heat while gas can still escape."
+      }
+    },
+    "callExpert": false
+  },
+  "brood-smell": {
+    "type": "question",
+    "question": { "de": "Wie riecht es und wie sieht die Brut aus?", "en": "What does it smell like and how does the brood look?" },
+    "options": [
+      { "label": { "de": "Sauer/modriger Geruch, Larven unregelmäßig in den Zellen verfärbt", "en": "Sour/musty smell, larvae discoloured irregularly in cells" }, "next": "foulbrood-suspect" },
+      { "label": { "de": "Kein besonderer Geruch, aber weiße, kreideähnliche Mumien", "en": "No unusual smell, but white chalk-like mummies" }, "next": "chalkbrood" }
+    ]
+  },
+  "foulbrood-suspect": {
+    "type": "outcome",
+    "diagnosis": { "de": "Mögliche Faulbrut unbekannter Art — Laborbefund nötig", "en": "Possible foulbrood of unknown kind — lab diagnosis required" },
+    "actions": [
+      { "de": "Kein Material in andere Völker übertragen — Faulbruterreger verbreiten sich über Waben und Werkzeug.", "en": "Do not transfer any equipment to other hives — foulbrood agents spread via comb and tools." },
+      { "de": "Betroffene Brutwabe markieren und Probe (verdächtige Larven in luftdichtem Behälter) zum Labor schicken.", "en": "Mark the suspect brood frame and send a sample (suspect larvae in an airtight container) to a laboratory." },
+      { "de": "Amerikanische und Europäische Faulbrut sind im Feld nicht sicher unterscheidbar — beide sind meldepflichtig.", "en": "American and European foulbrood cannot be reliably distinguished in the field — both are notifiable." },
+      { "de": "Sofort den lokalen Bienengesundheitsdienst kontaktieren, bevor weitere Maßnahmen ergriffen werden.", "en": "Contact the local bee health service immediately, before taking further action." }
+    ],
+    "risk": {
+      "level": "warning",
+      "note": {
+        "de": "Selbständiges „Behandeln\" mit Hausmitteln verwischt Spuren und kann die Diagnose unmöglich machen.",
+        "en": "Treating it yourself with home remedies destroys evidence and can make diagnosis impossible."
+      },
+      "mitigation": {
+        "de": "Nicht spritzen, nicht lüften, nicht umräumen. Betroffene Waben stehen lassen bis der Gesundheitsdienst entschieden hat.",
+        "en": "No spraying, no shaking out, no rearranging. Leave the affected comb in place until the inspector has decided."
+      }
+    },
+    "callExpert": true
+  },
+  "swarm-gone-check": {
+    "type": "question",
+    "question": { "de": "Was genau ist passiert?", "en": "What exactly happened?" },
+    "options": [
+      { "label": { "de": "Traube ist bereits weg, im Stock sind Weiselzellen und weniger Bienen", "en": "Swarm is already gone; queen cells and fewer bees in the hive" }, "next": "swarm-gone" },
+      { "label": { "de": "Schwarm ist noch nicht weg — Bienen hängen nur draußen oder am Stock", "en": "Swarm has not left yet — bees are only hanging outside or near the hive" }, "next": "swarm-prep" }
+    ]
+  },
+  "swarm-gone": {
+    "type": "outcome",
+    "diagnosis": { "de": "Erbschwarm ist ausgezogen — Restvolk zieht neue Königin", "en": "Prime swarm has left — the remainder is raising a new queen" },
+    "actions": [
+      { "de": "Einzug kontrollieren: die Königin finden oder frische Eier in Weiselzellen bestätigen — dann ist das Restvolk weiselrichtig unterwegs.", "en": "Verify the outcome: find the queen or confirm fresh eggs in queen cells — then the remainder is queenright." },
+      { "de": "Nachschwärme verhindern: alle verdeckelten Weiselzellen bis auf eine beste entfernen.", "en": "Prevent after-swarms: remove all sealed queen cells except the best one." },
+      { "de": "Restvolk nicht öffnen, bis die neue Königin schlüpft und beginnt zu legen.", "en": "Do not open the remainder until the new queen has emerged and started laying." },
+      { "de": "Ausgezogenen Schwarm falls gewünscht einfangen: Traube sammeln und in einen neuen Stock mit Mittelwänden setzen.", "en": "If desired, catch the departed swarm: collect the cluster and hive it on fresh foundation." }
+    ],
+    "risk": {
+      "level": "caution",
+      "note": {
+        "de": "Unkontrollierte Nachschwärme schwächen das Restvolk so stark, dass es den Winter oft nicht übersteht.",
+        "en": "Uncontrolled after-swarms weaken the remainder so much that it often does not survive winter."
+      },
+      "mitigation": {
+        "de": "Weiselzellenbestand nach 7 Tagen erneut prüfen — verdeckelte Zellen können bereits Jungköninnen enthalten. Nur eine Zelle stehen lassen.",
+        "en": "Recheck queen cells after 7 days — sealed cells may already contain queens. Leave only one cell."
       }
     },
     "callExpert": false

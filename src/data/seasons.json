@@ -73,6 +73,74 @@
         "minExperience": 0
       },
       {
+        "id": "sp-06",
+        "name": { "de": "Milbenfall nach dem Winter auswerten", "en": "Evaluate the post-winter mite drop" },
+        "why": { "de": "Das brutfreie Volk im Winter trägt alle Milben auf den Bienen. Ein Milbenfallbrett gibt eine erste Schätzung des Befalls, bevor die Brut wieder beginnt.", "en": "A broodless winter colony carries all its mites on the bees. A sticky board gives a first infestation estimate before brood rearing restarts." },
+        "urgency": "important",
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Ein einzelner Zähltag ist unzuverlässig — der Fall schwankt stark mit Temperatur und Aktivität.",
+            "en": "A single count day is unreliable — drop varies strongly with temperature and activity."
+          },
+          "mitigation": {
+            "de": "Das Brett über mehrere Tage (7 Tage) unter dem Gitterboden lassen und den Durchschnitt werten. Erst ab etwa 5 Milben pro Tag (bzw. 30 über die Woche) ist ein Handeln im Frühjahr nötig.",
+            "en": "Leave the board under the screened bottom for several days (7 days) and use the average. Act in spring only from about 5 mites per day (or 30 over the week)."
+          }
+        }
+      },
+      {
+        "id": "sp-07",
+        "name": { "de": "Alte Waben ausschneiden, Mittelwände prüfen", "en": "Cut out old comb, check foundation" },
+        "why": { "de": "Sehr alte Brutfäden sind dunkel, uneben und gesundheitsschädlich. Frühling ist der beste Zeitpunkt, sie gezielt zu erneuern.", "en": "Very old brood comb is dark, uneven and a health liability. Early spring is the best time to renew it deliberately." },
+        "urgency": "routine",
+        "minExperience": 1
+      },
+      {
+        "id": "sp-08",
+        "name": { "de": "Tracht einschätzen", "en": "Assess the forage landscape" },
+        "why": { "de": "Die Tracht entscheidet über Aufbau, Schwarmneigung und Ertrag. Weiden, Obstbäume und Raps sind die ersten starken Quellen.", "en": "Forage decides build-up, swarming pressure and harvest. Willow, fruit trees and oilseed rape are the first major sources." },
+        "urgency": "important",
+        "minExperience": 0
+      },
+      {
+        "id": "sp-09",
+        "name": { "de": "Eilage kontrollieren", "en": "Check the queen's laying" },
+        "why": { "de": "Nach dem Winter muss die Königin wieder regulär aufnehmen. Gleichmäßige Eilage in der Wabenmitte zeigt ein gesundes Volk.", "en": "After winter the queen must resume laying steadily. Even brood pattern in the centre of comb shows a healthy colony." },
+        "urgency": "important",
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Eine alte, nachlassende Königin kann noch Eier legen, aber lückenhaft — das wird oft übersehen.",
+            "en": "An old, declining queen can still lay but patchily — this is often missed."
+          },
+          "mitigation": {
+            "de": "Auf gleichmäßige, dichte Brutnestfläche achten (weniger als 5–10 % Lücken). Bei anhaltend lückenhafter Brut im Frühling an Umweiselung denken.",
+            "en": "Look for a solid, even brood nest (fewer than 5–10 % gaps). If the pattern stays patchy in spring, consider requeening."
+          }
+        }
+      },
+      {
+        "id": "sp-10",
+        "name": { "de": "Ableger für den Frühsommer planen", "en": "Plan early-summer splits" },
+        "why": { "de": "Starke Frühlingsvölker sind das beste Ausgangsmaterial für Ableger. Wer plant, hat rechtzeitig Weiselzellen und Käfige bereit.", "en": "Strong spring colonies are the best material for splits. Planning ahead means queen cells and cages are ready in time." },
+        "urgency": "important",
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Ein zu früher Ableger schwächt das Muttervolk gerade dann, wenn die Tracht startet.",
+            "en": "A split taken too early weakens the parent colony exactly as the flow begins."
+          },
+          "mitigation": {
+            "de": "Erst ab zuverlässiger Eilage und vollem Brutnest teilen. Dem Ableger eine Wabe mit frischen Eiern mitgeben, damit eine neue Königin gezogen werden kann, falls die Begattung scheitert.",
+            "en": "Split only once laying is reliable and the brood nest is full. Give the split a frame with eggs so a new queen can be reared if mating fails."
+          }
+        }
+      },
+      {
         "id": "sp-secret-01",
         "name": { "de": "Erste Löwenzahnblüte beobachten", "en": "Watch for the first dandelion bloom" },
         "why": { "de": "Wenn der erste Löwenzahn öffnet, hat der Frühjahrsaufbau begonnen — ein traditioneller Imker-Startschuss für Honigräume und Erweiterungen.", "en": "When the first dandelion opens, the spring build-up has started — the traditional beekeeper's cue to add supers and expand." },
@@ -102,6 +170,16 @@
             "en": "Put a reminder in your calendar and cut the frame out within 24 days of inserting it. Freeze the cut-out comb before composting or rendering."
           }
         }
+      },
+      {
+        "id": "sp-secret-03",
+        "name": { "de": "Erste Weidenblüte als Saisonmarker beobachten", "en": "Use the first willow bloom as a season marker" },
+        "why": { "de": "Die Blüte der Weide ist in vielen Regionen der zuverlässigste frühe Pollenlieferant. Wer sie notiert, baut sich über Jahre einen eigenen phänologischen Kalender auf.", "en": "Willow bloom is in many regions the most reliable early pollen source. Recording it builds your own phenological calendar over the years." },
+        "urgency": "routine",
+        "minExperience": 0,
+        "secret": true,
+        "unlockAt": 1,
+        "uniqueValue": { "de": "Weiden (Salix) sind eine der wenigen frühen Pollenquellen mit hohem Eiweißgehalt und decken den Proteinbedarf der aufbauenden Brut deutlich besser als reiner Frühnektar (Crane, 1990, „Bees and Beekeeping\"). Phänologische Marker wie die Weidenblüte helfen, Unterschiede zwischen Jahren objektiv zu vergleichen — dieselbe Methode, die Klimaforscher zur Messung von Frühjahrsverschiebungen verwenden.", "en": "Willows (Salix) are one of the few early pollen sources with high protein content and cover the protein demand of building brood far better than early nectar alone (Crane, 1990, 'Bees and Beekeeping'). Phenological markers like willow bloom let you compare years objectively — the same method climate scientists use to measure spring shifts." }
       }
     ]
   },
@@ -190,6 +268,85 @@
         }
       },
       {
+        "id": "su-06",
+        "name": { "de": "Kunstschwarm durchführen", "en": "Perform an artificial swarm" },
+        "why": { "de": "Wenn Weiselzellen auftauchen, ist ein Kunstschwarm der zuverlässigste Weg, das Schwärmen zu verhindern und doch die Königin zu halten.", "en": "When queen cells appear, an artificial swarm is the most reliable way to prevent swarming and still keep the queen." },
+        "urgency": "urgent",
+        "minExperience": 1,
+        "risk": {
+          "level": "warning",
+          "note": {
+            "de": "Ein schlecht ausgeführter Kunstschwarm lässt das Muttervolk weisellos zurück — die Restpopulation zieht trotzdem Schwarm.",
+            "en": "A badly executed artificial swarm leaves the parent colony queenless — the remaining bees still swarm."
+          },
+          "mitigation": {
+            "de": "Nur mit bestätigter Königin arbeiten: alte Königin mit einigen Brut- und Futterwaben in einen neuen Stock setzen, mindestens zwei Kilometer Abstand oder Räubergitter für 2–3 Tage. Weiselzellen im Muttervolk danach kontrollieren und auf eine Zelle reduzieren.",
+            "en": "Only work with a confirmed queen: move the old queen with a few brood and food frames to a new hive, at least two kilometres away or with a robbing screen for 2–3 days. Then check the parent's queen cells and reduce to one."
+          }
+        }
+      },
+      {
+        "id": "su-07",
+        "name": { "de": "Schleudern und Einwecken: Erntehygiene", "en": "Extracting and jarring: harvest hygiene" },
+        "why": { "de": "Entdeckelte Waben und feuchter Honig sind die Eintrittspforten für Gärung und Wachsmotten. Saubere Erntehygiene schützt den Honig und das eingelagerte Wachs.", "en": "Uncapped comb and moist honey are the entry points for fermentation and wax moths. Clean harvest hygiene protects both the honey and the stored wax." },
+        "urgency": "important",
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Feuchter Honig gärt im Glas, sodass Deckel aufgeblasen werden — ein ärgerlicher Verlust nach Wochen Warten.",
+            "en": "Moist honey ferments in the jar and bulges the lids — a frustrating loss after weeks of waiting."
+          },
+          "mitigation": {
+            "de": "Nur vollständig verdeckelte Waben schleudern oder per Refraktometer prüfen (unter 18 % Feuchtigkeit). Honig vor dem Abfüllen durch ein Sieb abdecken und warm lagern, sodass Luft entweicht. Geschleuderte Waben innerhalb von zwei Tagen zurück auf ein starkes Volk geben oder mottensicher einlagern.",
+            "en": "Only extract fully capped comb or verify with a refractometer (below 18 % moisture). Cover honey through a strainer before jarring and store warm so air escapes. Return extracted combs to a strong colony within two days or store them wax-moth-proof."
+          }
+        }
+      },
+      {
+        "id": "su-08",
+        "name": { "de": "Trachtlücke erkennen und reagieren", "en": "Recognise and react to a nectar gap" },
+        "why": { "de": "Im Hochsommer kann die Nektarquelle kurz versiegen. Das Volk braucht dann nur Erhaltungsfütterung — viel Fütterung würde Räuberei auslösen.", "en": "In mid-summer the nectar source can dry up briefly. The colony then needs maintenance feeding only — heavy feeding would trigger robbing." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Zuckerwasser im Sommer in offenen Schalen lockt Räuberbienen aus der ganzen Umgebung an.",
+            "en": "Sugar syrup in open containers in summer attracts robbing bees from everywhere around."
+          },
+          "mitigation": {
+            "de": "Nur geringe Mengen (maximal etwa 1 Liter pro Woche) im Innenfütterer bei Dämmerung geben. Bei anhaltender Trachtlücke besser gar nicht füttern und den Raum reduzieren.",
+            "en": "Give only small amounts (about 1 litre per week max) in an internal feeder at dusk. During a long dearth, feeding less and reducing space is often better."
+          }
+        }
+      },
+      {
+        "id": "su-09",
+        "name": { "de": "Bautätigkeit fördern", "en": "Encourage comb building" },
+        "why": { "de": "Bei starkem Nektarflug bauen Bienen am effizientesten. Mittelwände und Bar-Rähmchen jetzt einsetzen, statt im Frühjahr zu drängeln.", "en": "Bees build most efficiently during a strong flow. Add foundation and foundationless frames now instead of crowding them in spring." },
+        "urgency": "routine",
+        "minExperience": 1
+      },
+      {
+        "id": "su-10",
+        "name": { "de": "Ableger auf Begattung prüfen", "en": "Check splits for mating" },
+        "why": { "de": "3–4 Wochen nach der Ablegerbildung zeigt die Eilage, ob die Jungkönigin begattet und am Legen ist. Das ist der Moment, rechtzeitig nachzubessern.", "en": "Three to four weeks after the split, laying tells you whether the young queen mated and is productive. This is the moment to act in time." },
+        "urgency": "important",
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Ein Ableger mit Drohnenbrütern (unbefruchteten Eiern in Drohnennähe) kann sich nicht mehr selbst retten.",
+            "en": "A split with laying workers (unfertilised eggs in drone-sized cells) cannot recover on its own."
+          },
+          "mitigation": {
+            "de": "Bei fehlender Eilage nach 4 Wochen eine bebrütete Wabe aus einem starken Volk einhängen, damit Notweiselzellen gezogen werden können — oder den Ableger rechtzeitig mit einem Volk vereinigen.",
+            "en": "If no laying after 4 weeks, add a brood frame from a strong colony so emergency queen cells can be reared — or combine the split with a colony in time."
+          }
+        }
+      },
+      {
         "id": "su-secret-01",
         "name": { "de": "Propolisgitter einlegen und ernten", "en": "Lay a propolis screen and harvest" },
         "why": { "de": "Ein schlitzgitter (Propolisgitter) über den Rähmchen wird von den Bienen langsam mit Propolis gefüllt. Am Saisonende einfrieren und das Gitter biegen — die Propolis-Stückchen fallen heraus.", "en": "A slotted propolis screen laid above the frames is slowly filled with propolis by the bees. At season's end, freeze it and flex the screen — the propolis shards pop out cleanly." },
@@ -208,6 +365,27 @@
         "secret": true,
         "unlockAt": 6,
         "uniqueValue": { "de": "Die Entschlüsselung der Bienentanzsprache brachte Karl von Frisch 1973 den Nobelpreis für Physiologie oder Medizin ein. Die Dauer des Schwänzelns codiert die Entfernung (ca. 1 Sekunde = 1 km), die Richtung wird relativ zum Sonnenstand auf der senkrechten Wabe angegeben. Zehn Minuten Beobachtung geben dir eine direkte Verbindung zu einem Jahrhundert Bienenforschung.", "en": "Decoding the waggle dance earned Karl von Frisch the 1973 Nobel Prize in Physiology or Medicine. The waggle duration encodes distance (≈ 1 second = 1 km), and the direction is given relative to the sun on the vertical comb surface. Ten minutes of observation give you a direct line to a century of bee research." }
+      },
+      {
+        "id": "su-secret-03",
+        "name": { "de": "Königin nach internationalem Farbcode markieren", "en": "Mark the queen with the international colour code" },
+        "why": { "de": "Ein farbig markierter Punkt auf dem Thorax macht die Königin in Sekunden auffindbar und verrät ihr Alter — die letzte Ziffer des Jahres bestimmt die Farbe.", "en": "A coloured dot on the thorax makes the queen findable in seconds and reveals her age — the last digit of the year determines the colour." },
+        "urgency": "routine",
+        "minExperience": 2,
+        "secret": true,
+        "unlockAt": 7,
+        "uniqueValue": { "de": "Der internationale Farbcode wiederholt sich im Fünfjahresrhythmus: Jahre auf 1 oder 6 = weiß, 2 oder 7 = gelb, 3 oder 8 = rot, 4 oder 9 = grün, 5 oder 0 = blau — 2026 ist also weiß. Die Markierung spart auf Dutzenden von Kontrollen Minuten und verhindert, dass eine alte Königin versehentlich als neue gehalten wird. Markiert wird mit speziellen, wasserfesten Lackstiften auf dem mittleren Thoraxsegment.", "en": "The international marking code repeats on a five-year cycle: years ending in 1 or 6 = white, 2 or 7 = yellow, 3 or 8 = red, 4 or 9 = green, 5 or 0 = blue — so 2026 is white. The dot saves minutes across dozens of inspections and prevents an old queen from being kept by mistake as a new one. Mark with a special water-based queen-marking pen on the middle thorax segment." },
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Das Markieren stresst die Königin — ein Stich mit der Nadel oder zu langes Festhalten kann sie verletzen.",
+            "en": "Marking stresses the queen — a needle prick or holding her too long can injure her."
+          },
+          "mitigation": {
+            "de": "An einem kühlen, ruhigen Tag arbeiten. Die Königin nur am Brustbein (Thorax) halten, nie am Hinterleib. Punkt zügig setzen und sofort zurück in den Brutraum geben.",
+            "en": "Work on a cool, calm day. Hold the queen only by the thorax, never the abdomen. Apply the dot quickly and return her to the brood nest straight away."
+          }
+        }
       }
     ]
   },
@@ -304,6 +482,117 @@
         "secret": true,
         "unlockAt": 5,
         "uniqueValue": { "de": "Alte Waben sind ein Hauptgrund für ungesunde Völker und erhöhten Varroa-Befall. Der regelmäßige Austausch verhindert den Aufbau von Krankheitskeimen und gibt den Bienen frischen Raum für gesunden Nachwuchs. Viele Imker tauschen im Herbst systematisch Waben aus, um den Krankheitsdruck niedrig zu halten.", "en": "Old comb is a leading cause of unhealthy colonies and elevated Varroa pressure. Regular replacement prevents pathogen buildup and gives bees clean space for healthy brood. Many beekeepers systematically rotate comb in autumn to keep disease pressure low." }
+      },
+      {
+        "id": "au-06",
+        "name": { "de": "Varroa zählen, bevor du behandelst", "en": "Count mites before treating" },
+        "why": { "de": "Eine Behandlung ohne Zählung ist Blindflug. Der Milchglas-Test zeigt, ob und wie dringend eine Behandlung nötig ist.", "en": "Treating without counting is flying blind. The shake test shows whether and how urgently treatment is needed." },
+        "urgency": "important",
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Beim Schütteln fallen auch Nektar und Pollen aus der Wabe — das Ergebnis ist ungenau, wenn die Wabe nicht verdeckelte Brut enthält.",
+            "en": "Shaking also dislodges nectar and pollen — results are unreliable if the frame is not capped brood."
+          },
+          "mitigation": {
+            "de": "Nur eine Wabe mit verdeckelter Brut verwenden und auf eine weiße Unterlage schütteln. Alternativ mit Gitterboden und Milbenfallbrett über 3 Tage zählen.",
+            "en": "Use only a capped-brood frame and shake onto a white sheet. Alternatively count on a sticky board under a screened bottom over 3 days."
+          }
+        }
+      },
+      {
+        "id": "au-07",
+        "name": { "de": "Varroa-Nachbehandlung einplanen", "en": "Plan the varroa follow-up" },
+        "why": { "de": "Eine einzelne Behandlung erreicht nicht alle Milben — besonders nicht die unter Verdeckelung schlüpfenden. Ein zweiter Durchgang nach 1–2 Wochen halbiert den Restbefall wirksam.", "en": "A single treatment does not reach every mite — especially those emerging from capping. A second pass after 1–2 weeks effectively halves what's left." },
+        "urgency": "urgent",
+        "minExperience": 1,
+        "risk": {
+          "level": "warning",
+          "note": {
+            "de": "Aufeinanderfolgende Behandlungen mit demselben Wirkstoff fördern Resistenz. Die empfohlene Wartezeit vor der Honigernte muss eingehalten werden.",
+            "en": "Back-to-back treatments with the same active substance encourage resistance. The label's harvest withholding period must be observed."
+          },
+          "mitigation": {
+            "de": "Behandlungsplan vorher aufschreiben: Startdatum, Entnahmedatum, nächster Wirkstoffwechsel. Wirkstoffe rotieren (Amitraz → Ameisensäure → Thymol → Oxalsäure) wie im Integrierten Pestizidmanagement empfohlen.",
+            "en": "Write the plan before starting: start date, removal date, next substance change. Rotate active substances (amitraz → formic acid → thymol → oxalic acid) as integrated pest management recommends."
+          }
+        }
+      },
+      {
+        "id": "au-08",
+        "name": { "de": "Winterfutter prüfen: Futterkranz und Gewicht", "en": "Check winter stores: the food crown and weight" },
+        "why": { "de": "Ein satter Futterkranz über dem Brutnest ist die beste Versicherung gegen Wintersterben. Jetzt prüfen heißt, im Januar nicht mit Notfütterung zu kämpfen.", "en": "A full food crown above the brood nest is the best insurance against winter losses. Checking now means no emergency feeding in January." },
+        "urgency": "important",
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Viel Honig über dem Brutnest nützt nichts, wenn seitlich daneben nichts liegt — die Traube kann nur an das herankommen, was direkt über ihr hängt.",
+            "en": "Lots of honey above the brood nest is useless if nothing sits alongside it — the cluster can only reach what is directly above it."
+          },
+          "mitigation": {
+            "de": "Auf mindestens zwei handbreite Futterwaben links und rechts des Brutnestes achten. Unter 15 kg geschätzt? Jetzt auffüttern, solange die Bienen noch Flugwetter haben.",
+            "en": "Look for at least two hand-wide food frames left and right of the brood nest. Estimated under 15 kg? Feed now while the bees still have flying weather."
+          }
+        }
+      },
+      {
+        "id": "au-09",
+        "name": { "de": "Mäusegitter anbringen", "en": "Fit the mouse guard" },
+        "why": { "de": "Mäuse suchen im Herbst Schutz und nisten sich im warmen Stock ein. Ein Gitter verhindert, dass sie in den Stock gelangen.", "en": "Mice seek shelter in autumn and nest inside the warm hive. A guard stops them getting in." },
+        "urgency": "routine",
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Zu früh angebrachte, zu enge Gitter sperren die winterlichen Reinigungsflüge aus — tote Bienen können nicht aus dem Stock getragen werden.",
+            "en": "Guards fitted too early or too narrow lock out winter cleansing flights — dead bees cannot be carried out."
+          },
+          "mitigation": {
+            "de": "Erst anbringen, wenn der Flugbetrieb deutlich nachgelassen hat (oft November). Gitter mit Bienenbreite Öffnungen (ca. 8–9 mm) wählen.",
+            "en": "Fit only once foraging has clearly slowed (often November). Choose guards with bee-width openings (about 8–9 mm)."
+          }
+        }
+      },
+      {
+        "id": "au-10",
+        "name": { "de": "Geräte und Wachs mottensicher einlagern", "en": "Store equipment moth-proof" },
+        "why": { "de": "Leere Waben im Keller sind das Lieblingsbuffet der Wachsmotte. Richtig gelagert überstehen sie den Winter unbeschadet.", "en": "Empty comb in the cellar is a wax moth buffet. Stored correctly, it survives the winter undamaged." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Wachsmottenlarven zerstören eingelagerte Waben in wenigen Wochen komplett — dunkle, alte Waben sind besonders gefährdet.",
+            "en": "Wax moth larvae can destroy stored comb within weeks — dark, old comb is most at risk."
+          },
+          "mitigation": {
+            "de": "Waben über Nacht einfrieren (mindestens 24 Std., im Zweifel 48 Std.), danach luftdicht und kühl lagern und alle 4 Wochen kontrollieren. Oder Waben auf ein starkes Volk geben, damit die Bienen selbst reinigen.",
+            "en": "Freeze comb overnight (at least 24 h, 48 h to be safe), then store airtight and cool, checking every 4 weeks. Or put the comb on a strong colony and let the bees clean it themselves."
+          }
+        }
+      },
+      {
+        "id": "au-secret-02",
+        "name": { "de": "Winterableger aus weiselrichtigen Zellen bilden", "en": "Make winter nucs from queen cells" },
+        "why": { "de": "Im Spätsommer haben viele Völker frische, weiselrichtige Weiselzellen. Ein kleiner Ableger daraus überwindet den Winter zuverlässiger als ein später Frühjahrsableger und ist zum Saisonstart sofort einsatzbereit.", "en": "In late summer many colonies have fresh, well-formed queen cells. A small nuc from them overwinters far more reliably than a late spring split and is ready to go at season start." },
+        "urgency": "important",
+        "minExperience": 2,
+        "secret": true,
+        "unlockAt": 6,
+        "uniqueValue": { "de": "Spätsommer-Ableger („Winterableger\") profitieren von zwei Vorteilen: Die Jungkönigin begattet sich in der stabilen Spätsommerdrohnenpopulation, und der Ableger baut als Kleinvolk seine eigenen Winterbienen aus derselben reichhaltigen Pollentracht auf. Erfahrene Imker nutzen diese Methode, um gleichzeitig gegen Varroa zu gewinnen — der Ableger wird brutfrei behandelt und startet im Frühjahr mit einem sauberen Milbenstatus.", "en": "Late-summer nucs win twice: the young queen mates in the stable late-summer drone population, and the small colony rears its own winter bees off the same rich pollen flow. Experienced beekeepers also use the method to get ahead of varroa — the nuc is treated broodless and starts spring with a clean mite status." },
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Ein zu kleiner Ableger (unter 3 besetzten Waben) überlebt den Winter selten — er hat zu wenig Bienen, um Wärme und Futter zu halten.",
+            "en": "A nuc that is too small (under 3 occupied frames) rarely survives winter — too few bees to hold heat and food."
+          },
+          "mitigation": {
+            "de": "Mindestens 3 besetzte Brut- plus 2 Futterwaben mitgeben, auf ein volles Futtergewicht bringen und mit einer Varroa-Behandlung in der brutfreien Phase starten.",
+            "en": "Give at least 3 occupied brood plus 2 food frames, bring it to full weight, and start with a varroa treatment during the broodless phase."
+          }
+        }
       }
     ]
   },
@@ -357,10 +646,80 @@
             "en": "Oxalic acid is a hazardous substance for beekeepers AND bees. Overdose harms the queen and the cluster."
           },
           "mitigation": {
-            "de": "Nur anwenden, wenn das Volk brutfrei ist. Schutzbrille, säurefeste Handschuhe und Atemschutz tragen. Exakte Dosierung (z. B. 35 ml einer 3,2 % Oxalsäure-Dihydrat-Sirup-Lösung pro Volk) einhalten. Keine Wiederholungsbehandlung innerhalb weniger Wochen.",
-            "en": "Only apply when the colony is broodless. Wear goggles, acid-resistant gloves and a respirator. Keep the dose exact (e.g. 35 ml of 3.2 % oxalic-acid dihydrate syrup per colony). Do not repeat within a few weeks."
+            "de": "Nur anwenden, wenn das Volk brutfrei ist. Schutzbrille, säurefeste Handschuhe und Atemschutz tragen. Dosierung pro besetzter Raumfolge („seam\"), nicht pro Stock: ca. 5 ml einer 3,2 % Oxalsäure-Dihydrat-Lösung in 1:1-Zuckerwasser je Bienenraum, insgesamt höchstens 50 ml pro Volk. Keine Wiederholungsbehandlung innerhalb weniger Wochen.",
+            "en": "Only apply when the colony is broodless. Wear goggles, acid-resistant gloves and a respirator. Dose per seam of bees, not per hive: about 5 ml of a 3.2 % oxalic-acid dihydrate solution in 1:1 syrup per seam, never more than 50 ml total per colony. Do not repeat within a few weeks."
           }
         }
+      },
+      {
+        "id": "wi-05",
+        "name": { "de": "Totenfall am Flugloch beobachten", "en": "Watch the dead-bee drop at the entrance" },
+        "why": { "de": "Einige tote Bienen vor dem Stock gehören zum Winter — die Traube stirbt von innen nach außen ab. Der Totenfall zeigt, ob alles normal läuft.", "en": "Some dead bees in front of the hive are part of winter — the cluster dies off from the inside out. The drop shows whether all is normal." },
+        "urgency": "routine",
+        "minExperience": 0
+      },
+      {
+        "id": "wi-06",
+        "name": { "de": "Hefttechnik üben", "en": "Practise the heft test" },
+        "why": { "de": "Hinteren Rand anheben und das Gewicht fühlen — ohne den Stock zu öffnen. Je öfter du heftest, desto sicherer schätzt du Futterreserven.", "en": "Lift the back edge and feel the weight — without opening the hive. The more you heft, the surer your estimate of stores becomes." },
+        "urgency": "routine",
+        "minExperience": 0,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Heftiges Schieben oder Rütteln am Stock stört die ruhende Traube unnötig.",
+            "en": "Shoving or jostling the hive needlessly disturbs the resting cluster."
+          },
+          "mitigation": {
+            "de": "Nur kurz und ruhig anheben, am besten an Tagen mit Flugbetrieb. Kein Heften bei Sturm oder sehr kalten Nächten.",
+            "en": "Lift briefly and calmly, best on days with flight activity. Do not heft during storms or on very cold nights."
+          }
+        }
+      },
+      {
+        "id": "wi-07",
+        "name": { "de": "Königin und Varroaplan für die nächste Saison bestellen", "en": "Order next season's queen and varroa plan" },
+        "why": { "de": "Winter ist die Bestellzeit: gute Züchterköniginen und Behandlungsmittel sind im Frühjahr schnell ausverkauft. Wer jetzt plant, handelt im Frühjahr ohne Stress.", "en": "Winter is ordering season: good breeder queens and treatment supplies sell out fast in spring. Planning now means acting in spring without stress." },
+        "urgency": "important",
+        "minExperience": 1
+      },
+      {
+        "id": "wi-08",
+        "name": { "de": "Werkzeug warten und Waben umschmelzen", "en": "Maintain tools and render old wax" },
+        "why": { "de": "Der Winter ist die Werkstattzeit: Schneidebeschaffenheit prüfen, Schleuderteile reinigen, altes Wachs zu Kerzen oder Reinigungswasser verarbeiten.", "en": "Winter is workshop time: check your uncapping tools, clean extractor parts, and turn old wax into candles or cleaning water." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "risk": {
+          "level": "caution",
+          "note": {
+            "de": "Wachsschmelzen mit offener Flamme ist Brandschutz- und Gesundheitsrisiko — Wachs ist leichtentzündlich.",
+            "en": "Melting wax over an open flame is a fire and health hazard — wax is flammable."
+          },
+          "mitigation": {
+            "de": "Nur im Freien oder mit Wasserbad erhitzen, niemals über direkter Flamme. Dampf nicht einatmen — Schadstoffe aus altem Wachs können krebserregend sein.",
+            "en": "Heat only outdoors or in a water bath, never over direct flame. Do not inhale the vapour — contaminants in old wax can be carcinogenic."
+          }
+        }
+      },
+      {
+        "id": "wi-secret-01",
+        "name": { "de": "Winterbienen beobachten: die Biologie der kurzen Bienen", "en": "Observe winter bees: the biology of long-lived bees" },
+        "why": { "de": "Die Bienen, die jetzt schlüpfen, leben nicht sechs Wochen, sondern mehrere Monate. Ihre Qualität entscheidet über das Überleben des Volkes — und die liegt in der Spätsommer- und Herbstpflege.", "en": "The bees hatching now don't live six weeks but several months. Their quality decides whether the colony survives — and it is built in late-summer and autumn care." },
+        "urgency": "routine",
+        "minExperience": 0,
+        "secret": true,
+        "unlockAt": 2,
+        "uniqueValue": { "de": "Winterbienen („diutinus\"-Bienen) haben ein stark vergrößertes Fettkörpergewebe und hohe Vitellogenin-Speicher; ihr Stoffwechsel ist gedrosselt. Sie leben 4–6 Monate statt 5–6 Wochen (Technology Transfer Program, BC Honey Producers, 2024, unter Berufung auf Arrese & Soulages 2010; Frunze et al. 2024). Entscheidend: Sie entstehen aus Larven, die im Spätsommer mit proteinreicher Pollentracht gefüttert wurden. Varroa-Behandlung und Ernährung im August und September sind deshalb eigentlich Winterpflege — wer das versteht, hat im Frühjahr ein lebendes statt ein totes Volk.", "en": "Winter bees (so-called diutinus bees) have a greatly enlarged fat body and high vitellogenin stores, with reduced metabolism. They live 4–6 months instead of 5–6 weeks (Technology Transfer Program, BC Honey Producers, 2024, citing Arrese & Soulages 2010; Frunze et al. 2024). The key point: they develop from larvae fed protein-rich pollen in late summer. Varroa treatment and nutrition in August and September are therefore really winter care — understand that, and you head into spring with a living colony instead of a dead one." }
+      },
+      {
+        "id": "wi-secret-02",
+        "name": { "de": "Ablegerkalender für das Frühjahr entwerfen", "en": "Draft next spring's split calendar" },
+        "why": { "de": "Zwischen ersten Eiern und erster Tracht liegen nur wenige Wochen. Ein Kalender mit Zielterminen (Erstkontrolle, Weiselzellkontrolle, Ablegerbildung) macht daraus einen planbaren Ablauf.", "en": "Only a few weeks lie between first eggs and first flow. A calendar with target dates (first inspection, queen-cell check, split date) turns that into a planned sequence." },
+        "urgency": "routine",
+        "minExperience": 1,
+        "secret": true,
+        "unlockAt": 4,
+        "uniqueValue": { "de": "Erfahrene Imker arbeiten mit phänologischen statt Kalenderdaten: Erste Weidenblüte minus 10 Tage = Honigräume aufsetzen; erste Schwalben im Anflug = Schwarmkontrolle beginnen. Wer diese Marker mit den eigenen Beobachtungen der letzten Jahre kombiniert, plant genauer als mit jeder App — und Apiarios Notizen aus den Vorjahren sind dafür die beste Datenquelle.", "en": "Experienced beekeepers work with phenological rather than calendar dates: first willow bloom minus 10 days = add honey supers; first swallows arriving = start swarm checks. Combine those markers with your own observations from past years and you plan more accurately than any app can — and Apiario's notes from previous seasons are the best data source for it." }
       }
     ]
   }
