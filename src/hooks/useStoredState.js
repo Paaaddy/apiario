@@ -1,7 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { hasStorageRecovery, writeStorageTransaction } from '../utils/storageTransaction'
+import { hasStorageRecovery, writeStorageTransaction, STORED_VALUE } from '../utils/durableStorage'
 import { protectReload } from '../pwa/reloadSafety'
-import { STORED_VALUE } from '../utils/recordValidation'
 
 const STORAGE_ERROR = {
   ok: false,

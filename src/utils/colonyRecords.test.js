@@ -2,7 +2,7 @@ import {
   buildColonyRecord,
   buildColonyRecords,
   findColonyRecord,
-} from './colonyRecords'
+} from './inspectionHistory'
 
 const colony = { id: 'col-1', name: 'Apple tree' }
 

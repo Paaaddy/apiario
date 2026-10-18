@@ -1,5 +1,5 @@
 import { beforeEach, afterEach } from 'vitest'
-import { exportData, importData } from './dataPort'
+import { exportData, importData } from './durableStorage'
 
 const PROFILE_KEY = 'apiario-profile'
 const INSPECTIONS_KEY = 'apiario-inspections'

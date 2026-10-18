@@ -4,7 +4,7 @@ import { useProfile } from './useProfile'
 import { useInspections } from './useInspections'
 import { useColonyRemoval } from './useColonyRemoval'
 import { getReloadStatus } from '../pwa/reloadSafety'
-import { getRecoveryCause, hasStorageRecovery, recoverStorageTransaction } from '../utils/storageTransaction'
+import { getRecoveryCause, hasStorageRecovery, recoverStorageTransaction } from '../utils/durableStorage'
 
 function useRecords() {
   const profile = useProfile()

@@ -34,6 +34,9 @@ export const strings = {
   next_actions_title: { de: 'Nächste Schritte',     en: 'Next actions'      },
   next_action_unavailable: { de: 'Das gewählte Volk oder die Aufgabe ist nicht mehr verfügbar.', en: 'The selected colony or task is no longer available.' },
   insp_date_unknown: { de: 'Unbekanntes Kontrolldatum', en: 'Unknown inspection date' },
+  sparkline_lower: { de: 'niedriger ▾', en: 'lower ▾' },
+  sparkline_higher: { de: 'höher ▴', en: 'higher ▴' },
+  sparkline_not_enough: { de: 'Nicht genug Daten', en: 'Not enough data' },
 
   // Week picker
   week_previous:      { de: 'Vorherige Woche',      en: 'Previous week'     },

@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import diagnosisData from '../data/diagnosis.json'
 import { haptics } from '../utils/haptics'
-import { latestOverall, latestByColony } from '../utils/inspections'
+import { latestOverall, latestByColony } from '../utils/inspectionHistory'
 import { buildDiagnosisFlowState, routeFromInspection } from '../utils/diagnosisFlow'
 
 export function useDiagnosisFlow(inspections = [], options = {}) {
