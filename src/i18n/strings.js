@@ -28,6 +28,8 @@ export const strings = {
 
   // Season screen
   season_week:        { de: 'Woche',               en: 'Week'              },
+  season_week_lower:  { de: 'Woche',               en: 'week'              },
+  season_this_word:   { de: 'Diese',               en: 'This'              },
   season_this_week:   { de: 'Aufgaben diese Woche', en: "This week's tasks" },
   season_tasks_noun:  { de: 'Aufgaben zu prüfen',   en: 'things to check'  },
   season_nothing:     { de: 'Diese Woche nichts Dringendes. Bald wieder vorbeischauen.', en: 'Nothing urgent this week. Check back soon.' },
@@ -51,6 +53,7 @@ export const strings = {
   // Task log
   done_badge:         { de: 'Erledigt',              en: 'Done'                },
   log_title:          { de: 'Verlauf',               en: 'History'             },
+  log_delete_entry:   { de: 'Eintrag löschen',       en: 'Delete entry'        },
   log_custom_btn:     { de: '+ Eigener Eintrag',     en: '+ Custom entry'      },
   log_task_subtitle:  { de: 'Saisonaufgabe abgehakt', en: 'Season task checked off' },
   log_empty:          { de: 'Noch keine Einträge.',  en: 'No entries yet.'     },
@@ -76,6 +79,8 @@ export const strings = {
   colonies_delete_confirm:     { de: 'Dieses Volk wirklich entfernen?',           en: 'Really remove this colony?'            },
   colonies_created_on:         { de: 'Angelegt am',                               en: 'Added on'                              },
   profile_title:    { de: 'Profil',                           en: 'Profile'                       },
+  theme_design_label: { de: 'Design',                          en: 'Design'                        },
+  lang_group_label:   { de: 'Sprache',                         en: 'Language'                      },
   hive_count_title: { de: 'Anzahl Völker',                    en: 'Number of hives'               },
   climate_title:    { de: 'Klimazone',                        en: 'Climate zone'                  },
   experience_title: { de: 'Erfahrung',                        en: 'Experience level'              },
@@ -286,6 +291,7 @@ export const strings = {
 
   // Colony detail
   colony_total_harvest:      { de: 'Honigernte gesamt',            en: 'Total harvest'            },
+  colony_harvest_unit:       { de: 'kg',                           en: 'kg'                      },
   colony_inspections_count:  { de: 'Kontrollen',                   en: 'Inspections'              },
 
   // Diagnose pre-fill

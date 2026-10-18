@@ -93,7 +93,7 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
           <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
             <div style={{ flex: 1, padding: '12px', borderRadius: 14, border: `1px solid ${border}`, background: 'transparent' }}>
               <p style={{ margin: '0 0 4px', fontSize: 12, color: inkMid, fontWeight: 600, textTransform: 'uppercase' }}>{t(s.colony_total_harvest)}</p>
-              <p style={{ margin: 0, fontSize: 20, fontWeight: 700, color: ink }}>{totalHarvest.toFixed(1)} kg</p>
+              <p style={{ margin: 0, fontSize: 20, fontWeight: 700, color: ink }}>{totalHarvest.toFixed(1)} {t(s.colony_harvest_unit)}</p>
             </div>
             <div style={{ flex: 1, padding: '12px', borderRadius: 14, border: `1px solid ${border}`, background: 'transparent' }}>
               <p style={{ margin: '0 0 4px', fontSize: 12, color: inkMid, fontWeight: 600, textTransform: 'uppercase' }}>{t(s.colony_inspections_count)}</p>

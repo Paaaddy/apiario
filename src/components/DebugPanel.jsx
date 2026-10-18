@@ -1,3 +1,7 @@
+// Developer-only panel: rendered behind `import.meta.env.DEV && ?debug`, never
+// shipped to users. Its labels serve the person debugging the app, who reads
+// English, so the bilingual contract does not apply here.
+/* eslint-disable i18n/no-hardcoded-ui-text */
 import { useState } from 'react'
 import { haptics } from '../utils/haptics'
 

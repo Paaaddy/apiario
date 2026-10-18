@@ -1,6 +1,7 @@
 import { useTheme } from '../hooks/useTheme'
 import { useLanguage } from '../hooks/useLanguage'
 import { getButtonStyle } from '../utils/themeButtonStyle'
+import { strings as s } from '../i18n/strings'
 
 const THEMES = [
   { key: 'a', de: 'Honigwabe', en: 'Honeycomb', icon: '🍯' },
@@ -10,12 +11,12 @@ const THEMES = [
 
 export default function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
-  const { locale } = useLanguage()
+  const { locale, t } = useLanguage()
 
   return (
     <div style={{ marginBottom: 24 }}>
       <h3 style={{ fontFamily: 'var(--theme-font-head, serif)', fontSize: 12, fontWeight: 600, color: 'var(--theme-ink-mid, #92400e)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8, marginTop: 0 }}>
-        Design
+        {t(s.theme_design_label)}
       </h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {THEMES.map(({ key, de, en, icon }) => {

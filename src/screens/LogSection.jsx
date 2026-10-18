@@ -119,8 +119,9 @@ export default function LogSection({ log = [], onAddEntry, onDeleteEntry }) {
                     }`}
                   >
                     <button
-                      aria-label="Delete entry"
+                      type="button"
                       onClick={() => onDeleteEntry?.(entry.id)}
+                      aria-label={t(s.log_delete_entry)}
                       className="absolute top-2.5 right-2.5 text-brown-mid/40 hover:text-brown-mid text-xs leading-none"
                     >
                       ×
