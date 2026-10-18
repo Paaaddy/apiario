@@ -13,7 +13,7 @@ const URGENCY_STYLES = {
 }
 
 
-const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate = null, onToggle, inGlassContainer = false }) {
+const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate = null, onToggle }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const c = themeColors(theme)
