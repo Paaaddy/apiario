@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.1](https://github.com/Paaaddy/apiario/compare/v2.7.0...v2.7.1) (2026-10-19)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the testing group across 1 directory with 4 updates ([#149](https://github.com/Paaaddy/apiario/issues/149)) ([23cd1f9](https://github.com/Paaaddy/apiario/commit/23cd1f986fa1513188857391a19cf5f31bd03cff))
+
 ## [2.7.0](https://github.com/Paaaddy/apiario/compare/v2.6.1...v2.7.0) (2026-10-16)
 
 
