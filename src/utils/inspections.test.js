@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { execFileSync } from 'node:child_process'
-import { groupByColony, latestByColony, latestOverall, parseInspectionDate, inspectionAgeDays, localDateString } from './inspections'
-import { buildColonyRecord } from './colonyRecords'
+import { groupByColony, latestByColony, latestOverall, parseInspectionDate, inspectionAgeDays, localDateString, buildColonyRecord } from './inspectionHistory'
 import { renderHook, act, cleanup } from '@testing-library/react'
 import { useInspections } from '../hooks/useInspections'
 
@@ -79,7 +78,7 @@ describe('Inspection calendar dates', () => {
     ['America/Los_Angeles', '2026-03-29', 0],
   ])('interprets the same instant using calendar days in %s regardless of the test host', (timezone, date, age) => {
     const script = `
-      import { localDateString, inspectionAgeDays } from './src/utils/inspections.js';
+      import { localDateString, inspectionAgeDays } from './src/utils/inspectionHistory.js';
       const now = new Date('2026-03-29T22:15:00Z');
       console.log(JSON.stringify({ date: localDateString(now), age: inspectionAgeDays('2026-03-29', now) }));
     `

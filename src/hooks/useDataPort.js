@@ -1,6 +1,5 @@
 import { useCallback, useRef, useSyncExternalStore } from 'react'
-import { exportData as buildExport } from '../utils/dataPort'
-import { backupErrorOutcome, exportBackupOutcome, hasBackupRecovery, recoverBackup, restoreBackup, subscribeBackupRecovery } from '../utils/dataBackup'
+import { exportData as buildExport, backupErrorOutcome, exportBackupOutcome, hasBackupRecovery, recoverBackup, restoreBackup, subscribeBackupRecovery } from '../utils/durableStorage'
 import { MAX_BACKUP_BYTES } from '../utils/backupLimits'
 
 function triggerDownload(data) {

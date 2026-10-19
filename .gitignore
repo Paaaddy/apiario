@@ -6,3 +6,8 @@ dist-legacy/
 # the shared .claude/settings.json (safe permission allow-list) to be committed.
 .claude/settings.local.json
 .gstack/
+.agents/
+.claude/skills/
+.hermes/
+.pi/
+skills-lock.json

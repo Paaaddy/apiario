@@ -1,8 +1,7 @@
 import { useCallback } from 'react'
 import { useStoredState } from './useStoredState'
-import { PROFILE_SCHEMA_VERSION, migrateProfile, nextColonyId } from '../utils/profileMigration'
-import { isProfile, loadStoredValue } from '../utils/recordValidation'
-export { buildSeededColonies } from '../utils/profileMigration'
+import { PROFILE_SCHEMA_VERSION, migrateProfile, nextColonyId, isProfile, loadStoredValue } from '../utils/durableStorage'
+export { buildSeededColonies } from '../utils/durableStorage'
 
 const STORAGE_KEY = 'apiario-profile'
 const SCHEMA_VERSION = PROFILE_SCHEMA_VERSION

@@ -5,7 +5,7 @@ import { strings as s } from '../i18n/strings'
 import { themeColors } from '../utils/themeTokens'
 import InspectionCard from '../components/InspectionCard'
 import InspectionForm from '../components/InspectionForm'
-import { buildColonyRecord } from '../utils/colonyRecords'
+import { buildColonyRecord } from '../utils/inspectionHistory'
 
 const SPARKLINE_CONFIGS = [
   { key: 'varroa',      label: { de: 'Varroa / 100 Bienen', en: 'Varroa / 100 bees' }, min: 0, max: 10, lowerBetter: true },
@@ -40,18 +40,19 @@ function Sparkline({ data, min, max, strokeColor }) {
 }
 
 function SparklineCard({ label, data, min, max, strokeColor, lowerBetter, border, inkMid, mono }) {
+  const { t } = useLanguage()
   return (
     <div style={{ flex: '1 1 0', minWidth: 150, padding: '12px', borderRadius: 14, border: `1px solid ${border}`, background: 'transparent' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
         <p style={{ margin: 0, fontSize: 11, fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', color: inkMid, fontFamily: mono ? 'var(--theme-font-mono)' : undefined }}>
           {label}
         </p>
-        <span style={{ fontSize: 9, color: inkMid, opacity: 0.6 }}>{lowerBetter ? 'lower ▾' : 'higher ▴'}</span>
+        <span style={{ fontSize: 9, color: inkMid, opacity: 0.6 }}>{t(lowerBetter ? s.sparkline_lower : s.sparkline_higher)}</span>
       </div>
       {data.length >= 2 ? (
         <Sparkline data={data} min={min} max={max} strokeColor={strokeColor} />
       ) : (
-        <p style={{ margin: '8px 0 0', fontSize: 12, color: inkMid, opacity: 0.5 }}>Not enough data</p>
+        <p style={{ margin: '8px 0 0', fontSize: 12, color: inkMid, opacity: 0.5 }}>{t(s.sparkline_not_enough)}</p>
       )}
     </div>
   )
@@ -92,7 +93,7 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
           <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
             <div style={{ flex: 1, padding: '12px', borderRadius: 14, border: `1px solid ${border}`, background: 'transparent' }}>
               <p style={{ margin: '0 0 4px', fontSize: 12, color: inkMid, fontWeight: 600, textTransform: 'uppercase' }}>{t(s.colony_total_harvest)}</p>
-              <p style={{ margin: 0, fontSize: 20, fontWeight: 700, color: ink }}>{totalHarvest.toFixed(1)} kg</p>
+              <p style={{ margin: 0, fontSize: 20, fontWeight: 700, color: ink }}>{totalHarvest.toFixed(1)} {t(s.colony_harvest_unit)}</p>
             </div>
             <div style={{ flex: 1, padding: '12px', borderRadius: 14, border: `1px solid ${border}`, background: 'transparent' }}>
               <p style={{ margin: '0 0 4px', fontSize: 12, color: inkMid, fontWeight: 600, textTransform: 'uppercase' }}>{t(s.colony_inspections_count)}</p>

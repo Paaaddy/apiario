@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import { useStoredState } from './useStoredState'
-import { groupByColony, latestByColony } from '../utils/inspections'
+import { groupByColony, latestByColony } from '../utils/inspectionHistory'
 import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
-import { isInspection, uniqueRecords, loadStoredValue } from '../utils/recordValidation'
+import { isInspection, uniqueRecords, loadStoredValue } from '../utils/durableStorage'
 
 const STORAGE_KEY = 'apiario-inspections'
 const acceptsInspections = (value) => uniqueRecords(value, isInspection)

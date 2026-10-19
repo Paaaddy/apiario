@@ -5,7 +5,6 @@ import { useBackupRestoreController } from '../hooks/useBackupRestoreController'
 import { strings as s } from '../i18n/strings'
 import ThemeSwitcher from '../components/ThemeSwitcher'
 import { getButtonStyle } from '../utils/themeButtonStyle'
-import { themeColors } from '../utils/themeTokens'
 
 function OptionGroup({ title, options, currentValue, fieldKey, onUpdate, theme }) {
   return (
@@ -48,7 +47,6 @@ function DataPrivacyCollapse({ theme }) {
   const { status, canRecover, exportBackupFile, restoreFromInput } = useBackupRestoreController(t)
   const fileInputRef = useRef(null)
   const [expanded, setExpanded] = useState(false)
-  const c = themeColors(theme)
 
   async function handleExport() {
     exportBackupFile()

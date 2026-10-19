@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useDataPort } from './useDataPort'
-import { backupErrorOutcome } from '../utils/dataBackup'
+import { backupErrorOutcome } from '../utils/durableStorage'
 import { strings as s } from '../i18n/strings'
 
 function messageFor(result, t) {

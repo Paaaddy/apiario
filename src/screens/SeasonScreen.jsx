@@ -222,7 +222,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
 
   const headerProps = {
     theme, selectedDate, icon, label, week, rangeLabel,
-    taskCount: tasks.length, viewingToday, locale, t,
+    taskCount: tasks.length, viewingToday, t,
     onPrev: goPreviousWeek, onNext: goNextWeek, onToday: goToday,
   }
 

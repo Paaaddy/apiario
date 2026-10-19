@@ -2,7 +2,7 @@ import { useMemo, useCallback } from 'react'
 import { haptics } from '../utils/haptics'
 import { MAX_TASK_LOG_ENTRIES as MAX_ENTRIES } from '../utils/retentionLimits'
 import { useStoredState } from './useStoredState'
-import { isLogEntry, uniqueRecords, loadStoredValue } from '../utils/recordValidation'
+import { isLogEntry, uniqueRecords, loadStoredValue } from '../utils/durableStorage'
 
 const STORAGE_KEY = 'apiario-log'
 const acceptsLog = (value) => uniqueRecords(value, (entry) => isLogEntry(entry, true))

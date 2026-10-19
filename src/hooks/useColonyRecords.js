@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { buildColonyRecords, findColonyRecord } from '../utils/colonyRecords'
+import { buildColonyRecords, findColonyRecord } from '../utils/inspectionHistory'
 
 export function useColonyRecords(colonies = [], inspections = [], today = null) {
   return useMemo(

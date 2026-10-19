@@ -5,7 +5,7 @@ import { strings as s } from '../i18n/strings'
 import InspectionCard from '../components/InspectionCard'
 import InspectionForm from '../components/InspectionForm'
 import { themeColors } from '../utils/themeTokens'
-import { groupByColony } from '../utils/inspections'
+import { groupByColony } from '../utils/inspectionHistory'
 
 const MAX_VISIBLE = 5
 

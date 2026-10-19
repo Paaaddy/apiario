@@ -4,7 +4,7 @@ import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import InspectionScaleInput from './InspectionScaleInput'
 import { themeColors } from '../utils/themeTokens'
-import { localDateString } from '../utils/inspections'
+import { localDateString } from '../utils/inspectionHistory'
 import { useDraftProtection } from '../hooks/useDraftProtection'
 
 const QUEEN_OPTIONS = [

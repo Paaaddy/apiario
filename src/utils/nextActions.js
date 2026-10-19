@@ -1,5 +1,5 @@
 import { routeFromInspection } from './diagnosisFlow'
-import { latestByColony, inspectionAgeDays } from './inspections'
+import { latestByColony, inspectionAgeDays } from './inspectionHistory'
 
 const KIND_RANK = {
   'diagnosis-warning': 0,

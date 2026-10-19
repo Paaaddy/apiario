@@ -10,7 +10,7 @@ function getSeasonPalette(date) {
   return { sun: '#6b8fa6', bloom: '#4a6b80', leaf: '#3a5b70', sunDeep: '#2a4b60' }
 }
 
-export default function SeasonHeader({ theme, selectedDate, icon, label, week, rangeLabel, taskCount, viewingToday, locale, t, onPrev, onNext, onToday }) {
+export default function SeasonHeader({ theme, selectedDate, icon, label, week, rangeLabel, taskCount, viewingToday, t, onPrev, onNext, onToday }) {
   const c = themeColors(theme)
   if (theme === 'c') {
     const pal = getSeasonPalette(selectedDate)
@@ -28,8 +28,8 @@ export default function SeasonHeader({ theme, selectedDate, icon, label, week, r
           <div style={{ position: 'relative', padding: '12px 22px 24px', zIndex: 2 }}>
             <h1 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 58, lineHeight: 0.92, fontWeight: 700, color: c.ink, letterSpacing: -1 }}>
               {viewingToday
-                ? (locale === 'de' ? <>Diese<br/><span style={{ fontStyle: 'italic', fontWeight: 400 }}>Woche.</span></> : <>This<br/><span style={{ fontStyle: 'italic', fontWeight: 400 }}>week.</span></>)
-                : (locale === 'de' ? <>Woche<br/><span style={{ fontStyle: 'italic', fontWeight: 400 }}>{week}.</span></> : <>Week<br/><span style={{ fontStyle: 'italic', fontWeight: 400 }}>{week}.</span></>)
+                ? <>{t(s.season_this_word)}<br/><span style={{ fontStyle: 'italic', fontWeight: 400 }}>{t(s.season_week_lower)}.</span></>
+                : <>{t(s.season_week)}<br/><span style={{ fontStyle: 'italic', fontWeight: 400 }}>{week}.</span></>
               }
             </h1>
             <p style={{ margin: '12px 0 0', fontSize: 13, color: c.ink, maxWidth: '80%' }}>
@@ -60,8 +60,8 @@ export default function SeasonHeader({ theme, selectedDate, icon, label, week, r
       </div>
       <h1 style={{ margin: '14px 0 4px', fontFamily: 'var(--theme-font-head)', fontSize: 42, lineHeight: 0.95, fontWeight: 400, color: c.ink, letterSpacing: -0.5 }}>
         {icon}{viewingToday
-          ? (locale === 'de' ? <> <span style={{ fontStyle: 'italic', fontWeight: 300 }}>Diese Woche.</span></> : <> <span style={{ fontStyle: 'italic', fontWeight: 300 }}>This week.</span></>)
-          : (locale === 'de' ? <> <span style={{ fontStyle: 'italic', fontWeight: 300 }}>Woche {week}.</span></> : <> <span style={{ fontStyle: 'italic', fontWeight: 300 }}>Week {week}.</span></>)
+          ? <> <span style={{ fontStyle: 'italic', fontWeight: 300 }}>{t(s.season_this_word)} {t(s.season_week_lower)}.</span></>
+          : <> <span style={{ fontStyle: 'italic', fontWeight: 300 }}>{t(s.season_week)} {week}.</span></>
         }
       </h1>
       <p style={{ margin: '4px 0 0', fontSize: 13, color: c.inkMid, fontFamily: 'var(--theme-font-head)' }}>
