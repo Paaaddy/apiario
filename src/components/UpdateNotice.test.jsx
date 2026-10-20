@@ -9,9 +9,11 @@ import InspectionForm from './InspectionForm'
 import ColoniesSection from '../screens/ColoniesSection'
 import LogSection from '../screens/LogSection'
 import { useInspections } from '../hooks/useInspections'
+import { buildColonyRecords } from '../utils/inspectionHistory'
 import StorageNotice from './StorageNotice'
 
 const colonies = [{ id: 'a', name: 'Apple' }]
+const colonyRecords = buildColonyRecords(colonies)
 const reload = vi.fn()
 function wrap(ui) { return render(<ThemeProvider><LanguageProvider>{ui}</LanguageProvider></ThemeProvider>) }
 beforeEach(() => { localStorage.setItem('apiario-locale', 'en'); reload.mockClear() })
@@ -58,7 +60,7 @@ it.each(['a', 'b', 'c'])('protects an Inspection draft and offers explicit updat
 })
 
 it('does not leave a parent draft blocker behind when a nested Inspection closes', () => {
-  const form = wrap(<ColoniesSection colonies={colonies} onAddInspection={vi.fn()} onSelectColony={vi.fn()} />)
+  const form = wrap(<ColoniesSection colonyRecords={colonyRecords} onAddInspection={vi.fn()} onSelectColony={vi.fn()} />)
   fireEvent.click(screen.getByRole('button', { name: '+ Inspect' }))
   fireEvent.change(screen.getByLabelText('Date'), { target: { value: '2026-05-02' } })
   act(() => requestAppReload(reload))
@@ -69,7 +71,7 @@ it('does not leave a parent draft blocker behind when a nested Inspection closes
 })
 
 it('saving one Colony draft does not unprotect another draft', () => {
-  wrap(<ColoniesSection colonies={colonies} onAdd={vi.fn()} onUpdate={vi.fn()} onSelectColony={vi.fn()} />)
+  wrap(<ColoniesSection colonyRecords={colonyRecords} onAdd={vi.fn()} onUpdate={vi.fn()} onSelectColony={vi.fn()} />)
   fireEvent.click(screen.getByRole('button', { name: /Add a colony/ }))
   fireEvent.change(screen.getByRole('textbox', { name: /Colony name/ }), { target: { value: 'Birch' } })
   fireEvent.click(screen.getByRole('button', { name: 'Edit' }))

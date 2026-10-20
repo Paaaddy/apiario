@@ -3,18 +3,10 @@ import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import InspectionForm from '../components/InspectionForm'
 import { useDraftProtection } from '../hooks/useDraftProtection'
-
-function lastInspectedLabel(status, t) {
-  if (!status || status.kind === 'never') return t(s.insp_never)
-  if (status.kind === 'today') return t(s.insp_today)
-  if (status.kind === 'yesterday') return t(s.insp_yesterday)
-  if (status.kind === 'daysAgo') return t(s.insp_days_ago).replace('{n}', status.days)
-  return t(s.insp_never)
-}
+import { lastInspectedLabel } from '../utils/inspectionHistory'
 
 export default function ColoniesSection({
-  colonyRecords = null,
-  colonies = [],
+  colonyRecords = [],
   onAdd,
   onUpdate,
   onRemove,
@@ -24,11 +16,7 @@ export default function ColoniesSection({
   const { t } = useLanguage()
   const { markDraft: markAddDraft, clearDraft: clearAddDraft } = useDraftProtection()
   const { markDraft: markEditDraft, clearDraft: clearEditDraft } = useDraftProtection()
-  const records = colonyRecords ?? colonies.map((colony) => ({
-    colony,
-    lastInspected: { kind: 'never' },
-  }))
-  const colonyList = records.map((record) => record.colony)
+  const colonyList = colonyRecords.map((record) => record.colony)
 
   const [isAdding, setIsAdding] = useState(false)
   const [draftName, setDraftName] = useState('')
@@ -98,7 +86,7 @@ export default function ColoniesSection({
       )}
 
       <ul className="flex flex-col gap-2 mb-3">
-        {records.map((record) => {
+        {colonyRecords.map((record) => {
           const colony = record.colony
           return editingId === colony.id ? (
             <li
@@ -158,7 +146,7 @@ export default function ColoniesSection({
                     </p>
                   )}
                   <p className="mt-1 text-xs text-brown-mid/60">
-                    {t(s.insp_last_inspected)}: {lastInspectedLabel(record.lastInspected, t)}
+                    {t(s.insp_last_inspected)}: {lastInspectedLabel(record.lastInspected, t, s)}
                   </p>
                   {colony.createdAt && (
                     <p className="mt-0.5 text-xs text-brown-mid/40">

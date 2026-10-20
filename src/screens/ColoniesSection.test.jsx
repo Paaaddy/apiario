@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { LanguageProvider } from '../context/LanguageContext'
 import ColoniesSection from './ColoniesSection'
+import { buildColonyRecord, buildColonyRecords } from '../utils/inspectionHistory'
 
 beforeEach(() => {
   localStorage.setItem('apiario-locale', 'en')
@@ -21,14 +22,17 @@ const sampleColonies = [
   { id: 'col-2', name: 'Garden', createdAt: '2026-03-05', notes: '' },
 ]
 
+// ColoniesSection renders colony records, so the tests build real ones.
+const sampleRecords = buildColonyRecords(sampleColonies)
+
 describe('ColoniesSection', () => {
   it('renders the empty state when there are no colonies', () => {
-    wrap(<ColoniesSection colonies={[]} />)
+    wrap(<ColoniesSection colonyRecords={[]} />)
     expect(screen.getByText(/no colonies added yet/i)).toBeInTheDocument()
   })
 
   it('lists every colony with its name, notes and created date', () => {
-    wrap(<ColoniesSection colonies={sampleColonies} />)
+    wrap(<ColoniesSection colonyRecords={sampleRecords} />)
     expect(screen.getByText(/🐝 Apple tree/)).toBeInTheDocument()
     expect(screen.getByText(/Next to the south wall/)).toBeInTheDocument()
     expect(screen.getByText(/🐝 Garden/)).toBeInTheDocument()
@@ -37,7 +41,7 @@ describe('ColoniesSection', () => {
 
   it('opens an add form when "+ Add a colony" is clicked', async () => {
     const user = userEvent.setup()
-    wrap(<ColoniesSection colonies={[]} onAdd={() => {}} />)
+    wrap(<ColoniesSection colonyRecords={[]} onAdd={() => {}} />)
     await user.click(screen.getByRole('button', { name: /add a colony/i }))
     expect(
       screen.getByPlaceholderText(/colony name/i)
@@ -47,7 +51,7 @@ describe('ColoniesSection', () => {
   it('calls onAdd with the trimmed name and notes', async () => {
     const user = userEvent.setup()
     const onAdd = vi.fn()
-    wrap(<ColoniesSection colonies={[]} onAdd={onAdd} />)
+    wrap(<ColoniesSection colonyRecords={[]} onAdd={onAdd} />)
     await user.click(screen.getByRole('button', { name: /add a colony/i }))
     await user.type(screen.getByPlaceholderText(/colony name/i), '  Cherry  ')
     await user.type(screen.getByPlaceholderText(/notes/i), 'Young colony')
@@ -58,7 +62,7 @@ describe('ColoniesSection', () => {
   it('does not submit when the name is empty', async () => {
     const user = userEvent.setup()
     const onAdd = vi.fn()
-    wrap(<ColoniesSection colonies={[]} onAdd={onAdd} />)
+    wrap(<ColoniesSection colonyRecords={[]} onAdd={onAdd} />)
     await user.click(screen.getByRole('button', { name: /add a colony/i }))
     await user.click(screen.getByRole('button', { name: /^save$/i }))
     expect(onAdd).not.toHaveBeenCalled()
@@ -67,7 +71,7 @@ describe('ColoniesSection', () => {
   it('cancel closes the add form without calling onAdd', async () => {
     const user = userEvent.setup()
     const onAdd = vi.fn()
-    wrap(<ColoniesSection colonies={[]} onAdd={onAdd} />)
+    wrap(<ColoniesSection colonyRecords={[]} onAdd={onAdd} />)
     await user.click(screen.getByRole('button', { name: /add a colony/i }))
     await user.type(screen.getByPlaceholderText(/colony name/i), 'Discarded')
     await user.click(screen.getByRole('button', { name: /cancel/i }))
@@ -78,7 +82,7 @@ describe('ColoniesSection', () => {
   it('enters edit mode and calls onUpdate with the new values', async () => {
     const user = userEvent.setup()
     const onUpdate = vi.fn()
-    wrap(<ColoniesSection colonies={sampleColonies} onUpdate={onUpdate} />)
+    wrap(<ColoniesSection colonyRecords={sampleRecords} onUpdate={onUpdate} />)
     const editButtons = screen.getAllByRole('button', { name: /edit/i })
     await user.click(editButtons[0])
     const nameField = screen.getByDisplayValue('Apple tree')
@@ -95,7 +99,7 @@ describe('ColoniesSection', () => {
     const user = userEvent.setup()
     const onRemove = vi.fn()
     vi.spyOn(window, 'confirm').mockImplementation(() => true)
-    wrap(<ColoniesSection colonies={sampleColonies} onRemove={onRemove} />)
+    wrap(<ColoniesSection colonyRecords={sampleRecords} onRemove={onRemove} />)
     const removeButtons = screen.getAllByRole('button', { name: /remove/i })
     await user.click(removeButtons[0])
     expect(onRemove).toHaveBeenCalledWith('col-1')
@@ -105,8 +109,22 @@ describe('ColoniesSection', () => {
     const user = userEvent.setup()
     const onRemove = vi.fn()
     vi.spyOn(window, 'confirm').mockImplementation(() => false)
-    wrap(<ColoniesSection colonies={sampleColonies} onRemove={onRemove} />)
+    wrap(<ColoniesSection colonyRecords={sampleRecords} onRemove={onRemove} />)
     await user.click(screen.getAllByRole('button', { name: /remove/i })[0])
     expect(onRemove).not.toHaveBeenCalled()
+  })
+
+  it('reports an unreadable inspection date instead of "never inspected"', () => {
+    // The latest inspection is dated, but its age cannot be computed, so the
+    // record reports the 'unknown' status rather than 'never'.
+    const unknown = buildColonyRecord(
+      { id: 'col-3', name: 'Cherry', createdAt: '2026-03-09', notes: '' },
+      [{ id: 'i9', colonyId: 'col-3', date: '2026-05-01' }],
+      { today: new Date('unusable') }
+    )
+    expect(unknown.lastInspected).toEqual({ kind: 'unknown' })
+    wrap(<ColoniesSection colonyRecords={[unknown]} />)
+    expect(screen.getByText(/Last inspected: Unknown inspection date/)).toBeInTheDocument()
+    expect(screen.queryByText(/Never inspected/)).not.toBeInTheDocument()
   })
 })

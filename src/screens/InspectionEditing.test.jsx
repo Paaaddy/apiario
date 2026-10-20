@@ -5,7 +5,7 @@ import { LanguageProvider } from '../context/LanguageContext'
 import InspectionTab from './InspectionTab'
 import ColonyDetail from './ColonyDetail'
 import ColoniesSection from './ColoniesSection'
-import { buildColonyRecord } from '../utils/inspectionHistory'
+import { buildColonyRecord, buildColonyRecords } from '../utils/inspectionHistory'
 
 const colonies = [{ id: 'a', name: 'Apple' }, { id: 'b', name: 'Birch' }]
 const inspections = [{ id: 'i', colonyId: 'a', date: '2026-05-01', queenStatus: 'seen' }]
@@ -34,7 +34,7 @@ it.each([
 })
 
 it('keeps an invalid quick-add Inspection draft through the Colony screen', async () => {
-  wrap(<ColoniesSection colonies={colonies} onAddInspection={() => ({ ok: false, error: 'validation', messageKey: 'record_invalid' })} />)
+  wrap(<ColoniesSection colonyRecords={buildColonyRecords(colonies)} onAddInspection={() => ({ ok: false, error: 'validation', messageKey: 'record_invalid' })} />)
   fireEvent.click(screen.getAllByRole('button', { name: '+ Inspect' })[0])
   fireEvent.click(screen.getByRole('button', { name: /👑 Seen/ }))
   fireEvent.click(screen.getByRole('button', { name: 'Save', exact: true }))
