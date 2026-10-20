@@ -1,3 +1,14 @@
+/**
+ * The colony record module: one colony together with its derived inspection
+ * history and metrics.
+ *
+ * It owns the whole derivation — parsing and ordering inspection dates
+ * (including the ambiguous same-day and missing-date cases), grouping and
+ * selecting the latest observation, the metric series with their bounds and
+ * labels, and the last-inspected status and its text. Consumers read those
+ * answers off a record; none of them reimplements any part of it.
+ */
+
 export function parseInspectionDate(value) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null
   const [year, month, day] = value.split('-').map(Number)
