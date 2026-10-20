@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useStoredState } from './useStoredState'
-import { groupByColony, latestByColony } from '../utils/inspectionHistory'
+import { colonyChronology } from '../utils/inspectionHistory'
 import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
 import { isInspection, uniqueRecords, loadStoredValue } from '../utils/durableStorage'
 
@@ -59,17 +59,18 @@ export function useInspections() {
     })
   }, [setInspections])
 
-  const byColony = useMemo(() => groupByColony(inspections), [inspections])
-  const latest = useMemo(() => latestByColony(inspections), [inspections])
+  // One chronology pass feeds both accessors, so the latest a caller reads can
+  // never disagree with the history it came from.
+  const chronology = useMemo(() => colonyChronology(inspections), [inspections])
 
   const getColonyInspections = useCallback(
-    (colonyId) => byColony.get(colonyId) ?? [],
-    [byColony]
+    (colonyId) => chronology.byColony.get(colonyId) ?? [],
+    [chronology]
   )
 
   const getLatestInspection = useCallback(
-    (colonyId) => latest.get(colonyId) ?? null,
-    [latest]
+    (colonyId) => chronology.latest.get(colonyId) ?? null,
+    [chronology]
   )
 
   return {
