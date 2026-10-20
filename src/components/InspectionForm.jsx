@@ -3,6 +3,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import InspectionScaleInput from './InspectionScaleInput'
+import SectionLabel from './SectionLabel'
 import { themeColors } from '../utils/themeTokens'
 import { localDateString } from '../utils/inspectionHistory'
 import { useDraftProtection } from '../hooks/useDraftProtection'
@@ -19,14 +20,6 @@ const TEMPERAMENT_OPTIONS = [
   { value: 'normal',    key: 'insp_temperament_normal'    },
   { value: 'defensive', key: 'insp_temperament_defensive' },
 ]
-
-function SectionLabel({ text, color, mono }) {
-  return (
-    <p style={{ margin: '20px 0 10px', fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color, fontFamily: mono ? 'var(--theme-font-mono)' : undefined }}>
-      {text}
-    </p>
-  )
-}
 
 function FieldLabel({ text, htmlFor, id, color }) {
   const style = { margin: '0 0 6px', fontSize: 13, fontWeight: 600, color, display: 'block' }

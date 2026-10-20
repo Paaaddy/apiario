@@ -5,6 +5,7 @@ import { strings as s } from '../i18n/strings'
 import { themeColors } from '../utils/themeTokens'
 import InspectionCard from '../components/InspectionCard'
 import InspectionForm from '../components/InspectionForm'
+import SectionLabel from '../components/SectionLabel'
 import { colonyMetricSeries } from '../utils/inspectionHistory'
 
 function buildSparklinePoints(values, w, h, pad) {
@@ -149,13 +150,5 @@ export default function ColonyDetail({ colonyRecord, colonies = [], onBack, onUp
         />
       )}
     </div>
-  )
-}
-
-function SectionLabel({ text, color, mono }) {
-  return (
-    <p style={{ margin: '20px 0 10px', fontSize: 11, fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color, fontFamily: mono ? 'var(--theme-font-mono)' : undefined }}>
-      {text}
-    </p>
   )
 }
