@@ -1,3 +1,8 @@
+import { isNavTab } from '../hooks/useNavigationHandoff'
+
+/** Session actions are not destinations; everything else must name a real tab. */
+const SESSION_ACTIONS = new Set(['stop'])
+
 export const VOICE_CONFIG = {
   de: {
     lang: 'de-DE',
@@ -68,10 +73,22 @@ export function matchCommand(transcript, commandMap) {
  * happen: the tab to navigate to (or 'stop', or null for a no-nav
  * command/unrecognised phrase) and the text to speak back. Callers
  * apply the side effects themselves.
+ *
+ * Which phrases may navigate is the navigation handoff module's
+ * vocabulary, not this table's: a phrase that no longer names a real tab
+ * degrades to the unknown response instead of reaching the shell.
  */
 export function dispatchVoiceCommand(transcript, locale) {
   const config = VOICE_CONFIG[locale] ?? VOICE_CONFIG.en
   const command = matchCommand(transcript, config.commands)
+  const resolved = resolveCommand(command, config)
+  if (resolved.action && !SESSION_ACTIONS.has(resolved.action) && !isNavTab(resolved.action)) {
+    return { action: null, spokenText: config.speech.unknown }
+  }
+  return resolved
+}
+
+function resolveCommand(command, config) {
   switch (command) {
     case 'stop':
       return { action: 'stop', spokenText: config.bye }

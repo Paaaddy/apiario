@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo, useRef, lazy, Suspense } from 'react'
+import { useEffect, useMemo, lazy, Suspense } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
@@ -11,13 +11,11 @@ import { useSeason } from './hooks/useSeason'
 import { useCurrentDate } from './hooks/useCurrentDate'
 import { useHandsFreeSession } from './hooks/useHandsFreeSession'
 import { useColonyRemoval } from './hooks/useColonyRemoval'
+import { useNavigationHandoff } from './hooks/useNavigationHandoff'
 import { strings as s } from './i18n/strings'
 import UpdateNotice from './components/UpdateNotice'
 import VoiceNotice from './components/VoiceNotice'
-import { runWithViewTransition } from './utils/viewTransitions'
-import { haptics } from './utils/haptics'
 import { requestPersistentStorage } from './utils/persistStorage'
-import NextActionNotice from './components/NextActionNotice'
 import StorageNotice from './components/StorageNotice'
 import BackupRecoveryNotice from './components/BackupRecoveryNotice'
 import HostingMigrationNotice from './components/HostingMigrationNotice'
@@ -37,12 +35,6 @@ const MyHiveScreen  = lazy(() => import('./screens/MyHiveScreen'))
 const LearnScreen   = lazy(() => import('./screens/LearnScreen'))
 
 const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
-const VALID_TABS = ['season', 'diagnose', 'inspect', 'learn', 'myhive']
-function initialTab() {
-  const q = new URLSearchParams(window.location.search).get('tab')
-  return VALID_TABS.includes(q) ? q : 'season'
-}
-
 function AppContent() {
   const { locale, t } = useLanguage()
   const { profile, updateProfile, addColony, updateColony, removeColony, persistenceError: profileError, retrySave: retryProfile } = useProfile()
@@ -57,28 +49,9 @@ function AppContent() {
   )
 
   const colonyRemoval = useColonyRemoval(removeColony, removeInspectionsByColonyId)
-  const [activeTab, setActiveTabState] = useState(initialTab)
-  const [nextAction, setNextAction] = useState(null)
-  const actionSequence = useRef(0)
-  const targetColonyExists = !nextAction?.colonyId || profile.colonies.some((colony) => colony.id === nextAction.colonyId)
-
-  // Wrap tab changes in the View Transitions API when available so
-  // the user sees a native-feeling cross-fade between Season / Diagnose
-  // / My Hive instead of a hard swap. Also gives a small haptic tap
-  // on the tab change.
-  const setActiveTab = useCallback((next, action = null) => {
-    haptics.tap()
-    runWithViewTransition(() => {
-      setNextAction(action)
-      setActiveTabState(next)
-    })
-  }, [])
-
-  const handleNextAction = useCallback((target) => {
-    if (target?.tab && VALID_TABS.includes(target.tab)) {
-      setActiveTab(target.tab, { ...target, selectionId: ++actionSequence.current })
-    }
-  }, [setActiveTab])
+  // The navigation handoff seam owns which tab is showing, what the current
+  // handoff is, whether its target still exists, and the notice that says so.
+  const navigation = useNavigationHandoff({ colonies: profile.colonies, inspections })
 
   // Surface the number of outstanding urgent/important tasks on the
   // installed app icon — the beekeeper sees "3" on the home screen
@@ -106,7 +79,7 @@ function AppContent() {
     }
   }, [profile?.onboardingDone])
 
-  const handsFree = useHandsFreeSession(locale, setActiveTab)
+  const handsFree = useHandsFreeSession(locale, navigation.navigate)
   const pwaInstall = usePwaInstallPrompt()
 
   if (!profile.onboardingDone) {
@@ -146,9 +119,9 @@ function AppContent() {
       )}
       <VoiceNotice feedback={handsFree.feedback} onRestart={handsFree.start} onDismiss={handsFree.dismissFeedback} />
       <main className="flex-1 overflow-y-auto">
-        {!targetColonyExists && <NextActionNotice key={nextAction.selectionId} />}
+        {navigation.notice}
         <Suspense fallback={<div className="flex-1" />}>
-          {activeTab === 'season' && (
+          {navigation.activeTab === 'season' && (
             <SeasonScreen
               today={today}
               profile={profile}
@@ -156,14 +129,15 @@ function AppContent() {
               completedTaskIds={completedTaskIds}
               onToggleTask={toggleTask}
               inspections={inspections}
-              onNextAction={handleNextAction}
-              nextAction={nextAction}
+              onNextAction={navigation.dispatch}
+              nextAction={navigation.handoff}
+              onTargetScope={navigation.reportTargetScope}
             />
           )}
-          {activeTab === 'diagnose' && <DiagnoseScreen inspections={targetColonyExists ? inspections : []} nextAction={nextAction} />}
-          {activeTab === 'inspect' && (
+          {navigation.activeTab === 'diagnose' && <DiagnoseScreen inspections={navigation.handoffInspections} nextAction={navigation.handoff} />}
+          {navigation.activeTab === 'inspect' && (
             <InspectScreen
-              initialColonyId={targetColonyExists ? nextAction?.colonyId : undefined}
+              initialColonyId={navigation.handoffColonyId}
               colonies={profile?.colonies ?? []}
               inspections={inspections}
               onAdd={addInspection}
@@ -171,8 +145,8 @@ function AppContent() {
               onDelete={removeInspection}
             />
           )}
-          {activeTab === 'learn' && <LearnScreen />}
-          {activeTab === 'myhive' && (
+          {navigation.activeTab === 'learn' && <LearnScreen />}
+          {navigation.activeTab === 'myhive' && (
             <MyHiveScreen
               profile={profile}
               onUpdate={updateProfile}
@@ -191,7 +165,7 @@ function AppContent() {
           )}
         </Suspense>
       </main>
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav activeTab={navigation.activeTab} onTabChange={navigation.navigate} />
       <BeeFab onActivate={handsFree.start} isActive={handsFree.isActive || handsFree.isStarting} />
       <PwaInstallHint
         isInstalled={pwaInstall.isInstalled}

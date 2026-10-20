@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
-import { strings as s } from '../i18n/strings'
+import { NAV_TABS } from '../hooks/useNavigationHandoff'
 import { themeColors } from '../utils/themeTokens'
 
 function SproutIcon({ active }) {
@@ -63,18 +63,19 @@ function BookIcon({ active }) {
   )
 }
 
+const ICONS = { season: SproutIcon, diagnose: MagnifyIcon, inspect: ClipboardIcon, learn: BookIcon, myhive: HiveIcon }
+
 const BottomNav = memo(function BottomNav({ activeTab, onTabChange }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const c = themeColors(theme)
 
-  const TABS = useMemo(() => [
-    { key: 'season',   label: t(s.nav_season),   emoji: '📅', Icon: SproutIcon },
-    { key: 'diagnose', label: t(s.nav_diagnose),  emoji: '🔎', Icon: MagnifyIcon },
-    { key: 'inspect',  label: t(s.nav_inspect),   emoji: '📋', Icon: ClipboardIcon },
-    { key: 'learn',    label: t(s.nav_learn),     emoji: '📚', Icon: BookIcon },
-    { key: 'myhive',   label: t(s.nav_myhive),    emoji: '🐝', Icon: HiveIcon },
-  ], [t])
+  // The tab vocabulary is the navigation handoff module's; the icons are
+  // the only per-theme presentation this component adds.
+  const TABS = useMemo(
+    () => NAV_TABS.map(({ key, label, emoji }) => ({ key, label: t(label), emoji, Icon: ICONS[key] })),
+    [t]
+  )
 
   if (theme === 'c') {
     return (

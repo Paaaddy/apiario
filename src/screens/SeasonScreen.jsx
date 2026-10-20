@@ -13,7 +13,6 @@ import { addWeeks, isSameIsoWeek } from '../utils/season'
 import { haptics } from '../utils/haptics'
 import { themeColors } from '../utils/themeTokens'
 import { buildNextActions } from '../utils/nextActions'
-import NextActionNotice from '../components/NextActionNotice'
 
 if (import.meta.env.DEV) {
   validateSeasonsTree()
@@ -145,7 +144,7 @@ function NextActionsPanel({ actions, theme, onNextAction }) {
   )
 }
 
-export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask, inspections = [], onNextAction, nextAction, today: suppliedToday }) {
+export default function SeasonScreen({ profile, log, completedTaskIds, onToggleTask, inspections = [], onNextAction, nextAction, onTargetScope, today: suppliedToday }) {
   const { t, locale } = useLanguage()
   const { theme } = useTheme()
   const completedCount = completedTaskIds?.size ?? 0
@@ -181,24 +180,17 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   const taskElements = useRef(new Map())
   const consumedAction = useRef(null)
   useEffect(() => {
-    if (!nextAction?.taskId || consumedAction.current === nextAction) return
+    if (!nextAction || consumedAction.current === nextAction) return
     consumedAction.current = nextAction
+    // The handoff is consumed here, once per selection: the seam decides
+    // from the tasks on screen whether its target still exists, and we move
+    // focus to the task it named.
+    onTargetScope?.(tasks.map((task) => task.id))
     const element = taskElements.current.get(nextAction.taskId)
     element?.focus({ preventScroll: true })
     element?.scrollIntoView?.({ block: 'center', behavior: 'auto' })
-  }, [nextAction, tasks])
+  }, [nextAction, tasks, onTargetScope])
 
-  const [taskHandoff, setTaskHandoff] = useState(() => ({
-    action: nextAction,
-    unavailable: Boolean(nextAction?.taskId && !tasks.some((task) => task.id === nextAction.taskId)),
-  }))
-  if (taskHandoff.action !== nextAction) {
-    setTaskHandoff({
-      action: nextAction,
-      unavailable: Boolean(nextAction?.taskId && !tasks.some((task) => task.id === nextAction.taskId)),
-    })
-  }
-  const notice = taskHandoff.unavailable ? <NextActionNotice key={nextAction.selectionId} /> : null
   function renderTask(task, inGlassContainer = false) {
     const logEntry = logByTaskId.get(task.id)
     return (
@@ -234,7 +226,6 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 14px 120px' }}>
           <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
-          {notice}
           {tasks.length === 0 ? (
             <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: '"Playfair Display", serif', fontSize: 18 }}>{t(s.season_nothing)}</p>
           ) : (
@@ -267,7 +258,6 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
         <SeasonHeader {...headerProps} />
         <div style={{ padding: '0 24px 120px' }}>
           <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
-          {notice}
           {tasks.length === 0 ? (
             <p style={{ textAlign: 'center', color: c.inkMid, padding: '2rem 0', fontFamily: 'var(--theme-font-head)', fontSize: 18, fontStyle: 'italic' }}>{t(s.season_nothing)}</p>
           ) : (
@@ -336,7 +326,6 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
 
       <div className="flex-1 px-4 py-5 flex flex-col gap-3">
         <NextActionsPanel actions={nextActions} theme={theme} onNextAction={onNextAction} />
-        {notice}
         {tasks.length === 0 ? (
           <p className="text-center text-brown-mid py-8 font-serif text-lg">{t(s.season_nothing)}</p>
         ) : (
