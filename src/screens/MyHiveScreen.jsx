@@ -44,8 +44,7 @@ export default function MyHiveScreen({
         if (selectedColonyId && selectedColonyRecord) {
           return (
             <ColonyDetail
-              colony={selectedColonyRecord}
-              inspections={[]}
+              colonyRecord={selectedColonyRecord}
               colonies={colonies}
               onBack={() => setSelectedColonyId(null)}
               onUpdateInspection={onUpdateInspection}

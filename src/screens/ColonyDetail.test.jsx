@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { LanguageProvider } from '../context/LanguageContext'
 import { ThemeProvider } from '../context/ThemeContext'
 import ColonyDetail from './ColonyDetail'
+import { buildColonyRecord } from '../utils/inspectionHistory'
 
 beforeEach(() => {
   localStorage.setItem('apiario-locale', 'en')
@@ -24,28 +25,33 @@ const inspections = [
   { id: 'i3', colonyId: 'col-2', date: '2026-06-05', queenStatus: 'seen', varroa: 1, broodPattern: 2, population: 3, honeyStores: 2, harvest: 3 },
 ]
 
+// ColonyDetail renders a colony record; the tests build real ones through the
+// module rather than handing it a bare colony to derive from.
+const record = buildColonyRecord(colony, inspections)
+const singleRecord = buildColonyRecord(colony, [inspections[0]])
+const emptyRecord = buildColonyRecord({ id: 'col-9', name: 'Empty Hive' }, inspections)
+
 describe('ColonyDetail', () => {
   it('sums harvest and counts inspections for the selected colony only', () => {
-    wrap(<ColonyDetail colony={colony} inspections={inspections} onBack={vi.fn()} />)
+    wrap(<ColonyDetail colonyRecord={record} onBack={vi.fn()} />)
     expect(screen.getByText('12.5 kg')).toBeInTheDocument()
     expect(screen.getByText('2')).toBeInTheDocument()
   })
 
   it('shows the empty-history message when the colony has no inspections', () => {
-    wrap(<ColonyDetail colony={{ id: 'col-9', name: 'Empty Hive' }} inspections={inspections} onBack={vi.fn()} />)
+    wrap(<ColonyDetail colonyRecord={emptyRecord} onBack={vi.fn()} />)
     expect(screen.getByText(/no inspections for this colony yet/i)).toBeInTheDocument()
     expect(screen.getByText('0.0 kg')).toBeInTheDocument()
   })
 
   it('shows "not enough data" for a sparkline with fewer than 2 points', () => {
-    const single = [inspections[0]]
-    wrap(<ColonyDetail colony={colony} inspections={single} onBack={vi.fn()} />)
+    wrap(<ColonyDetail colonyRecord={singleRecord} onBack={vi.fn()} />)
     expect(screen.getAllByText('Not enough data').length).toBeGreaterThan(0)
   })
 
   it('calls onBack when the back button is clicked', () => {
     const onBack = vi.fn()
-    wrap(<ColonyDetail colony={colony} inspections={inspections} onBack={onBack} />)
+    wrap(<ColonyDetail colonyRecord={record} onBack={onBack} />)
     fireEvent.click(screen.getByText('←'))
     expect(onBack).toHaveBeenCalled()
   })
@@ -54,8 +60,7 @@ describe('ColonyDetail', () => {
     const onUpdateInspection = vi.fn()
     wrap(
       <ColonyDetail
-        colony={colony}
-        inspections={inspections}
+        colonyRecord={record}
         colonies={[colony]}
         onBack={vi.fn()}
         onUpdateInspection={onUpdateInspection}
@@ -73,8 +78,7 @@ describe('ColonyDetail', () => {
     const onDeleteInspection = vi.fn()
     wrap(
       <ColonyDetail
-        colony={colony}
-        inspections={inspections}
+        colonyRecord={record}
         onBack={vi.fn()}
         onDeleteInspection={onDeleteInspection}
       />

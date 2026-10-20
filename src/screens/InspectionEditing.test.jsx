@@ -5,6 +5,7 @@ import { LanguageProvider } from '../context/LanguageContext'
 import InspectionTab from './InspectionTab'
 import ColonyDetail from './ColonyDetail'
 import ColoniesSection from './ColoniesSection'
+import { buildColonyRecord } from '../utils/inspectionHistory'
 
 const colonies = [{ id: 'a', name: 'Apple' }, { id: 'b', name: 'Birch' }]
 const inspections = [{ id: 'i', colonyId: 'a', date: '2026-05-01', queenStatus: 'seen' }]
@@ -21,7 +22,7 @@ it.each([
   const update = vi.fn(() => outcome)
   wrap(kind === 'list'
     ? <InspectionTab colonies={colonies} inspections={inspections} onUpdate={update} />
-    : <ColonyDetail colony={colonies[0]} colonies={colonies} inspections={inspections} onUpdateInspection={update} />)
+    : <ColonyDetail colonyRecord={buildColonyRecord(colonies[0], inspections)} colonies={colonies} onUpdateInspection={update} />)
   fireEvent.click(screen.getByLabelText(/2026-05-01/))
   fireEvent.click(screen.getByRole('button', { name: 'Edit', exact: true }))
   fireEvent.change(screen.getByLabelText('Colony'), { target: { value: 'b' } })

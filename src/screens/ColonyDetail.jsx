@@ -1,18 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
 import { themeColors } from '../utils/themeTokens'
 import InspectionCard from '../components/InspectionCard'
 import InspectionForm from '../components/InspectionForm'
-import { buildColonyRecord } from '../utils/inspectionHistory'
-
-const SPARKLINE_CONFIGS = [
-  { key: 'varroa',      label: { de: 'Varroa / 100 Bienen', en: 'Varroa / 100 bees' }, min: 0, max: 10, lowerBetter: true },
-  { key: 'broodPattern', label: { de: 'Brutstimmung', en: 'Brood pattern' }, min: 1, max: 5, lowerBetter: false },
-  { key: 'population',   labelKey: 'insp_population_label', min: 1, max: 5, lowerBetter: false },
-  { key: 'honeyStores',  labelKey: 'insp_honeystores_label', min: 1, max: 5, lowerBetter: false },
-]
+import { colonyMetricSeries } from '../utils/inspectionHistory'
 
 function buildSparklinePoints(values, w, h, pad) {
   const span = values.length === 1 ? 1 : values.length - 1
@@ -58,7 +51,7 @@ function SparklineCard({ label, data, min, max, strokeColor, lowerBetter, border
   )
 }
 
-export default function ColonyDetail({ colony, inspections, colonies = [], onBack, onUpdateInspection, onDeleteInspection }) {
+export default function ColonyDetail({ colonyRecord, colonies = [], onBack, onUpdateInspection, onDeleteInspection }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
   const [editTarget, setEditTarget] = useState(null)
@@ -73,11 +66,10 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
     return onUpdateInspection?.(editTarget.id, data)
   }
 
-  const colonyRecord = useMemo(
-    () => (colony?.colony ? colony : buildColonyRecord(colony, inspections)),
-    [colony, inspections]
-  )
-  const displayColony = colonyRecord?.colony ?? colony
+  // Bounds, labels and points all come off the record: this screen renders a
+  // colony record, it does not derive one.
+  const metricSeries = colonyMetricSeries(colonyRecord)
+  const displayColony = colonyRecord?.colony
   const historyNewestFirst = colonyRecord?.history ?? []
   const totalHarvest = colonyRecord?.totalHarvestKg ?? 0
 
@@ -111,13 +103,13 @@ export default function ColonyDetail({ colony, inspections, colonies = [], onBac
         <SectionLabel text={t(s.insp_history)} color={inkMid} mono={theme === 'b'} />
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 12, marginBottom: 20 }}>
-          {SPARKLINE_CONFIGS.map(cfg => {
-            const data = colonyRecord?.metrics?.[cfg.key]?.points ?? []
+          {metricSeries.map(cfg => {
+            const data = cfg.points
             const strokeColor = cfg.key === 'varroa' ? '#d44' : c.accent
             return (
               <SparklineCard
                 key={cfg.key}
-                label={cfg.label ? t(cfg.label) : t(s[cfg.labelKey])}
+                label={t(s[cfg.labelKey])}
                 data={data}
                 min={cfg.min}
                 max={cfg.max}
