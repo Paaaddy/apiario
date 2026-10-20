@@ -72,13 +72,24 @@ export function groupByColony(inspections) {
 }
 
 export function latestByColony(inspections) {
-  const grouped = groupByColony(inspections)
-  const map = new Map()
-  for (const [colonyId, arr] of grouped) {
-    const latest = arr.find((inspection) => parseInspectionDate(inspection.date))
-    if (latest) map.set(colonyId, latest)
+  return colonyChronology(inspections).latest
+}
+
+/**
+ * One pass over the inspections that answers both chronology questions every
+ * consumer asks: the ordered history per colony and that colony's latest
+ * dated observation. Building them together keeps the two answers derived
+ * from a single ordering, so no consumer can end up with a latest that its
+ * own history disagrees with.
+ */
+export function colonyChronology(inspections) {
+  const byColony = groupByColony(inspections)
+  const latest = new Map()
+  for (const [colonyId, history] of byColony) {
+    const latestInspection = history.find((inspection) => parseInspectionDate(inspection.date))
+    if (latestInspection) latest.set(colonyId, latestInspection)
   }
-  return map
+  return { byColony, latest }
 }
 
 export function latestOverall(inspections) {
@@ -87,11 +98,20 @@ export function latestOverall(inspections) {
 }
 
 
+// The colony record owns its metric vocabulary: which series exist, the bounds
+// each one is drawn against, and the strings.js key it is labelled with. A
+// consumer that needs a sparkline reads all three off the record instead of
+// restating them, so the series cannot drift apart between screens.
+//
+// These are keys, not the { de, en } pairs themselves, because this module is
+// imported directly by Node in the timezone regression
+// (src/utils/inspections.test.js) where there is no bundler to resolve an
+// import of the string table.
 const METRIC_CONFIGS = [
-  { key: 'varroa', min: 0, max: 10, lowerBetter: true },
-  { key: 'broodPattern', min: 1, max: 5, lowerBetter: false },
-  { key: 'population', min: 1, max: 5, lowerBetter: false },
-  { key: 'honeyStores', min: 1, max: 5, lowerBetter: false },
+  { key: 'varroa',       labelKey: 'insp_varroa_label',      min: 0, max: 10, lowerBetter: true },
+  { key: 'broodPattern', labelKey: 'insp_brood_label',       min: 1, max: 5,  lowerBetter: false },
+  { key: 'population',   labelKey: 'insp_population_label',  min: 1, max: 5,  lowerBetter: false },
+  { key: 'honeyStores',  labelKey: 'insp_honeystores_label', min: 1, max: 5,  lowerBetter: false },
 ]
 
 function numericValue(value) {
@@ -107,6 +127,38 @@ function lastInspectedStatus(latestInspection, today) {
   if (days <= 0) return { kind: 'today' }
   if (days === 1) return { kind: 'yesterday' }
   return { kind: 'daysAgo', days }
+}
+
+/**
+ * The metric series of a colony record, in display order, each carrying its
+ * bounds, its label key and its oldest-first points.
+ */
+export function colonyMetricSeries(record) {
+  return METRIC_CONFIGS.map((config) => ({
+    ...config,
+    points: record?.metrics?.[config.key]?.points ?? [],
+  }))
+}
+
+const LAST_INSPECTED_LABEL_KEYS = {
+  never: 'insp_never',
+  today: 'insp_today',
+  yesterday: 'insp_yesterday',
+  unknown: 'insp_unknown',
+}
+
+/**
+ * The last-inspected status is only a code; this is the single place that
+ * turns it into text. An unparseable date is its own status and gets its own
+ * label instead of being silently reported as "never inspected".
+ *
+ * The string table is injected for the same reason the metric series carry
+ * keys rather than pairs: this module stays free of app imports.
+ */
+export function lastInspectedLabel(status, t, strings) {
+  if (!status) return t(strings.insp_never)
+  if (status.kind === 'daysAgo') return t(strings.insp_days_ago).replace('{n}', status.days)
+  return t(strings[LAST_INSPECTED_LABEL_KEYS[status.kind]] ?? strings.insp_never)
 }
 
 export function buildMetricSeries(inspections) {
@@ -132,7 +184,10 @@ export function buildColonyRecord(colony, inspections = [], options = {}) {
   if (!colony) return null
   const today = options.today ?? new Date()
   const history = groupByColony(inspections.filter((inspection) => inspection?.colonyId === colony.id)).get(colony.id) ?? []
-  const latestInspection = latestOverall(history)
+  // `history` is already ordered, so its first dated observation is the latest
+  // one: no second pass, and the record's latest can never disagree with the
+  // history it is shown next to.
+  const latestInspection = history.find((inspection) => parseInspectionDate(inspection.date)) ?? null
   const totalHarvestKg = history.reduce((sum, inspection) => {
     const harvest = numericValue(inspection.harvest)
     return harvest == null ? sum : sum + harvest

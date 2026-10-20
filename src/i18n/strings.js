@@ -247,6 +247,7 @@ export const strings = {
   insp_queen_year_placeholder:{ de: 'Jahr eingeben (z.B. 2024)',   en: 'Enter year (e.g. 2024)'   },
   insp_harvest_label:         { de: 'Honigernte',                  en: 'Honey harvest'            },
   insp_harvest_placeholder:   { de: 'Kg eingeben (z.B. 15.5)',     en: 'Enter kg (e.g. 15.5)'     },
+  insp_varroa_label:          { de: 'Varroa / 100 Bienen',         en: 'Varroa / 100 bees'        },
   insp_brood_label:           { de: 'Brutstimmung',                en: 'Brood pattern'            },
   insp_brood_none:            { de: 'Keine',                         en: 'None'                     },
   insp_brood_scattered:       { de: 'Zerstreut',                    en: 'Scattered'                },
@@ -286,6 +287,7 @@ export const strings = {
   insp_yesterday:      { de: 'Gestern',                            en: 'Yesterday'                },
   insp_show_all:       { de: 'Alle anzeigen',                      en: 'Show all'                 },
   insp_never:          { de: 'Noch nie kontrolliert',              en: 'Never inspected'          },
+  insp_unknown:        { de: 'Unbekanntes Kontrolldatum',          en: 'Unknown inspection date'  },
   insp_history:        { de: 'Kontrollverlauf',                    en: 'Inspection history'       },
   insp_no_history:     { de: 'Noch keine Kontrollen für dieses Volk.', en: 'No inspections for this colony yet.' },
 
