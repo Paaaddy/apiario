@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.7.2](https://github.com/Paaaddy/apiario/compare/v2.7.1...v2.7.2) (2026-11-06)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump @vitest/ui from 5.0.4 to 5.0.5 ([#165](https://github.com/Paaaddy/apiario/issues/165)) ([0fdb4ed](https://github.com/Paaaddy/apiario/commit/0fdb4edd4ae0f0a3d9c5e3ca05a5a248af31de67))
+* **deps-dev:** bump @vitest/ui from 5.0.5 to 5.1.0 ([#173](https://github.com/Paaaddy/apiario/issues/173)) ([40a8cdc](https://github.com/Paaaddy/apiario/commit/40a8cdc7058ce346a6345fe92b63793f8c477a39))
+* **deps-dev:** bump fast-uri from 3.1.8 to 3.1.9 ([#168](https://github.com/Paaaddy/apiario/issues/168)) ([040da4c](https://github.com/Paaaddy/apiario/commit/040da4c4ca36723b68a275ac91da0d70e5c249db))
+* **deps-dev:** bump serialize-javascript from 7.0.5 to 7.1.4 ([#172](https://github.com/Paaaddy/apiario/issues/172)) ([749758a](https://github.com/Paaaddy/apiario/commit/749758a638633876719fe652c7c3db4b4da73624))
+* **deps-dev:** bump the testing group across 1 directory with 3 updates ([#153](https://github.com/Paaaddy/apiario/issues/153)) ([4977ea1](https://github.com/Paaaddy/apiario/commit/4977ea1cc256b7829b4465b9ee664932c4eefa08))
+* **deps-dev:** bump undici from 8.11.2 to 8.12.3 ([#167](https://github.com/Paaaddy/apiario/issues/167)) ([8a0e576](https://github.com/Paaaddy/apiario/commit/8a0e576dabb55e3479dc71d97e6aea1c8835960c))
+* **deps-dev:** bump undici from 8.12.3 to 8.12.4 ([#171](https://github.com/Paaaddy/apiario/issues/171)) ([f9fea67](https://github.com/Paaaddy/apiario/commit/f9fea67418a6e533e864fba143db9af5f3194e00))
+* **deps:** bump react-dom from 19.3.0 to 19.3.1 ([#155](https://github.com/Paaaddy/apiario/issues/155)) ([892d0eb](https://github.com/Paaaddy/apiario/commit/892d0ebd6c647ca588cfe8573832e039b2cd0188))
+
 ## [2.7.1](https://github.com/Paaaddy/apiario/compare/v2.7.0...v2.7.1) (2026-10-19)
 
 
