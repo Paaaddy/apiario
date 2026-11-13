@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.7.3](https://github.com/Paaaddy/apiario/compare/v2.7.2...v2.7.3) (2026-11-13)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump jsdom from 30.1.3 to 31.0.0 in the testing-major group ([#177](https://github.com/Paaaddy/apiario/issues/177)) ([57ac7b7](https://github.com/Paaaddy/apiario/commit/57ac7b79c950a54c21301ce6804441116a74af78))
+* **deps-dev:** bump the dev-dependencies group across 1 directory with 6 updates ([#174](https://github.com/Paaaddy/apiario/issues/174)) ([9a42021](https://github.com/Paaaddy/apiario/commit/9a4202192d66e02f5089a02f290e117b64910da8))
+* **deps-dev:** bump the dev-dependencies group with 3 updates ([#176](https://github.com/Paaaddy/apiario/issues/176)) ([079acb0](https://github.com/Paaaddy/apiario/commit/079acb0febb77f785ecb9b514abdb36e597d3620))
+* **deps:** override minimatch to &gt;=11.0.1 ([899feb9](https://github.com/Paaaddy/apiario/commit/899feb9caad58b08bcdf21d1674e6e87d118b849))
+
 ## [2.7.2](https://github.com/Paaaddy/apiario/compare/v2.7.1...v2.7.2) (2026-11-06)
 
 
