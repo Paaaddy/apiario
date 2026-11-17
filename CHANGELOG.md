@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.7.4](https://github.com/Paaaddy/apiario/compare/v2.7.3...v2.7.4) (2026-11-17)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump the dev-dependencies group with 3 updates ([d6c372f](https://github.com/Paaaddy/apiario/commit/d6c372f9db7db797a531421999615584de734a56))
+* **deps-dev:** bump the dev-dependencies group with 3 updates ([5b80f94](https://github.com/Paaaddy/apiario/commit/5b80f9437f25f1ecc3c01bffb54c0038ea87641c))
+* **deps-dev:** bump the testing group across 1 directory with 2 updates ([b3ecf77](https://github.com/Paaaddy/apiario/commit/b3ecf77521f160871224f62a3896af2b49f16468))
+* **deps-dev:** bump the testing group across 1 directory with 2 updates ([c0a948f](https://github.com/Paaaddy/apiario/commit/c0a948f927caf3c1a8cb2b1dbd2b479669648907))
+
 ## [2.7.3](https://github.com/Paaaddy/apiario/compare/v2.7.2...v2.7.3) (2026-11-13)
 
 
