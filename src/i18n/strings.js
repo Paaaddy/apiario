@@ -221,7 +221,7 @@ export const strings = {
 
   learn_search:   { de: 'Suchen…',    en: 'Search…'    },
 
-  learn_difficulty: { de: 'Schwierigkeit', en: 'Difficulty' },
+
 
   learn_source:   { de: 'Quelle',     en: 'Source'     },
   learn_no_results: { de: 'Keine Einträge gefunden.', en: 'No entries found.' },

@@ -168,8 +168,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
 }, (prev, next) =>
   prev.task.id === next.task.id &&
   prev.isChecked === next.isChecked &&
-  prev.checkedDate === next.checkedDate &&
-  prev.inGlassContainer === next.inGlassContainer
+  prev.checkedDate === next.checkedDate
 )
 
 export default TaskCard

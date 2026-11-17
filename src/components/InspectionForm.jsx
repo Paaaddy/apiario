@@ -119,7 +119,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
   }
 
   return (
-    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="insp-form-title" onChangeCapture={markDraft} onClickCapture={(event) => {
+    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="insp-form-title" onChangeCapture={() => { markDraft(); setSaveError(null) }} onClickCapture={(event) => {
       if (event.target.closest('button')) markDraft()
     }} style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', flexDirection: 'column', background: bg }}>
       {/* sticky header */}

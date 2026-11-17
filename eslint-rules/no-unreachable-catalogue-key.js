@@ -17,7 +17,8 @@ function collectReferencedKeys() {
       try { text = fs.readFileSync(full, 'utf8') } catch { return }
       for (const key of definedKeys) {
         // word-boundary-ish check
-        if (text.includes(key)) referenced.add(key)
+        const pattern = new RegExp(`\\b${key.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}\\b`)
+        if (pattern.test(text)) referenced.add(key)
       }
     }
   }
