@@ -1,4 +1,4 @@
-import { routeFromInspection } from './diagnosisFlow'
+import { routeFromInspection } from './diagnosisRoute'
 import { latestByColony, inspectionAgeDays } from './inspectionHistory'
 
 const KIND_RANK = {

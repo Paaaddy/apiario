@@ -44,29 +44,36 @@ function creationTime(inspection) {
 
 export function orderInspections(inspections, { oldestFirst = false } = {}) {
   const direction = oldestFirst ? -1 : 1
-  const ordered = [...inspections].sort((a, b) => {
-    const aDate = parseInspectionDate(a.date)
-    const bDate = parseInspectionDate(b.date)
-    if (!aDate && !bDate) return 0
-    if (!aDate) return 1
-    if (!bDate) return -1
-    return (bDate - aDate) * direction
+  // Parse each date once per call instead of re-parsing it inside every
+  // comparator invocation.
+  const enriched = inspections.map((inspection) => ({
+    inspection,
+    parsedDate: parseInspectionDate(inspection.date),
+    creation: creationTime(inspection),
+  }))
+  const ordered = [...enriched].sort((a, b) => {
+    if (!a.parsedDate && !b.parsedDate) return 0
+    if (!a.parsedDate) return 1
+    if (!b.parsedDate) return -1
+    return (b.parsedDate - a.parsedDate) * direction
   })
   // Missing timestamps are barriers: a pairwise fallback comparator would be
   // non-transitive and could move records across an ambiguous observation.
   let start = 0
   while (start < ordered.length) {
-    if (!parseInspectionDate(ordered[start].date) || creationTime(ordered[start]) == null) {
+    const startItem = ordered[start]
+    if (!startItem.parsedDate || startItem.creation == null) {
       start += 1
       continue
     }
     let end = start + 1
-    while (end < ordered.length && ordered[end].date === ordered[start].date && creationTime(ordered[end]) != null) end += 1
-    const run = ordered.slice(start, end).sort((a, b) => (creationTime(b) - creationTime(a)) * direction)
-    ordered.splice(start, run.length, ...run)
+    while (end < ordered.length && ordered[end].inspection.date === startItem.inspection.date && ordered[end].creation != null) end += 1
+    const run = ordered.slice(start, end)
+    run.sort((a, b) => (b.creation - a.creation) * direction)
+    for (let i = 0; i < run.length; i += 1) ordered[start + i] = run[i]
     start = end
   }
-  return ordered
+  return ordered.map((entry) => entry.inspection)
 }
 
 export function groupByColony(inspections) {

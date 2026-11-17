@@ -14,7 +14,7 @@ it('lets Vite resolve font preloads for either hosting base', () => {
   const preloads = [...html.matchAll(/as="font"[^>]*href="([^"]+)"/g)]
   expect(preloads).toHaveLength(4)
   for (const [, source] of preloads) {
-    expect(source).toMatch(/^\/node_modules\/@fontsource\//)
+    expect(source).toMatch(/^\/node_modules\/@fontsource-variable\//)
     expect(readFileSync(new URL(`..${source}`, import.meta.url)).length).toBeGreaterThan(0)
   }
 })
