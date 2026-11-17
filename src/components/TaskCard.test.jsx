@@ -39,18 +39,18 @@ describe('TaskCard', () => {
 
   it('renders checkbox when onToggle is provided', () => {
     wrap(<TaskCard task={task} onToggle={() => {}} />)
-    expect(screen.getByRole('button', { name: /check task/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /aufgabe abhaken/i })).toBeInTheDocument()
   })
 
   it('does not render checkbox when onToggle is not provided', () => {
     wrap(<TaskCard task={task} />)
-    expect(screen.queryByRole('button', { name: /check task/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /aufgabe abhaken/i })).not.toBeInTheDocument()
   })
 
   it('calls onToggle when checkbox is clicked', async () => {
     const onToggle = vi.fn()
     wrap(<TaskCard task={task} onToggle={onToggle} />)
-    await userEvent.click(screen.getByRole('button', { name: /check task/i }))
+    await userEvent.click(screen.getByRole('button', { name: /aufgabe abhaken/i }))
     expect(onToggle).toHaveBeenCalledOnce()
   })
 

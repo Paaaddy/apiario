@@ -1,4 +1,4 @@
-import { backupStrings } from './backupStrings'
+import { backupStrings } from './backupStrings.js'
 
 export const strings = {
   ...backupStrings,
@@ -33,6 +33,7 @@ export const strings = {
   season_this_week:   { de: 'Aufgaben diese Woche', en: "This week's tasks" },
   season_tasks_noun:  { de: 'Aufgaben zu prüfen',   en: 'things to check'  },
   season_nothing:     { de: 'Diese Woche nichts Dringendes. Bald wieder vorbeischauen.', en: 'Nothing urgent this week. Check back soon.' },
+  season_end_of_week: { de: 'Ende der Woche', en: 'end of week' },
   next_actions_title: { de: 'Nächste Schritte',     en: 'Next actions'      },
   next_action_unavailable: { de: 'Das gewählte Volk oder die Aufgabe ist nicht mehr verfügbar.', en: 'The selected colony or task is no longer available.' },
   insp_date_unknown: { de: 'Unbekanntes Kontrolldatum', en: 'Unknown inspection date' },
@@ -52,6 +53,8 @@ export const strings = {
 
   // Task log
   done_badge:         { de: 'Erledigt',              en: 'Done'                },
+  task_check:          { de: 'Aufgabe abhaken',      en: 'Check task'          },
+  task_uncheck:        { de: 'Abhaken zurücknehmen', en: 'Uncheck task'        },
   log_title:          { de: 'Verlauf',               en: 'History'             },
   log_delete_entry:   { de: 'Eintrag löschen',       en: 'Delete entry'        },
   log_custom_btn:     { de: '+ Eigener Eintrag',     en: '+ Custom entry'      },
@@ -110,7 +113,7 @@ export const strings = {
   data_export:      { de: 'Export als JSON',                        en: 'Export as JSON'                 },
   data_import:      { de: 'Import aus Datei',                       en: 'Import from file'               },
   data_exported:    { de: 'Exportiert',                             en: 'Exported'                       },
-  data_imported:    { de: 'Importiert',                             en: 'Imported'                       },
+
   data_import_reload: { de: 'Daten geladen. App wird neu geladen …', en: 'Data loaded. Reloading app…'   },
   data_import_error_parse:      { de: 'Keine gültige JSON-Datei.',        en: 'Not a valid JSON file.'           },
   data_import_error_format:     { de: 'Keine Apiario-Sicherung.',         en: 'Not an Apiario backup file.'      },
@@ -165,16 +168,14 @@ export const strings = {
   voice_ended: { de: 'Das Mikrofon hört nicht mehr zu. Starte den Freisprechmodus bei Bedarf erneut.', en: 'The microphone stopped listening. Restart hands-free mode when ready.' },
   voice_unsupported: { de: 'Dieser Browser unterstützt keine Spracherkennung. Du kannst die App weiterhin per Hand bedienen.', en: 'This browser does not support speech recognition. You can still use the app without voice.' },
   voice_error: { de: 'Spracherkennung fehlgeschlagen. Du kannst sie erneut starten oder die App per Hand bedienen.', en: 'Speech recognition failed. You can restart it or use the app without voice.' },
+
   voice_restart: { de: 'Freisprechmodus erneut starten', en: 'Restart hands-free' },
   voice_listening:         { de: 'Auf Befehle hörend…',      en: 'Listening for commands...' },
   voice_cmd_diagnose:      { de: '"diagnose"',                en: '"diagnose"'                },
   voice_cmd_diagnose_desc: { de: 'zum Diagnose-Tab wechseln', en: 'go to diagnose tab'       },
   voice_cmd_season:        { de: '"saison"',                  en: '"season"'                 },
   voice_cmd_season_desc:   { de: 'zum Wochen-Tab wechseln',   en: 'go to season / week tab'  },
-  voice_cmd_inspect:       { de: '"kontrolle"',               en: '"inspect"'                },
-  voice_cmd_inspect_desc:  { de: 'zu den Kontrollen wechseln', en: 'go to inspections'       },
-  voice_cmd_learn:         { de: '"lernen"',                  en: '"learn"'                  },
-  voice_cmd_learn_desc:    { de: 'zur Wissensbibliothek',     en: 'go to knowledge library'  },
+
   voice_cmd_myhive:        { de: '"stock"',                   en: '"my hive"'                },
   voice_cmd_myhive_desc:   { de: 'Profil, Verlauf und Völker', en: 'profile, log and colonies' },
   voice_cmd_next:          { de: '"weiter"',                  en: '"next"'                   },
@@ -217,12 +218,11 @@ export const strings = {
 
   // Guide/Learn tab
   nav_learn:      { de: 'Lernen',     en: 'Learn'      },
-  learn_title:    { de: 'Wissensbibliothek', en: 'Knowledge Library' },
-  learn_subtitle: { de: 'Kurates Bienenwissen aus seriösen Quellen', en: 'Curated bee knowledge from trusted sources' },
+
   learn_search:   { de: 'Suchen…',    en: 'Search…'    },
-  learn_category: { de: 'Kategorie',  en: 'Category'   },
+
   learn_difficulty: { de: 'Schwierigkeit', en: 'Difficulty' },
-  learn_tags:     { de: 'Stichworte', en: 'Tags'       },
+
   learn_source:   { de: 'Quelle',     en: 'Source'     },
   learn_no_results: { de: 'Keine Einträge gefunden.', en: 'No entries found.' },
   learn_difficulty_beginner: { de: 'Einsteiger', en: 'Beginner' },
@@ -237,7 +237,7 @@ export const strings = {
   insp_section_treatment:     { de: 'Behandlung',                  en: 'Treatment'                },
   insp_date_label:            { de: 'Datum',                       en: 'Date'                     },
   insp_colony_label:          { de: 'Volk',                        en: 'Colony'                   },
-  insp_colony_placeholder:    { de: 'Volk auswählen',              en: 'Select colony'            },
+
   insp_queen_label:           { de: 'Königin',                     en: 'Queen'                    },
   insp_queen_seen:            { de: 'Gesehen',                     en: 'Seen'                     },
   insp_queen_eggs:            { de: 'Eier',                        en: 'Eggs'                     },
@@ -248,6 +248,7 @@ export const strings = {
   insp_harvest_label:         { de: 'Honigernte',                  en: 'Honey harvest'            },
   insp_harvest_placeholder:   { de: 'Kg eingeben (z.B. 15.5)',     en: 'Enter kg (e.g. 15.5)'     },
   insp_varroa_label:          { de: 'Varroa / 100 Bienen',         en: 'Varroa / 100 bees'        },
+  insp_varroa_not_tested:     { de: 'Nicht getestet',               en: 'Not tested'               },
   insp_brood_label:           { de: 'Brutstimmung',                en: 'Brood pattern'            },
   insp_brood_none:            { de: 'Keine',                         en: 'None'                     },
   insp_brood_scattered:       { de: 'Zerstreut',                    en: 'Scattered'                },
@@ -265,6 +266,10 @@ export const strings = {
   insp_population_normal:     { de: 'Normal',                      en: 'Normal'                   },
   insp_population_high:       { de: 'Hoch',                        en: 'High'                     },
   insp_population_very_high:  { de: 'Sehr hoch',                   en: 'Very high'                },
+  insp_temperament_label:     { de: 'Temperament',                 en: 'Temperament'              },
+  insp_temperament_calm:      { de: 'Ruhig',                       en: 'Calm'                     },
+  insp_temperament_normal:    { de: 'Normal',                      en: 'Normal'                   },
+  insp_temperament_defensive: { de: 'Defensiv',                    en: 'Defensive'                },
   insp_treatment_label:       { de: 'Behandlung',                  en: 'Treatment'                },
   insp_treatment_none:        { de: 'Keine Behandlung',            en: 'None'                     },
   insp_treatment_varroa:      { de: 'Varroa-Behandlung',           en: 'Varroa treatment'         },
@@ -277,6 +282,9 @@ export const strings = {
   insp_delete_confirm:        { de: 'Diese Kontrolle wirklich löschen?', en: 'Really delete this inspection?' },
   insp_add_button:            { de: '+ Kontrolle',                 en: '+ Inspect'                },
   insp_edit_label:            { de: 'Bearbeiten',                  en: 'Edit'                     },
+  insp_notes_label:           { de: 'Notizen',                     en: 'Notes'                    },
+  insp_notes_placeholder:     { de: 'Was hast du beobachtet?',     en: 'What did you observe?'     },
+  insp_treatment_placeholder: { de: 'Behandlung beschreiben',       en: 'Describe treatment'        },
 
   // Inspection tab / colony card
   insp_tab_empty:      { de: 'Noch keine Kontrollen. Tippe auf + Kontrolle, um deine erste aufzuzeichnen.', en: 'No inspections yet. Tap + Inspect to record your first one.' },

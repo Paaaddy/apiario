@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { strings as s } from '../i18n/strings'
+import { METRIC_CONFIGS } from '../utils/inspectionHistory'
 import InspectionScaleInput from './InspectionScaleInput'
 import SectionLabel from './SectionLabel'
 import { themeColors } from '../utils/themeTokens'
@@ -9,16 +10,24 @@ import { localDateString } from '../utils/inspectionHistory'
 import { useDraftProtection } from '../hooks/useDraftProtection'
 
 const QUEEN_OPTIONS = [
-  { value: 'seen',     emoji: '👑', key: 'insp_queen_seen'     },
-  { value: 'eggs',     emoji: '🥚', key: 'insp_queen_eggs'     },
-  { value: 'larvae',   emoji: '🐛', key: 'insp_queen_larvae'   },
-  { value: 'not_seen', emoji: '❓', key: 'insp_queen_not_seen' },
+  { value: 'seen',     emoji: '👑', label: s.insp_queen_seen     },
+  { value: 'eggs',     emoji: '🥚', label: s.insp_queen_eggs     },
+  { value: 'larvae',   emoji: '🐛', label: s.insp_queen_larvae   },
+  { value: 'not_seen', emoji: '❓', label: s.insp_queen_not_seen },
 ]
 
 const TEMPERAMENT_OPTIONS = [
-  { value: 'calm',      key: 'insp_temperament_calm'      },
-  { value: 'normal',    key: 'insp_temperament_normal'    },
-  { value: 'defensive', key: 'insp_temperament_defensive' },
+  { value: 'calm',      label: s.insp_temperament_calm      },
+  { value: 'normal',    label: s.insp_temperament_normal    },
+  { value: 'defensive', label: s.insp_temperament_defensive },
+]
+
+const TREATMENT_OPTIONS = [
+  { value: 'none',     label: s.insp_treatment_none     },
+  { value: 'varroa',   label: s.insp_treatment_varroa   },
+  { value: 'feeding',  label: s.insp_treatment_feeding  },
+  { value: 'queen',    label: s.insp_treatment_queen    },
+  { value: 'other',    label: s.insp_treatment_other    },
 ]
 
 function FieldLabel({ text, htmlFor, id, color }) {
@@ -67,6 +76,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
   const [varroaChecked, setVarroaChecked] = useState(initial?.varroa != null)
   const [varroa, setVarroa]               = useState(initial?.varroa != null ? String(initial.varroa) : '')
   const [treatment, setTreatment]         = useState(initial?.treatment ?? '')
+  const [treatmentOther, setTreatmentOther] = useState('')
   const [harvest, setHarvest]             = useState(initial?.harvest != null ? String(initial.harvest) : '')
   const [notes, setNotes]                 = useState(initial?.notes ?? '')
 
@@ -94,7 +104,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
       population,
       temperament,
       varroa: varroaChecked ? (varroa === '' ? null : (/^\d+(\.\d{1,2})?$/.test(varroa.trim()) ? Number(varroa) : null)) : null,
-      treatment: treatment.trim() || null,
+      treatment: treatment === 'other' ? ((treatmentOther ?? '').trim() || 'other') : (treatment || null),
       harvest: harvest.trim() ? Number(harvest) : null,
       notes: notes.trim() || null,
     })
@@ -183,7 +193,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
                     minHeight: 44,
                   }}
                 >
-                  {opt.emoji} {t(s[opt.key])}
+                  {opt.emoji} {t(opt.label)}
                 </button>
               )
             })}
@@ -221,17 +231,17 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
 
         <div style={{ marginBottom: 18 }}>
           <FieldLabel text={t(s.insp_brood_label)} id="insp-brood-lbl" color={ink} />
-          <InspectionScaleInput value={broodPattern} onChange={setBrood} theme={theme} labelId="insp-brood-lbl" />
+          <InspectionScaleInput value={broodPattern} onChange={setBrood} theme={theme} labelId="insp-brood-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'broodPattern').stepKeys} />
         </div>
 
         <div style={{ marginBottom: 18 }}>
-          <FieldLabel text={t(s.insp_stores_label)} id="insp-stores-lbl" color={ink} />
-          <InspectionScaleInput value={honeyStores} onChange={setStores} theme={theme} labelId="insp-stores-lbl" />
+          <FieldLabel text={t(s[METRIC_CONFIGS.find((m) => m.key === 'honeyStores').labelKey])} id="insp-stores-lbl" color={ink} />
+          <InspectionScaleInput value={honeyStores} onChange={setStores} theme={theme} labelId="insp-stores-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'honeyStores').stepKeys} />
         </div>
 
         <div style={{ marginBottom: 18 }}>
           <FieldLabel text={t(s.insp_population_label)} id="insp-pop-lbl" color={ink} />
-          <InspectionScaleInput value={population} onChange={setPop} theme={theme} labelId="insp-pop-lbl" />
+          <InspectionScaleInput value={population} onChange={setPop} theme={theme} labelId="insp-pop-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'population').stepKeys} />
         </div>
 
         <div style={{ marginBottom: 14 }}>
@@ -258,7 +268,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
                     minHeight: 44,
                   }}
                 >
-                  {t(s[opt.key])}
+                  {t(opt.label)}
                 </button>
               )
             })}
@@ -295,16 +305,44 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
         </div>
 
         <div style={{ marginBottom: 14 }}>
-          <FieldLabel text={t(s.insp_treatment_label)} htmlFor="insp-treatment" color={ink} />
-          <input
-            id="insp-treatment"
-            type="text"
-            maxLength={500}
-            value={treatment}
-            onChange={(e) => setTreatment(e.target.value)}
-            placeholder={t(s.insp_treatment_placeholder)}
-            style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
-          />
+          <FieldLabel text={t(s.insp_treatment_label)} id="insp-treatment-lbl" color={ink} />
+          <div role="group" aria-labelledby="insp-treatment-lbl" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+            {TREATMENT_OPTIONS.map((opt) => {
+              const active = treatment === opt.value
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setTreatment(active ? '' : opt.value)}
+                  aria-pressed={active}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: 24,
+                    border: `2px solid ${active ? c.accent : border}`,
+                    background: active ? c.queenActiveBg : 'transparent',
+                    color: active ? c.queenActiveColor : inkMid,
+                    fontSize: 14,
+                    fontWeight: active ? 700 : 400,
+                    cursor: 'pointer',
+                    minHeight: 44,
+                  }}
+                >
+                  {t(opt.label)}
+                </button>
+              )
+            })}
+          </div>
+          {treatment === 'other' && (
+            <input
+              id="insp-treatment"
+              type="text"
+              maxLength={500}
+              value={treatmentOther ?? ''}
+              onChange={(e) => setTreatmentOther(e.target.value)}
+              placeholder={t(s.insp_treatment_placeholder)}
+              style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
+            />
+          )}
         </div>
 
         <div style={{ marginBottom: 14 }}>

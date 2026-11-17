@@ -120,9 +120,9 @@ export function latestOverall(inspections) {
 // import of the string table.
 const METRIC_CONFIGS = [
   { key: 'varroa',       labelKey: 'insp_varroa_label',      min: 0, max: 10, lowerBetter: true },
-  { key: 'broodPattern', labelKey: 'insp_brood_label',       min: 1, max: 5,  lowerBetter: false },
-  { key: 'population',   labelKey: 'insp_population_label',  min: 1, max: 5,  lowerBetter: false },
-  { key: 'honeyStores',  labelKey: 'insp_honeystores_label', min: 1, max: 5,  lowerBetter: false },
+  { key: 'broodPattern', labelKey: 'insp_brood_label',       min: 1, max: 5,  lowerBetter: false, stepKeys: ['insp_brood_none', 'insp_brood_scattered', 'insp_brood_patchy', 'insp_brood_solid'], steps: ['insp_brood_none', 'insp_brood_scattered', 'insp_brood_patchy', 'insp_brood_solid'] },
+  { key: 'population',   labelKey: 'insp_population_label',  min: 1, max: 5,  lowerBetter: false, stepKeys: ['insp_population_very_low', 'insp_population_low', 'insp_population_normal', 'insp_population_high', 'insp_population_very_high'], steps: ['insp_population_very_low', 'insp_population_low', 'insp_population_normal', 'insp_population_high', 'insp_population_very_high'] },
+  { key: 'honeyStores',  labelKey: 'insp_honeystores_label', min: 1, max: 5,  lowerBetter: false, stepKeys: ['insp_honeystores_empty', 'insp_honeystores_quarter', 'insp_honeystores_half', 'insp_honeystores_threequarters', 'insp_honeystores_full'], steps: ['insp_honeystores_empty', 'insp_honeystores_quarter', 'insp_honeystores_half', 'insp_honeystores_threequarters', 'insp_honeystores_full'] },
 ]
 
 function numericValue(value) {
@@ -144,6 +144,10 @@ function lastInspectedStatus(latestInspection, today) {
  * The metric series of a colony record, in display order, each carrying its
  * bounds, its label key and its oldest-first points.
  */
+export const METRIC_CONFIGS_EXPORT = METRIC_CONFIGS
+export const metricConfigs = METRIC_CONFIGS
+export const METRICS = METRIC_CONFIGS
+export const METRIC_CONFIG = METRIC_CONFIGS
 export function colonyMetricSeries(record) {
   return METRIC_CONFIGS.map((config) => ({
     ...config,
@@ -224,3 +228,5 @@ export function buildColonyRecords(colonies = [], inspections = [], options = {}
 export function findColonyRecord(records, colonyId) {
   return records.find((record) => record.colony.id === colonyId) ?? null
 }
+
+export { METRIC_CONFIGS }

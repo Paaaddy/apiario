@@ -97,13 +97,13 @@ export default function InspectionCard({ inspection, colonyName, onEdit, onDelet
                 inkMid={inkMid}
               />
               {inspection.treatment && (
-                <DetailRow label={t(s.insp_treatment_label)} value={inspection.treatment} ink={ink} inkMid={inkMid} />
+                <DetailRow label={t(s.insp_treatment_label)} value={s[`insp_treatment_${inspection.treatment}`] ? t(s[`insp_treatment_${inspection.treatment}`]) : inspection.treatment} ink={ink} inkMid={inkMid} />
               )}
               {inspection.queenYear && (
                 <DetailRow label={t(s.insp_queen_year_label)} value={inspection.queenYear} ink={ink} inkMid={inkMid} />
               )}
               {inspection.harvest != null && (
-                <DetailRow label={t(s.insp_harvest_label)} value={`${inspection.harvest} kg`} ink={ink} inkMid={inkMid} />
+                <DetailRow label={t(s.insp_harvest_label)} value={`${inspection.harvest} ${t(s.colony_harvest_unit)}`} ink={ink} inkMid={inkMid} />
               )}
               {inspection.notes && (
                 <DetailRow label={t(s.insp_notes_label)} value={inspection.notes} ink={ink} inkMid={inkMid} />
