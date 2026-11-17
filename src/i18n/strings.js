@@ -118,7 +118,7 @@ export const strings = {
 
   // Privacy disclosure
   privacy_title:            { de: 'Datenschutz',                       en: 'Your data'                       },
-  privacy_body:             { de: 'Alle deine Daten – Profil, Völker, Kontrollen und Verlauf – werden ausschließlich auf diesem Gerät gespeichert (localStorage). Es werden keine Daten an einen Server gesendet; es gibt kein Cloud-Backup.', en: 'All your data – profile, colonies, inspections and history – is stored exclusively on this device (localStorage). No data is ever sent to a server; there is no cloud backup.' },
+  privacy_body:             { de: 'Alle deine Daten – Profil, Völker, Kontrollen und Verlauf – werden ausschließlich auf diesem Gerät gespeichert (localStorage). Die App selbst sendet keine Daten an einen Server und es gibt kein Cloud-Backup. Im Freisprechmodus, falls genutzt, wird Mikrofonaudio an den Spracherkennungsdienst deines Browsers übertragen.', en: 'All your data – profile, colonies, inspections and history – is stored exclusively on this device (localStorage). The app itself sends no data to a server and there is no cloud backup. Hands-free mode, if you use it, streams microphone audio to your browser vendor\u2019s speech-recognition service.' },
   privacy_delete_warning:   { de: 'Wenn du die App löschst oder die Browserdaten dieser Seite entfernst, gehen deine Daten unwiderruflich verloren.', en: 'If you delete the app or clear this site\u2019s browser data, your data will be lost permanently.' },
   privacy_export_pointer:   { de: 'Nutze die „Datensicherung"-Funktion oben, um deine Daten regelmäßig als Datei zu exportieren.', en: 'Use the "Data & backup" section above to regularly export your data as a file.' },
 
@@ -146,7 +146,7 @@ export const strings = {
   onboarding_feature_season_desc:  { de: 'Saisonale Aufgaben für deine Völker',     en: 'Seasonal tasks for your colonies'           },
   onboarding_feature_diagnose_desc:{ de: 'Symptome prüfen und Diagnose stellen',    en: 'Check symptoms and get a diagnosis'         },
   onboarding_feature_myhive_desc:  { de: 'Verlauf führen und Profil anpassen',      en: 'Track your history and update your profile' },
-  onboarding_privacy_step_body:    { de: 'Deine Daten – Profil, Völker und Verlauf – werden ausschließlich auf diesem Gerät gespeichert. Es gibt keine Konten und kein Cloud-Backup.', en: 'Your data – profile, colonies and history – is stored only on this device. There are no accounts and no cloud backup.' },
+  onboarding_privacy_step_body:    { de: 'Deine Daten – Profil, Völker und Verlauf – werden ausschließlich auf diesem Gerät gespeichert. Es gibt keine Konten und kein Cloud-Backup. Im Freisprechmodus, falls genutzt, wird Mikrofonaudio an den Spracherkennungsdienst deines Browsers übertragen.', en: 'Your data – profile, colonies and history – is stored only on this device. There are no accounts and no cloud backup. Hands-free mode, if you use it, streams microphone audio to your browser vendor\u2019s speech-recognition service.' },
   onboarding_privacy_import_prompt:{ de: 'Hast du bereits ein Backup? Importiere es jetzt.', en: 'Already have a backup? Import it now.' },
 
 
