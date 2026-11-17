@@ -95,9 +95,9 @@ completes, and only acts when that run succeeded, was for a `pull_request`, and
 has an associated PR.
 
 It merges (`--squash --delete-branch`) when the update is
-`version-update:semver-patch` or `version-update:semver-minor`, for both
-production and development dependencies. **Major bumps are never auto-merged** —
-they stay open for review.
+`version-update:semver-patch` or `version-update:semver-minor` and the change
+touches only development dependencies. **Production dependency changes and
+major bumps are never auto-merged** — they stay open for review.
 
 For grouped updates the reported update type is the highest severity across the
 whole group, so a group containing any major bump does not match and stays open.

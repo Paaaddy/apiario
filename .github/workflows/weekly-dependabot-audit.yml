@@ -141,10 +141,10 @@ jobs:
             echo
             echo "---"
             echo
-            echo "Patch and minor updates merge automatically once CI passes"
-            echo "(\`.github/workflows/dependabot-automerge.yml\`). Anything left"
-            echo "open above needs a look: major bumps are held back by design,"
-            echo "everything else is stuck."
+            echo "Development dependency patch and minor updates merge automatically"
+            echo "once CI passes (\`.github/workflows/dependabot-automerge.yml\`)."
+            echo "Production dependency changes and major version bumps wait for a"
+            echo "person. Anything left open above needs a look."
           } > audit-report.md
 
           cat audit-report.md
