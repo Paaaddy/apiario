@@ -48,6 +48,7 @@ describe('ThemeSwitcher', () => {
   it('inactive button has transparent background in theme C', () => {
     wrap('c')
     const btn = screen.getByText('Honeycomb').closest('button')
-    expect(btn.style.background).toBe('transparent')
+    // jsdom 31+ serializes the `background: transparent` shorthand as 'none'
+    expect(btn.style.backgroundColor).toBe('transparent')
   })
 })
