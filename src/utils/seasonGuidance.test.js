@@ -31,6 +31,17 @@ describe('seasonGuidance', () => {
     expect(seasonalActionId(guidance)).toBe('seasonal-sp-01')
   })
 
+  it('keeps the overdue-inspection threshold anchored on today while browsing another season', () => {
+    // 20 days old: overdue by the spring threshold (10 days), not by the winter one (30 days).
+    const stale = [{ id: 'i1', colonyId: 'c1', date: '2026-03-26', queenStatus: 'seen' }]
+    const guidance = seasonGuidance({
+      profile, inspections: stale, today: springToday, browsedDate: new Date(2026, 11, 15),
+    })
+
+    expect(guidance.season).toBe('winter')
+    expect(guidance.nextActions.map((action) => action.kind)).toContain('overdue-inspection')
+  })
+
   it('counts pending urgent and important tasks due today, not those of the browsed week', () => {
     const autumnToday = new Date(2026, 9, 15)
     const open = seasonGuidance({

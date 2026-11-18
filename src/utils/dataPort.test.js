@@ -103,6 +103,12 @@ describe('importData', () => {
     if (count === 500) expect(outcome.data.log).toHaveLength(500)
   })
 
+  it('imports a task log entry without a taskName, as stored data may carry', () => {
+    const backup = JSON.parse(validPayload())
+    backup.data.log = [{ id: 'l1', type: 'task', taskId: 'sp-01', date: '2026-01-01' }]
+    expect(importData(JSON.stringify(backup))).toMatchObject({ ok: true })
+  })
+
   it.each([500, 501])('enforces the existing %i per-Colony Inspection boundary without truncation', (count) => {
     const backup = JSON.parse(validPayload())
     backup.data.inspections = Array.from({ length: count }, (_, index) => ({

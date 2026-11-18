@@ -38,6 +38,18 @@ describe('inspectionFromDraft', () => {
     expect(isInspection(result.inspection)).toBe(true)
   })
 
+  it.each([
+    ['a blank draft', {}],
+    ['a custom treatment', { treatment: 'other', treatmentOther: 'thymol' }],
+    ['the scale limits', { broodPattern: 0, honeyStores: 5, population: 5, temperament: 'defensive' }],
+    ['a zero varroa count and harvest', { varroaChecked: true, varroa: '0', harvest: '0' }],
+  ])('produces an Inspection the stored-record validator accepts for %s', (_label, changes) => {
+    const result = inspectionFromDraft(draft(changes))
+
+    expect(result.ok).toBe(true)
+    expect(isInspection(result.inspection)).toBe(true)
+  })
+
   it('stores the free text of the "other" treatment, or "other" when left blank', () => {
     expect(inspectionFromDraft(draft({ treatment: 'other', treatmentOther: ' thymol ' })).inspection.treatment).toBe('thymol')
     expect(inspectionFromDraft(draft({ treatment: 'other' })).inspection.treatment).toBe('other')

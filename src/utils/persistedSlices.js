@@ -193,6 +193,7 @@ export const SLICES = {
     isCollection: true,
     accepts: acceptsLog,
     normalize: capLog,
+    maxRecords: MAX_TASK_LOG_ENTRIES,
   },
 }
 

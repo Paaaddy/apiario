@@ -1,15 +1,18 @@
 import { MAX_BACKUP_BYTES, MAX_IMPORTED_COLONIES } from './backupLimits'
-import { MAX_INSPECTIONS_PER_COLONY, MAX_TASK_LOG_ENTRIES } from './retentionLimits'
-import { SLICES, isRecord, isProfile, isInspection, isLogEntry, uniqueRecords, migrateProfile } from './persistedSlices'
+import { MAX_INSPECTIONS_PER_COLONY } from './retentionLimits'
+import { SLICES, isRecord, migrateProfile } from './persistedSlices'
 import {
   hasStorageRecovery, subscribeStorageRecovery, writeStorageTransaction, recoverStorageTransaction,
 } from './storageEngine'
 
 const SLICE_ENTRIES = Object.entries(SLICES)
 
-export function hasValidBackupRecords({ profile, inspections, log }) {
-  if (!isProfile(profile) || log.length > MAX_TASK_LOG_ENTRIES ||
-    !uniqueRecords(inspections, isInspection) || !uniqueRecords(log, isLogEntry)) return false
+// A Backup is stricter than a load: over-cap collections are rejected, not truncated.
+export function hasValidBackupRecords(data) {
+  const withinCaps = SLICE_ENTRIES.every(([name, slice]) =>
+    slice.accepts(data[name]) && (slice.maxRecords == null || data[name].length <= slice.maxRecords))
+  if (!withinCaps) return false
+  const { profile, inspections } = data
   const migratedColonies = migrateProfile(profile).colonies ?? []
   if (!Array.isArray(migratedColonies) || migratedColonies.length > MAX_IMPORTED_COLONIES) return false
   const colonyIds = new Set(migratedColonies.map((colony) => colony.id))
