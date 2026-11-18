@@ -1,4 +1,4 @@
-import { useEffect, lazy, Suspense } from 'react'
+import { useEffect, useMemo, lazy, Suspense } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
@@ -7,7 +7,7 @@ import { useTaskLog } from './hooks/useTaskLog'
 import { useInspections } from './hooks/useInspections'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import { useAppBadge } from './hooks/useAppBadge'
-import { useSeasonGuidance } from './hooks/useSeasonGuidance'
+import { pendingUrgentCount } from './utils/seasonGuidance'
 import { useCurrentDate } from './hooks/useCurrentDate'
 import { useHandsFreeSession } from './hooks/useHandsFreeSession'
 import { useColonyRemoval } from './hooks/useColonyRemoval'
@@ -57,8 +57,12 @@ function AppContent() {
   // installed app icon — the beekeeper sees "3" on the home screen
   // without opening the app.
   const today = useCurrentDate()
-  const { pendingUrgentCount } = useSeasonGuidance({ profile, inspections, completedTaskIds, today })
-  useAppBadge(pendingUrgentCount)
+  const todayTime = today.getTime()
+  const pendingCount = useMemo(
+    () => pendingUrgentCount({ profile, completedTaskIds, today: new Date(todayTime) }),
+    [profile, completedTaskIds, todayTime]
+  )
+  useAppBadge(pendingCount)
 
   // Once the user has completed onboarding they have data worth
   // protecting (profile, colonies, log). Ask the browser to upgrade

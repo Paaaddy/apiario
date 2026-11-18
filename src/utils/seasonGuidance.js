@@ -122,6 +122,15 @@ function isDue(task, completedTaskIds) {
 }
 
 /**
+ * How many urgent or important tasks of today's season are still open, for
+ * the app badge. Answers for today only; browsing a week never changes it.
+ */
+export function pendingUrgentCount({ profile, completedTaskIds = new Set(), today = new Date() }) {
+  const { tasks } = seasonView(profile, completedTaskIds.size, today)
+  return (tasks ?? []).filter((task) => isDue(task, completedTaskIds)).length
+}
+
+/**
  * Season guidance for one profile: the season view of the browsed week
  * (defaults to today) plus Next actions and the pending urgent count.
  * The seasonal Next action follows the browsed week's tasks; overdue
@@ -147,6 +156,6 @@ export function seasonGuidance({
       completedTaskIds,
       today,
     }),
-    pendingUrgentCount: (current.tasks ?? []).filter((task) => isDue(task, completedTaskIds)).length,
+    pendingUrgentCount: pendingUrgentCount({ profile, completedTaskIds, today }),
   }
 }

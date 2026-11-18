@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react'
 import { haptics } from '../utils/haptics'
-import { useSliceState } from './useStoredState'
-import { SLICES, capLog as cap } from '../utils/persistedSlices'
+import { useSliceState } from './useSliceState'
+import { SLICES, capLog } from '../utils/persistedSlices'
 
 export function useTaskLog() {
   const { state: log, updateState: setLog, persistenceError, retrySave } =
@@ -21,7 +21,7 @@ export function useTaskLog() {
       if (!exists) haptics.tap()
       const next = exists
         ? prev.filter((e) => !(e.type === 'task' && e.taskId === task.id))
-        : cap([
+        : capLog([
             {
               id: `task-${task.id}-${crypto.randomUUID()}`,
               type: 'task',
@@ -37,7 +37,7 @@ export function useTaskLog() {
 
   const addCustomEntry = useCallback(({ text, date }) => {
     return setLog((prev) => {
-      const next = cap([
+      const next = capLog([
         {
           id: `custom-${crypto.randomUUID()}`,
           type: 'custom',

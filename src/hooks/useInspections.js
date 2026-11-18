@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { useSliceState } from './useStoredState'
+import { useSliceState } from './useSliceState'
 import { colonyChronology } from '../utils/inspectionHistory'
 import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
 import { SLICES } from '../utils/persistedSlices'

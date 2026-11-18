@@ -382,4 +382,69 @@ export const strings = {
     de: 'Als Anfänger: Lagere lieber etwas mehr ein (13–15 kg) und frage einen lokalen Imker nach deiner spezifischen Gegend.',
     en: 'As a beginner: err on the higher side (13–15 kg) and ask a local beekeeper for advice specific to your area.',
   },
+
+  next_diagnosis_queenless_reason: {
+    de: 'Die letzte Kontrolle hat die Königin nicht bestätigt. Diagnose starten.',
+    en: 'The latest inspection did not confirm the queen. Run diagnosis.',
+  },
+  next_diagnosis_varroa_reason: {
+    de: 'Die letzte Kontrolle zeigt erhöhten Varroa-Druck. Diagnose starten.',
+    en: 'The latest inspection shows high varroa pressure. Run diagnosis.',
+  },
+  next_diagnosis_brood_reason: {
+    de: 'Die letzte Kontrolle zeigt ein schwaches Brutbild. Diagnose starten.',
+    en: 'The latest inspection shows a weak brood pattern. Run diagnosis.',
+  },
+  next_setup_add_colony_title: {
+    de: 'Erstes Volk hinzufügen',
+    en: 'Add your first colony',
+  },
+  next_setup_add_colony_reason: {
+    de: 'Nächste Schritte werden hilfreicher, sobald Apiario deine Völker kennt.',
+    en: 'Next actions get smarter once Apiario knows what you keep.',
+  },
+  next_first_inspection_title: {
+    de: 'Erste Kontrolle erfassen',
+    en: 'Record your first inspection',
+  },
+  next_first_inspection_reason: {
+    de: 'Eine Kontrolle macht die Hinweise zu deinen Völkern genauer.',
+    en: 'One inspection makes colony guidance more precise.',
+  },
+  next_dated_inspection_title: {
+    de: 'Datierte Kontrolle für {name} erfassen',
+    en: 'Record a dated inspection for {name}',
+  },
+  next_dated_inspection_reason: {
+    de: 'Ohne gültiges Kontrolldatum sind keine zeitlichen Hinweise möglich.',
+    en: 'A valid inspection date is needed for dated guidance.',
+  },
+  next_diagnosis_title: {
+    de: 'Mögliches Problem bei {name}',
+    en: 'Possible issue in {name}',
+  },
+  next_overdue_one_title: {
+    de: '{name} kontrollieren',
+    en: 'Inspect {name}',
+  },
+  next_overdue_one_reason: {
+    de: 'Letzte Kontrolle war vor {days} Tag(en).',
+    en: 'Last inspection was {days} days ago.',
+  },
+  next_overdue_many_title: {
+    de: '{count} Völker kontrollieren',
+    en: 'Inspect {count} colonies',
+  },
+  next_overdue_many_reason: {
+    de: 'Älteste Kontrolle war vor {days} Tag(en).',
+    en: 'Oldest inspection was {days} days ago.',
+  },
+  next_all_clear_title: {
+    de: 'Keine dringenden nächsten Schritte',
+    en: 'No urgent next actions',
+  },
+  next_all_clear_reason: {
+    de: 'Folge weiter der saisonalen Checkliste.',
+    en: 'Keep following the seasonal checklist.',
+  },
 }

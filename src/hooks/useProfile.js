@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useSliceState } from './useStoredState'
+import { useSliceState } from './useSliceState'
 import { nextColonyId, SLICES } from '../utils/persistedSlices'
 export { buildSeededColonies } from '../utils/persistedSlices'
 
