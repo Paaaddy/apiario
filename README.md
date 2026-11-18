@@ -35,8 +35,8 @@ unsaved-change retry, and failed-restore recovery.
 | Framework | React 19 + Vite 8 |
 | Styling | Tailwind CSS 3 |
 | Offline | vite-plugin-pwa + Workbox |
-| Onboarding | @onboardjs/react |
-| Fonts | @fontsource (self-hosted, precached) |
+| Onboarding | local step state machine |
+| Fonts | @fontsource-variable (self-hosted, precached) |
 | State | React context + localStorage |
 | Voice | Web Speech API |
 | Tests | Vitest + Testing Library |
@@ -95,9 +95,9 @@ completes, and only acts when that run succeeded, was for a `pull_request`, and
 has an associated PR.
 
 It merges (`--squash --delete-branch`) when the update is
-`version-update:semver-patch` or `version-update:semver-minor`, for both
-production and development dependencies. **Major bumps are never auto-merged** —
-they stay open for review.
+`version-update:semver-patch` or `version-update:semver-minor` and the change
+touches only development dependencies. **Production dependency changes and
+major bumps are never auto-merged** — they stay open for review.
 
 For grouped updates the reported update type is the highest severity across the
 whole group, so a group containing any major bump does not match and stays open.
@@ -108,7 +108,7 @@ in `.github/dependabot.yml` is scoped to `update-types: ["minor", "patch"]`:
 | Group | Contents | Outcome |
 |---|---|---|
 | `dev-dependencies` | dev deps, excluding the testing packages | auto-merges |
-| `fontsource` | `@fontsource/*` (production) | auto-merges |
+| `fontsource` | `@fontsource/*` (production) | held for review |
 | `testing` | vitest, `@vitest/*`, `@testing-library/*`, jsdom | auto-merges |
 | `testing-major` | the same testing packages, majors only | held for review |
 | _(ungrouped)_ | any other major bump | individual PR, held for review |

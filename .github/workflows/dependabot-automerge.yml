@@ -66,7 +66,7 @@ jobs:
       # moved since, that green tick says nothing about the current head, so
       # stop and wait for the next CI run instead of merging untested code.
       - name: Verify CI result still describes the current head
-        if: steps.pr.outputs.author == 'dependabot[bot]' && steps.pr.outputs.state == 'OPEN'
+        if: steps.pr.outputs.author == 'app/dependabot' && steps.pr.outputs.state == 'OPEN'
         id: fresh
         run: |
           set -euo pipefail
@@ -146,18 +146,24 @@ jobs:
             echo "dependency-group=$group"
           } >> "$GITHUB_OUTPUT"
 
-      # Patch and minor merge regardless of production/development type.
-      # Major bumps are left open on purpose for a human to look at.
-      - name: Auto-merge patch and minor updates
+      # Development dependency patch/minor bumps merge on their own once CI
+      # is green. Production dependency changes and major bumps wait for a
+      # human, even when they travel inside a group.
+      - name: Auto-merge development dependency patch/minor updates
         if: >-
-          steps.meta.outputs.update-type == 'version-update:semver-patch' ||
-          steps.meta.outputs.update-type == 'version-update:semver-minor'
+          (steps.meta.outputs.update-type == 'version-update:semver-patch' ||
+           steps.meta.outputs.update-type == 'version-update:semver-minor') &&
+          steps.meta.outputs.dependency-type == 'direct:development'
+        env:
+          GH_TOKEN: ${{ secrets.DEPENDABOT_PAT }}
         run: |
           set -euo pipefail
-          echo "Merging PR #${PR_NUMBER} (${{ steps.meta.outputs.update-type }})."
+          echo "Merging PR #${PR_NUMBER} (${{ steps.meta.outputs.update-type }}, development only)."
           gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch
 
-      - name: Leave major updates for review
-        if: steps.meta.outputs.update-type == 'version-update:semver-major'
+      - name: Leave production and major updates for review
+        if: >-
+          steps.meta.outputs.update-type == 'version-update:semver-major' ||
+          steps.meta.outputs.dependency-type != 'direct:development'
         run: |
-          echo "PR #${PR_NUMBER} is a major update; leaving it open for manual review."
+          echo "PR #${PR_NUMBER} is not an auto-merge candidate (update=${{ steps.meta.outputs.update-type }}, dependency-type=${{ steps.meta.outputs.dependency-type }}); leaving it open for manual review."

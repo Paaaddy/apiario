@@ -15,7 +15,7 @@ const URGENCY_STYLES = {
 
 const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate = null, onToggle }) {
   const { t } = useLanguage()
-  const { theme } = useTheme()
+  const theme = useTheme()?.theme ?? 'a'
   const c = themeColors(theme)
   const style = URGENCY_STYLES[task.urgency] ?? URGENCY_STYLES.routine
   const isSecret = task.secret === true
@@ -28,7 +28,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
           {onToggle ? (
             <button
               onClick={onToggle}
-              aria-label={isChecked ? 'Uncheck task' : 'Check task'}
+              aria-label={isChecked ? t(s.task_uncheck) : t(s.task_check)}
               style={{
                 width: 18, height: 18, borderRadius: '50%',
                 border: `1.5px solid ${isChecked ? c.done : c.inkLight}`,
@@ -65,6 +65,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
               {t(task.why)}
             </p>
           )}
+          {!isChecked && <RiskNote risk={task.risk} />}
         </div>
       </div>
     )
@@ -77,7 +78,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
         {onToggle ? (
           <button
             onClick={onToggle}
-            aria-label={isChecked ? 'Uncheck task' : 'Check task'}
+            aria-label={isChecked ? t(s.task_uncheck) : t(s.task_check)}
             style={{ marginTop: 2, flexShrink: 0, width: 22, height: 22, borderRadius: '50%', background: isChecked ? c.done : 'transparent', border: isChecked ? 'none' : '1.5px solid rgba(107,88,67,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}
           >
             {isChecked && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round"/></svg>}
@@ -98,6 +99,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
             {t(task.name)}
           </h3>
           {!isChecked && <p style={{ margin: '4px 0 0', fontSize: 12.5, color: c.inkMid, lineHeight: 1.45 }}>{t(task.why)}</p>}
+          {!isChecked && <RiskNote risk={task.risk} />}
         </div>
       </div>
     )
@@ -112,7 +114,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
         {onToggle && (
           <button
             onClick={onToggle}
-            aria-label={isChecked ? 'Uncheck task' : 'Check task'}
+            aria-label={isChecked ? t(s.task_uncheck) : t(s.task_check)}
             className={`mt-0.5 shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
               isChecked ? 'bg-green-400 border-green-400 text-white' : 'border-gray-300'
             }`}
@@ -166,8 +168,7 @@ const TaskCard = memo(function TaskCard({ task, isChecked = false, checkedDate =
 }, (prev, next) =>
   prev.task.id === next.task.id &&
   prev.isChecked === next.isChecked &&
-  prev.checkedDate === next.checkedDate &&
-  prev.inGlassContainer === next.inGlassContainer
+  prev.checkedDate === next.checkedDate
 )
 
 export default TaskCard

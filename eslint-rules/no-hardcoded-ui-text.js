@@ -1,19 +1,3 @@
-/**
- * User-facing text must come from `src/i18n/strings.js` as a `{ de, en }`
- * pair, rendered through `t()`. Hardcoded text bypasses the language
- * switch, so this rule makes the bilingual contract mechanical instead of
- * relying on review to catch it.
- *
- * Flagged:
- *  - JSXText containing Latin letters (`<p>Week</p>`)
- *  - string literals in children position (`<p>{'Not enough data'}</p>`)
- *  - string literals on the user-facing attributes aria-label, title,
- *    placeholder and alt
- *
- * Not flagged: symbol-only text ('‹', '·'), whitespace, numbers, and
- * anything already routed through `t()`. Escape with a disable comment
- * that states the reason (language codes like DE/EN, dev-only panels).
- */
 const USER_FACING_ATTRIBUTES = new Set(['aria-label', 'title', 'placeholder', 'alt'])
 const HAS_LETTER = /[A-Za-z]/
 
@@ -23,6 +7,26 @@ function isTextNode(node) {
 
 function literalValue(node) {
   return typeof node.value === 'string' ? node.value : node.raw
+}
+
+function textCandidates(node) {
+  if (!node) return []
+  if (node.type === 'Literal' || node.type === 'StringLiteral') {
+    if (typeof node.value === 'string') return [{ node, text: node.value }]
+    return []
+  }
+  if (node.type === 'TemplateLiteral') {
+    return (node.quasis || [])
+      .map((q) => ({ node: q, text: q.value && (q.value.cooked != null ? q.value.cooked : q.value.raw) }))
+      .filter((c) => typeof c.text === 'string')
+  }
+  if (node.type === 'ConditionalExpression') {
+    return [...textCandidates(node.consequent), ...textCandidates(node.alternate)]
+  }
+  if (node.type === 'LogicalExpression') {
+    return [...textCandidates(node.left), ...textCandidates(node.right)]
+  }
+  return []
 }
 
 export default {
@@ -53,9 +57,13 @@ export default {
     const allow = new Set(options.allow ?? [])
 
     function report(node, text) {
-      const trimmed = text.trim()
+      const trimmed = String(text).trim()
       if (!HAS_LETTER.test(trimmed) || allow.has(trimmed)) return
       context.report({ node, messageId: 'hardcodedText', data: { text: trimmed } })
+    }
+
+    function reportCandidates(candidates) {
+      candidates.forEach((c) => report(c.node, c.text))
     }
 
     return {
@@ -63,11 +71,30 @@ export default {
         report(node, node.value)
       },
       JSXExpressionContainer(node) {
-        if (isTextNode(node.expression)) report(node, literalValue(node.expression))
+        const parent = node.parent
+        const inChildren = parent && (parent.type === 'JSXElement' || parent.type === 'JSXFragment')
+        const inUserFacingAttr = parent && parent.type === 'JSXAttribute' && USER_FACING_ATTRIBUTES.has(parent.name && parent.name.name)
+        if (!inChildren && !inUserFacingAttr) return
+        if (isTextNode(node.expression)) {
+          report(node.expression, literalValue(node.expression))
+        } else {
+          reportCandidates(textCandidates(node.expression))
+        }
       },
       JSXAttribute(node) {
-        if (!USER_FACING_ATTRIBUTES.has(node.name.name)) return
-        if (node.value && isTextNode(node.value)) report(node.value, literalValue(node.value))
+        if (!USER_FACING_ATTRIBUTES.has(node.name && node.name.name)) return
+        if (!node.value) return
+        if (isTextNode(node.value)) {
+          report(node.value, literalValue(node.value))
+          return
+        }
+        if (node.value.type === 'JSXExpressionContainer') {
+          if (isTextNode(node.value.expression)) {
+            report(node.value.expression, literalValue(node.value.expression))
+          } else {
+            reportCandidates(textCandidates(node.value.expression))
+          }
+        }
       },
     }
   },

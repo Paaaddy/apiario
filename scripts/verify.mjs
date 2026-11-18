@@ -5,6 +5,7 @@ const checks = [
   ['test:run'],
   ['test:timezone'],
   ['build', '--', '--base', '/'],
+  ['check:precache'],
 ]
 let failed = false
 for (const args of checks) {

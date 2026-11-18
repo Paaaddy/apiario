@@ -275,7 +275,7 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
           )}
           <WinterStoreBanner guidance={winterStoreGuidance} theme={theme} />
           <div style={{ marginTop: 20, padding: '12px 0', textAlign: 'center', fontFamily: 'var(--theme-font-mono)', fontSize: 10, letterSpacing: '1.5px', color: c.inkLight, textTransform: 'uppercase' }}>
-            — {locale === 'de' ? 'Ende der Woche' : 'end of week'} —
+            — {t(s.season_end_of_week)} —
           </div>
         </div>
       </div>

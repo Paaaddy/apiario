@@ -1,13 +1,8 @@
 import diagnosisData from '../data/diagnosis.json'
 import { analyzeDiagnosisTree } from './validateDiagnosis'
+import { routeFromInspection } from './diagnosisRoute'
 
-export function routeFromInspection(inspection) {
-  if (!inspection) return null
-  if (inspection.queenStatus === 'not_seen') return 'queenless'
-  if (inspection.varroa != null && inspection.varroa >= 3) return 'varroa-suspect'
-  if (inspection.broodPattern != null && inspection.broodPattern <= 2) return 'sick-brood'
-  return null
-}
+export { routeFromInspection }
 
 export function getDiagnosisMaxDepth(data = diagnosisData, rootId = 'root') {
   const analysis = analyzeDiagnosisTree(data)

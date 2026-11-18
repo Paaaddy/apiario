@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from 'react'
-import { OnboardingProvider, useOnboarding } from '@onboardjs/react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useBackupRestoreController } from '../hooks/useBackupRestoreController'
 import { useDraftProtection } from '../hooks/useDraftProtection'
@@ -9,9 +8,8 @@ import HexWatermark from '../components/HexWatermark'
 
 // ── Step: Welcome ────────────────────────────────────────────────────────────
 
-function WelcomeStep() {
+function WelcomeStep({ onNext }) {
   const { t } = useLanguage()
-  const { next } = useOnboarding()
   return (
     <div className="min-h-full bg-cream flex flex-col">
       <div className="bg-honey px-6 pt-12 pb-8 border-b border-honey-dark/20 shadow-xs shadow-honey-dark/20" style={{ position: 'relative', overflow: 'hidden' }}>
@@ -28,7 +26,7 @@ function WelcomeStep() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 pb-10">
         <div className="text-8xl mb-10 animate-bob">🐝</div>
         <button
-          onClick={() => next()}
+          onClick={() => onNext()}
           className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-xs active:opacity-80 transition-opacity"
         >
           {t(s.onboarding_lets_go)}
@@ -40,9 +38,8 @@ function WelcomeStep() {
 
 // ── Step: Features overview ───────────────────────────────────────────────────
 
-function FeaturesStep() {
+function FeaturesStep({ onNext }) {
   const { t } = useLanguage()
-  const { next } = useOnboarding()
   const features = [
     { icon: '🌱', label: t(s.nav_season),   desc: t(s.onboarding_feature_season_desc)  },
     { icon: '🔎', label: t(s.nav_diagnose), desc: t(s.onboarding_feature_diagnose_desc) },
@@ -76,7 +73,7 @@ function FeaturesStep() {
       </div>
       <div className="px-6 pt-6 pb-10">
         <button
-          onClick={() => next()}
+          onClick={() => onNext()}
           className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-xs active:opacity-80 transition-opacity"
         >
           {t(s.onboarding_continue)}
@@ -88,9 +85,8 @@ function FeaturesStep() {
 
 // ── Step: Privacy & Import ────────────────────────────────────────────────────
 
-function PrivacyStep() {
+function PrivacyStep({ onNext }) {
   const { t } = useLanguage()
-  const { next } = useOnboarding()
   const { status, restoreFromInput } = useBackupRestoreController(t)
   const fileInputRef = useRef(null)
 
@@ -135,7 +131,7 @@ function PrivacyStep() {
       </div>
       <div className="px-6 pt-6 pb-10">
         <button
-          onClick={() => next()}
+          onClick={() => onNext()}
           className="w-full bg-honey text-brown font-bold py-4 rounded-xl text-lg shadow-xs active:opacity-80 transition-opacity"
         >
           {t(s.onboarding_continue)}
@@ -147,14 +143,12 @@ function PrivacyStep() {
 
 // ── Step: Question (reused for hiveCount, climateZone, experience) ────────────
 
-function QuestionStep({ payload, onDataChange }) {
+function QuestionStep({ payload, onNext }) {
   const { t } = useLanguage()
-  const { next } = useOnboarding()
 
   function handleSelect(value) {
     payload.onAnswer(payload.answerKey, value)
-    onDataChange({ [payload.answerKey]: value }, true)
-    next()
+    onNext()
   }
 
   return (
@@ -231,124 +225,13 @@ function CompleteStep({ payload }) {
   )
 }
 
-// ── Component registry ────────────────────────────────────────────────────────
-
-const COMPONENT_REGISTRY = {
-  welcome:  WelcomeStep,
-  features: FeaturesStep,
-  privacy:  PrivacyStep,
-  question: QuestionStep,
-  complete: CompleteStep,
-}
-
-// ── Inner UI (must live inside OnboardingProvider) ────────────────────────────
-
-function OnboardingUI() {
-  const { renderStep, state } = useOnboarding()
-  if (!state || !state.currentStep) return null
-  return <>{renderStep()}</>
-}
-
 // ── Main export ───────────────────────────────────────────────────────────────
 
-// The steps array is created once and kept stable across renders:
-// OnboardingProvider re-initialises if the array reference changes, so it must
-// not be recreated on every render. It's held in lazy `useState` (runs once).
-// `onAnswer`/`onFinish` are plain callbacks that close over refs but only read
-// them when invoked (at user-action time), so they never read a ref during
-// render — satisfying `react-hooks/refs`.
-function buildSteps(onAnswer, onFinish) {
-  return [
-    {
-      id: 'welcome',
-      type: 'CUSTOM_COMPONENT',
-      payload: { componentKey: 'welcome' },
-      nextStep: 'features',
-    },
-    {
-      id: 'features',
-      type: 'CUSTOM_COMPONENT',
-      payload: { componentKey: 'features' },
-      nextStep: 'privacy',
-    },
-    {
-      id: 'privacy',
-      type: 'CUSTOM_COMPONENT',
-      payload: { componentKey: 'privacy' },
-      nextStep: 'hiveCount',
-    },
-    {
-      id: 'hiveCount',
-      type: 'CUSTOM_COMPONENT',
-      payload: {
-        componentKey: 'question',
-        answerKey: 'hiveCount',
-        question: s.onboarding_q_hives,
-        dots: [true, false, false],
-        options: [
-          { label: s.hive_1,  value: 1  },
-          { label: s.hive_2,  value: 2  },
-          { label: s.hive_5,  value: 5  },
-          { label: s.hive_10, value: 10 },
-        ],
-        onAnswer,
-      },
-      nextStep: 'climateZone',
-    },
-    {
-      id: 'climateZone',
-      type: 'CUSTOM_COMPONENT',
-      payload: {
-        componentKey: 'question',
-        answerKey: 'climateZone',
-        question: s.onboarding_q_zone,
-        dots: [true, true, false],
-        options: [
-          { label: s.zone_northern,      value: 'northern'      },
-          { label: s.zone_central,       value: 'central'       },
-          { label: s.zone_mediterranean, value: 'mediterranean' },
-          { label: s.zone_other,         value: 'other'         },
-        ],
-        onAnswer,
-      },
-      nextStep: 'experience',
-    },
-    {
-      id: 'experience',
-      type: 'CUSTOM_COMPONENT',
-      payload: {
-        componentKey: 'question',
-        answerKey: 'experience',
-        question: s.onboarding_q_exp,
-        dots: [true, true, true],
-        options: [
-          { label: s.exp_0, value: 0 },
-          { label: s.exp_1, value: 1 },
-          { label: s.exp_2, value: 2 },
-        ],
-        onAnswer,
-      },
-      nextStep: 'complete',
-    },
-    {
-      id: 'complete',
-      type: 'CUSTOM_COMPONENT',
-      payload: {
-        componentKey: 'complete',
-        onFinish,
-      },
-      nextStep: null,
-    },
-  ]
-}
-
 export default function Onboarding({ onComplete }) {
+  const [step, setStep] = useState('welcome')
   const answersRef = useRef({})
   const { markDraft, clearDraft } = useDraftProtection()
 
-  // Stable ref so the steps array (created once) can call the latest onComplete.
-  // Kept fresh in an effect (not during render) per `react-hooks/refs`; the
-  // `complete` step only runs after the user reaches it, long after mount.
   const onCompleteRef = useRef(onComplete)
   useEffect(() => {
     onCompleteRef.current = onComplete
@@ -363,18 +246,67 @@ export default function Onboarding({ onComplete }) {
     clearDraft()
   }
 
-  // Created once via lazy initializer so the steps array reference stays stable
-  // across renders (OnboardingProvider re-initialises if the reference changes).
-  // `onAnswer`/`onFinish` capture refs but only READ them when OnboardJS invokes
-  // them on a user action (never during render); the analyzer can't see that
-  // they're stored for later, so it conservatively flags passing them into the
-  // render-phase initializer. The refs are never dereferenced while rendering.
-  // eslint-disable-next-line react-hooks/refs
-  const [steps] = useState(() => buildSteps(onAnswer, onFinish))
+  const next = () => {
+    const order = ['welcome', 'features', 'privacy', 'hiveCount', 'climateZone', 'experience', 'complete']
+    setStep((prev) => {
+      const i = order.indexOf(prev)
+      return i >= 0 && i < order.length - 1 ? order[i + 1] : prev
+    })
+  }
 
-  return (
-    <OnboardingProvider steps={steps} componentRegistry={COMPONENT_REGISTRY}>
-      <OnboardingUI />
-    </OnboardingProvider>
-  )
+  const hivePayload = {
+    answerKey: 'hiveCount',
+    question: s.onboarding_q_hives,
+    dots: [true, false, false],
+    options: [
+      { label: s.hive_1, value: 1 },
+      { label: s.hive_2, value: 2 },
+      { label: s.hive_5, value: 5 },
+      { label: s.hive_10, value: 10 },
+    ],
+    onAnswer,
+  }
+  const climatePayload = {
+    answerKey: 'climateZone',
+    question: s.onboarding_q_zone,
+    dots: [true, true, false],
+    options: [
+      { label: s.zone_northern, value: 'northern' },
+      { label: s.zone_central, value: 'central' },
+      { label: s.zone_mediterranean, value: 'mediterranean' },
+      { label: s.zone_other, value: 'other' },
+    ],
+    onAnswer,
+  }
+  const experiencePayload = {
+    answerKey: 'experience',
+    question: s.onboarding_q_exp,
+    dots: [true, true, true],
+    options: [
+      { label: s.exp_0, value: 0 },
+      { label: s.exp_1, value: 1 },
+      { label: s.exp_2, value: 2 },
+    ],
+    onAnswer,
+  }
+  const completePayload = { onFinish }
+
+  switch (step) {
+    case 'welcome':
+      return <WelcomeStep onNext={next} />
+    case 'features':
+      return <FeaturesStep onNext={next} />
+    case 'privacy':
+      return <PrivacyStep onNext={next} />
+    case 'hiveCount':
+      return <QuestionStep payload={hivePayload} onNext={next} />
+    case 'climateZone':
+      return <QuestionStep payload={climatePayload} onNext={next} />
+    case 'experience':
+      return <QuestionStep payload={experiencePayload} onNext={next} />
+    case 'complete':
+      return <CompleteStep payload={completePayload} />
+    default:
+      return null
+  }
 }

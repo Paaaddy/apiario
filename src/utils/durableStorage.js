@@ -36,7 +36,7 @@ export function buildSeededColonies(count, existing = []) {
 export function migrateProfile(profile) {
   const migrated = { ...profile }
   const version = migrated.schemaVersion ?? 0
-  if (version < 2) migrated.colonies = buildSeededColonies(migrated.hiveCount)
+  if (version < 2) migrated.colonies = buildSeededColonies(migrated.hiveCount, migrated.colonies)
   if (version < 3) {
     if (Array.isArray(migrated.colonies)) {
       migrated.colonies = migrated.colonies.map((colony) => ({
@@ -90,7 +90,9 @@ export function uniqueRecords(records, accepts) {
 
 function isColony(colony) {
   return isText(colony.name) &&
-    optionalFields(colony, ['notes', 'createdAt', 'queenIntroducedAt'], isText) &&
+    colony.name.length <= MAX_COLONY_NAME_LENGTH &&
+    (colony.notes == null || (isText(colony.notes) && colony.notes.length <= MAX_COLONY_NOTES_LENGTH)) &&
+    optionalFields(colony, ['createdAt', 'queenIntroducedAt'], isText) &&
     (colony.harvestLog == null || (Array.isArray(colony.harvestLog) && colony.harvestLog.every(isRecord)))
 }
 
@@ -102,7 +104,7 @@ export function isProfile(profile) {
     optionalFields(profile, ['experience'], (value) => [0, 1, 2].includes(value)) &&
     optionalFields(profile, ['climateZone'], (value) => ['northern', 'central', 'mediterranean', 'other'].includes(value)) &&
     (!Object.hasOwn(profile, 'onboardingDone') || typeof profile.onboardingDone === 'boolean') &&
-    (!Object.hasOwn(profile, 'colonies') || uniqueRecords(profile.colonies, isColony))
+    (!Object.hasOwn(profile, 'colonies') || (uniqueRecords(profile.colonies, isColony) && profile.colonies.length <= MAX_IMPORTED_COLONIES))
 }
 
 export function isInspection(inspection) {
@@ -158,7 +160,9 @@ export function loadStoredValue(key, fallback, accepts, normalize = (value) => v
 export function hasValidBackupRecords({ profile, inspections, log }) {
   if (!isProfile(profile) || log.length > MAX_TASK_LOG_ENTRIES ||
     !uniqueRecords(inspections, isInspection) || !uniqueRecords(log, isLogEntry)) return false
-  const colonyIds = new Set((migrateProfile(profile).colonies ?? []).map((colony) => colony.id))
+  const migratedColonies = migrateProfile(profile).colonies ?? []
+  if (!Array.isArray(migratedColonies) || migratedColonies.length > MAX_IMPORTED_COLONIES) return false
+  const colonyIds = new Set(migratedColonies.map((colony) => colony.id))
   const counts = new Map()
   return inspections.every((inspection) => {
     const count = (counts.get(inspection.colonyId) ?? 0) + 1
@@ -168,7 +172,7 @@ export function hasValidBackupRecords({ profile, inspections, log }) {
 }
 
 import { protectReload } from '../pwa/reloadSafety'
-import { MAX_LEGACY_SEEDED_COLONIES, MAX_BACKUP_BYTES } from './backupLimits'
+import { MAX_LEGACY_SEEDED_COLONIES, MAX_BACKUP_BYTES, MAX_IMPORTED_COLONIES, MAX_COLONY_NAME_LENGTH, MAX_COLONY_NOTES_LENGTH } from './backupLimits'
 import { MAX_INSPECTIONS_PER_COLONY, MAX_TASK_LOG_ENTRIES } from './retentionLimits'
 // Shared by Backup replacement and related ordinary changes. Exact raw strings
 // survive rollback; this session-only recovery is not a crash-safe transaction.
@@ -254,6 +258,7 @@ export const BACKUP_MESSAGE_KEYS = {
   unexpectedError: 'data_import_error_unexpected',
   recoveryError: 'data_import_error_recovery',
   sizeError: 'data_import_error_size',
+  storageError: 'storage_error',
 }
 
 function readJSON(key, fallback) {
@@ -285,6 +290,7 @@ export function backupErrorOutcome(error) {
   const messageKey = {
     recovery: BACKUP_MESSAGE_KEYS.recoveryError,
     size: BACKUP_MESSAGE_KEYS.sizeError,
+    storage: BACKUP_MESSAGE_KEYS.storageError,
     parse: BACKUP_MESSAGE_KEYS.parseError,
     format: BACKUP_MESSAGE_KEYS.formatError,
   }[error] ?? BACKUP_MESSAGE_KEYS.unexpectedError
@@ -341,7 +347,7 @@ export function restoreBackup(raw) {
     [INSPECTIONS_KEY, result.data.inspections],
     [LOG_KEY, result.data.log],
   ], 'backup')
-  if (!outcome.ok) return backupErrorOutcome(outcome.error === 'recovery' ? 'recovery' : 'unexpected')
+  if (!outcome.ok) return backupErrorOutcome(outcome.error === 'recovery' ? 'recovery' : outcome.error === 'storage' ? 'storage' : 'unexpected')
 
   return {
     ok: true,

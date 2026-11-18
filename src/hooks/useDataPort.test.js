@@ -80,7 +80,7 @@ describe('useDataPort.importData', () => {
     let outcome
     await act(async () => { outcome = await result.current.importData(makeFile(validPayload())) })
     read.mockRestore()
-    expect(outcome).toMatchObject({ ok: false, error: 'unexpected', requiresReload: false })
+    expect(outcome).toMatchObject({ ok: false, error: 'storage', requiresReload: false })
     expect(localStorage.getItem(PROFILE_KEY)).toBe(previous)
     expect(localStorage.getItem(INSPECTIONS_KEY)).toBeNull()
     expect(localStorage.getItem(LOG_KEY)).toBeNull()
@@ -94,7 +94,7 @@ describe('useDataPort.importData', () => {
     const { result } = renderHook(() => useDataPort())
     let outcome
     await act(async () => { outcome = await result.current.importData(makeFile(text)) })
-    expect(outcome).toMatchObject({ ok: false, error: 'unexpected', requiresReload: false })
+    expect(outcome).toMatchObject({ ok: false, error: 'storage', requiresReload: false })
     expect(localStorage.getItem(PROFILE_KEY)).toBe(previous)
     expect(localStorage.getItem(INSPECTIONS_KEY)).toBeNull()
   })

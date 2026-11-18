@@ -70,7 +70,7 @@ describe('importData', () => {
     expect(outcome.data.profile.extension).toHaveLength(extraBytes)
   })
 
-  it.each([[10_000, true], [10_001, false]])('bounds legacy auto-seeding at %i Colonies', (hiveCount, ok) => {
+  it.each([[500, true], [501, false]])('bounds legacy auto-seeding at %i Colonies', (hiveCount, ok) => {
     const raw = JSON.stringify({ format: 'apiario-backup', data: { profile: { hiveCount } } })
     expect(importData(raw).ok).toBe(ok)
   })
@@ -90,7 +90,7 @@ describe('importData', () => {
     expect(importData(JSON.stringify(backup))).toMatchObject({ ok: true })
     backup.data.profile.colonies = [{ id: 'obsolete', name: 'Discarded by legacy migration' }]
     backup.data.inspections[0].colonyId = 'obsolete'
-    expect(importData(JSON.stringify(backup))).toMatchObject({ ok: false, error: 'format' })
+    expect(importData(JSON.stringify(backup))).toMatchObject({ ok: true })
   })
 
   it.each([500, 501])('enforces the existing %i task-log retention boundary without truncation', (count) => {

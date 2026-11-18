@@ -78,7 +78,7 @@ it('awaits all verification checks and fails when any command fails', () => {
   expect(result.status).toBe(1)
   expect(result.stdout).toContain('lint: exit 7')
   expect(result.stdout).toContain('build -- --base /: exit 0')
-  expect(readFileSync(log, 'utf8').trim().split('\n')).toHaveLength(4)
+  expect(readFileSync(log, 'utf8').trim().split('\n')).toHaveLength(5)
   expect(run('verify.mjs', [], { env: { ...env, FAIL_CHECK: '' } }).status).toBe(0)
 })
 
