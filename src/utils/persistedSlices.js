@@ -75,10 +75,6 @@ function isTranslatedText(value) {
   return isText(value) || (isRecord(value) && isText(value.de) && isText(value.en))
 }
 
-function isNonnegativeNumber(value) {
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0
-}
-
 export function uniqueRecords(records, accepts) {
   if (!Array.isArray(records)) return false
   const ids = new Set()
@@ -108,12 +104,24 @@ export function isProfile(profile) {
     (!Object.hasOwn(profile, 'colonies') || (uniqueRecords(profile.colonies, isColony) && profile.colonies.length <= MAX_IMPORTED_COLONIES))
 }
 
+export const QUEEN_STATUSES = ['seen', 'eggs', 'larvae', 'not_seen']
+export const TEMPERAMENTS = ['calm', 'normal', 'defensive']
+export const INSPECTION_SCALE_MAX = 5
+
+export function isScaleValue(value) {
+  return Number.isInteger(value) && value >= 0 && value <= INSPECTION_SCALE_MAX
+}
+
+export function isNonnegativeFiniteNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0
+}
+
 export function isInspection(inspection) {
   return isId(inspection.colonyId) &&
-    optionalFields(inspection, ['queenStatus'], (value) => ['seen', 'eggs', 'larvae', 'not_seen'].includes(value)) &&
-    optionalFields(inspection, ['temperament'], (value) => ['calm', 'normal', 'defensive'].includes(value)) &&
-    optionalFields(inspection, ['broodPattern', 'honeyStores', 'population'], (value) => Number.isInteger(value) && value >= 0 && value <= 5) &&
-    optionalFields(inspection, ['varroa', 'harvest'], isNonnegativeNumber) &&
+    optionalFields(inspection, ['queenStatus'], (value) => QUEEN_STATUSES.includes(value)) &&
+    optionalFields(inspection, ['temperament'], (value) => TEMPERAMENTS.includes(value)) &&
+    optionalFields(inspection, ['broodPattern', 'honeyStores', 'population'], isScaleValue) &&
+    optionalFields(inspection, ['varroa', 'harvest'], isNonnegativeFiniteNumber) &&
     optionalFields(inspection, ['notes', 'treatment', 'createdAt', 'queenYear'], isText) &&
     // Invalid calendar dates are retained by the Inspection chronology contract.
     // Object-valued dates are unsafe to render; missing/null/primitive dates are not.

@@ -8,6 +8,7 @@ import SectionLabel from './SectionLabel'
 import { themeColors } from '../utils/themeTokens'
 import { localDateString } from '../utils/inspectionHistory'
 import { useDraftProtection } from '../hooks/useDraftProtection'
+import { draftFromInspection, inspectionFromDraft, saveVerdict } from '../utils/inspectionDraft'
 
 const QUEEN_OPTIONS = [
   { value: 'seen',     emoji: '👑', label: s.insp_queen_seen     },
@@ -65,20 +66,21 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
     return () => el.removeEventListener('keydown', trap)
   }, [onClose])
 
-  const [date, setDate]                   = useState(initial?.date ?? localDateString())
-  const [colonyId, setColonyId]           = useState(initial?.colonyId ?? initialColonyId ?? (colonies[0]?.id ?? ''))
-  const [queenStatus, setQueenStatus]     = useState(initial?.queenStatus ?? null)
-  const [queenYear, setQueenYear]         = useState(initial?.queenYear ?? '')
-  const [broodPattern, setBrood]          = useState(initial?.broodPattern ?? null)
-  const [honeyStores, setStores]          = useState(initial?.honeyStores ?? null)
-  const [population, setPop]              = useState(initial?.population ?? null)
-  const [temperament, setTemper]          = useState(initial?.temperament ?? null)
-  const [varroaChecked, setVarroaChecked] = useState(initial?.varroa != null)
-  const [varroa, setVarroa]               = useState(initial?.varroa != null ? String(initial.varroa) : '')
-  const [treatment, setTreatment]         = useState(initial?.treatment ?? '')
-  const [treatmentOther, setTreatmentOther] = useState('')
-  const [harvest, setHarvest]             = useState(initial?.harvest != null ? String(initial.harvest) : '')
-  const [notes, setNotes]                 = useState(initial?.notes ?? '')
+  const [initialDraft] = useState(() => draftFromInspection(initial, { colonies, initialColonyId, today: localDateString() }))
+  const [date, setDate]                   = useState(initialDraft.date)
+  const [colonyId, setColonyId]           = useState(initialDraft.colonyId)
+  const [queenStatus, setQueenStatus]     = useState(initialDraft.queenStatus)
+  const [queenYear, setQueenYear]         = useState(initialDraft.queenYear)
+  const [broodPattern, setBrood]          = useState(initialDraft.broodPattern)
+  const [honeyStores, setStores]          = useState(initialDraft.honeyStores)
+  const [population, setPop]              = useState(initialDraft.population)
+  const [temperament, setTemper]          = useState(initialDraft.temperament)
+  const [varroaChecked, setVarroaChecked] = useState(initialDraft.varroaChecked)
+  const [varroa, setVarroa]               = useState(initialDraft.varroa)
+  const [treatment, setTreatment]         = useState(initialDraft.treatment)
+  const [treatmentOther, setTreatmentOther] = useState(initialDraft.treatmentOther)
+  const [harvest, setHarvest]             = useState(initialDraft.harvest)
+  const [notes, setNotes]                 = useState(initialDraft.notes)
 
   const isEditing = Boolean(initial)
   const canSave   = date && colonies.some((colony) => colony.id === colonyId) && queenStatus
@@ -94,24 +96,17 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
 
   function handleSave() {
     if (!canSave) return
-    const outcome = onSave({
-      colonyId,
-      date,
-      queenStatus,
-      queenYear: queenYear.trim() || null,
-      broodPattern,
-      honeyStores,
-      population,
-      temperament,
-      varroa: varroaChecked ? (varroa === '' ? null : (/^\d+(\.\d{1,2})?$/.test(varroa.trim()) ? Number(varroa) : null)) : null,
-      treatment: treatment === 'other' ? ((treatmentOther ?? '').trim() || 'other') : (treatment || null),
-      harvest: harvest.trim() ? Number(harvest) : null,
-      notes: notes.trim() || null,
+    const draft = inspectionFromDraft({
+      colonyId, date, queenStatus, queenYear, broodPattern, honeyStores, population,
+      temperament, varroaChecked, varroa, treatment, treatmentOther, harvest, notes,
     })
-    // Failed durable writes remain ordinary drafts managed by persistence;
-    // rejected moves must keep this form open because no mutation was applied.
-    if (outcome?.ok === false && (outcome.error === 'validation' || outcome.messageKey === 'insp_colony_full')) {
-      setSaveError(outcome.messageKey)
+    if (!draft.ok) {
+      setSaveError(draft.messageKey)
+      return
+    }
+    const verdict = saveVerdict(onSave(draft.inspection))
+    if (!verdict.close) {
+      setSaveError(verdict.messageKey)
       return
     }
     clearDraft()
