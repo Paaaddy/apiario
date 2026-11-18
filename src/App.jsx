@@ -1,4 +1,4 @@
-import { useEffect, useMemo, lazy, Suspense } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
@@ -7,7 +7,7 @@ import { useTaskLog } from './hooks/useTaskLog'
 import { useInspections } from './hooks/useInspections'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
 import { useAppBadge } from './hooks/useAppBadge'
-import { useSeason } from './hooks/useSeason'
+import { useSeasonGuidance } from './hooks/useSeasonGuidance'
 import { useCurrentDate } from './hooks/useCurrentDate'
 import { useHandsFreeSession } from './hooks/useHandsFreeSession'
 import { useColonyRemoval } from './hooks/useColonyRemoval'
@@ -57,15 +57,7 @@ function AppContent() {
   // installed app icon — the beekeeper sees "3" on the home screen
   // without opening the app.
   const today = useCurrentDate()
-  const seasonForBadge = useSeason(profile, completedTaskIds.size, today)
-  const pendingUrgentCount = useMemo(() => {
-    const tasks = seasonForBadge.tasks ?? []
-    return tasks.filter(
-      (t) =>
-        (t.urgency === 'urgent' || t.urgency === 'important') &&
-        !completedTaskIds.has(t.id)
-    ).length
-  }, [seasonForBadge.tasks, completedTaskIds])
+  const { pendingUrgentCount } = useSeasonGuidance({ profile, inspections, completedTaskIds, today })
   useAppBadge(pendingUrgentCount)
 
   // Once the user has completed onboarding they have data worth
