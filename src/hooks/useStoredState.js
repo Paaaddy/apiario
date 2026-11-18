@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { hasStorageRecovery, writeStorageTransaction, STORED_VALUE } from '../utils/durableStorage'
+import { hasStorageRecovery, writeStorageTransaction, STORED_VALUE } from '../utils/storageEngine'
+import { loadSlice } from '../utils/persistedSlices'
 import { protectReload } from '../pwa/reloadSafety'
 
 const STORAGE_ERROR = {
@@ -107,4 +108,10 @@ export function useStoredState(storageKey, load, accepts = acceptsAny) {
   const retrySave = useCallback(() => save(stateRef.current), [save])
 
   return { state, updateState, persistenceError, retrySave, getState }
+}
+
+// The slice definition supplies key, loader and validator, so hooks over a
+// persisted slice declare none of them.
+export function useSliceState(slice) {
+  return useStoredState(slice.key, () => loadSlice(slice), slice.accepts)
 }

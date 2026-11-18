@@ -4,11 +4,11 @@
 /* eslint-disable i18n/no-hardcoded-ui-text */
 import { useState } from 'react'
 import { haptics } from '../utils/haptics'
+import { SLICES } from '../utils/persistedSlices'
 
 const KEYS = {
-  profile: 'apiario-profile',
-  log:     'apiario-log',
-  locale:  'apiario-locale',
+  ...Object.fromEntries(Object.entries(SLICES).map(([name, slice]) => [name, slice.key])),
+  locale: 'apiario-locale',
 }
 
 function readAll() {

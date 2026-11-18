@@ -1,23 +1,11 @@
 import { useMemo, useCallback } from 'react'
 import { haptics } from '../utils/haptics'
-import { MAX_TASK_LOG_ENTRIES as MAX_ENTRIES } from '../utils/retentionLimits'
-import { useStoredState } from './useStoredState'
-import { isLogEntry, uniqueRecords, loadStoredValue } from '../utils/durableStorage'
-
-const STORAGE_KEY = 'apiario-log'
-const acceptsLog = (value) => uniqueRecords(value, (entry) => isLogEntry(entry, true))
-
-function loadLog() {
-  return loadStoredValue(STORAGE_KEY, [], acceptsLog, cap)
-}
-
-function cap(log) {
-  return log.length > MAX_ENTRIES ? log.slice(0, MAX_ENTRIES) : log
-}
+import { useSliceState } from './useStoredState'
+import { SLICES, capLog as cap } from '../utils/persistedSlices'
 
 export function useTaskLog() {
   const { state: log, updateState: setLog, persistenceError, retrySave } =
-    useStoredState(STORAGE_KEY, loadLog, acceptsLog)
+    useSliceState(SLICES.log)
 
   const completedTaskIds = useMemo(
     () => new Set(log.filter((e) => e.type === 'task').map((e) => e.taskId)),
