@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/Paaaddy/apiario/compare/v2.7.4...v2.8.0) (2026-11-20)
+
+
+### Features
+
+* implement ready-for-agent issues [#156](https://github.com/Paaaddy/apiario/issues/156), [#158](https://github.com/Paaaddy/apiario/issues/158), [#161](https://github.com/Paaaddy/apiario/issues/161), [#162](https://github.com/Paaaddy/apiario/issues/162) ([#182](https://github.com/Paaaddy/apiario/issues/182)) ([a237604](https://github.com/Paaaddy/apiario/commit/a2376042677b1a53a44821cb2980cc0aacbca131))
+
 ## [2.7.4](https://github.com/Paaaddy/apiario/compare/v2.7.3...v2.7.4) (2026-11-17)
 
 
