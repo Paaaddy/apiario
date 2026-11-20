@@ -1,71 +1,42 @@
 import { useMemo, useCallback } from 'react'
 import { haptics } from '../utils/haptics'
 import { useSliceState } from './useSliceState'
-import { SLICES, capLog } from '../utils/persistedSlices'
+import { SLICES } from '../utils/persistedSlices'
+import * as colonyData from '../utils/colonyData'
+
+const isoDate = () => new Date().toISOString().split('T')[0]
 
 export function useTaskLog() {
   const { state: log, updateState: setLog, persistenceError, retrySave } =
     useSliceState(SLICES.log)
 
-  const completedTaskIds = useMemo(
-    () => new Set(log.filter((e) => e.type === 'task').map((e) => e.taskId)),
-    [log]
-  )
+  const completedTaskIds = useMemo(() => colonyData.completedTaskIds(log), [log])
 
   const toggleTask = useCallback((task) => {
     // useStoredState runs this transaction synchronously in the event, not
     // as a React updater: haptics stay inside the user-activation window.
     return setLog((prev) => {
-      const exists = prev.find((e) => e.type === 'task' && e.taskId === task.id)
+      const result = colonyData.toggleTask(prev, task, {
+        entryId: `task-${task.id}-${crypto.randomUUID()}`,
+        completedAt: isoDate(),
+      })
       // Undo remains silent, including several toggles in the same event.
-      if (!exists) haptics.tap()
-      const next = exists
-        ? prev.filter((e) => !(e.type === 'task' && e.taskId === task.id))
-        : capLog([
-            {
-              id: `task-${task.id}-${crypto.randomUUID()}`,
-              type: 'task',
-              taskId: task.id,
-              taskName: task.name,
-              completedAt: new Date().toISOString().split('T')[0],
-            },
-            ...prev,
-          ])
-      return next
+      if (result.completed) haptics.tap()
+      return result.log
     })
   }, [setLog])
 
   const addCustomEntry = useCallback(({ text, date }) => {
-    return setLog((prev) => {
-      const next = capLog([
-        {
-          id: `custom-${crypto.randomUUID()}`,
-          type: 'custom',
-          text,
-          date,
-        },
-        ...prev,
-      ])
-      return next
-    })
+    return setLog((prev) =>
+      colonyData.addCustomEntry(prev, { entryId: `custom-${crypto.randomUUID()}`, text, date })
+    )
   }, [setLog])
 
   const deleteEntry = useCallback((id) => {
-    return setLog((prev) => {
-      const next = prev.filter((e) => e.id !== id)
-      return next
-    })
+    return setLog((prev) => colonyData.deleteLogEntry(prev, id))
   }, [setLog])
 
-  const sortedLog = useMemo(
-    () =>
-      [...log].sort((a, b) => {
-        const dateA = a.completedAt || a.date || ''
-        const dateB = b.completedAt || b.date || ''
-        return dateB.localeCompare(dateA)
-      }),
-    [log]
-  )
+  const sortedLog = useMemo(() => colonyData.sortLogNewestFirst(log), [log])
 
   return { log: sortedLog, completedTaskIds, toggleTask, addCustomEntry, deleteEntry, persistenceError, retrySave }
 }

@@ -3,6 +3,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useBackupRestoreController } from '../hooks/useBackupRestoreController'
 import { useDraftProtection } from '../hooks/useDraftProtection'
 import { strings as s } from '../i18n/strings'
+import { HIVE_COUNT_OPTIONS, CLIMATE_ZONE_OPTIONS, EXPERIENCE_OPTIONS } from '../utils/profileAnswers'
 import LanguageToggle from '../components/LanguageToggle'
 import HexWatermark from '../components/HexWatermark'
 
@@ -258,35 +259,21 @@ export default function Onboarding({ onComplete }) {
     answerKey: 'hiveCount',
     question: s.onboarding_q_hives,
     dots: [true, false, false],
-    options: [
-      { label: s.hive_1, value: 1 },
-      { label: s.hive_2, value: 2 },
-      { label: s.hive_5, value: 5 },
-      { label: s.hive_10, value: 10 },
-    ],
+    options: HIVE_COUNT_OPTIONS,
     onAnswer,
   }
   const climatePayload = {
     answerKey: 'climateZone',
     question: s.onboarding_q_zone,
     dots: [true, true, false],
-    options: [
-      { label: s.zone_northern, value: 'northern' },
-      { label: s.zone_central, value: 'central' },
-      { label: s.zone_mediterranean, value: 'mediterranean' },
-      { label: s.zone_other, value: 'other' },
-    ],
+    options: CLIMATE_ZONE_OPTIONS,
     onAnswer,
   }
   const experiencePayload = {
     answerKey: 'experience',
     question: s.onboarding_q_exp,
     dots: [true, true, true],
-    options: [
-      { label: s.exp_0, value: 0 },
-      { label: s.exp_1, value: 1 },
-      { label: s.exp_2, value: 2 },
-    ],
+    options: EXPERIENCE_OPTIONS,
     onAnswer,
   }
   const completePayload = { onFinish }

@@ -5,6 +5,7 @@ import { useBackupRestoreController } from '../hooks/useBackupRestoreController'
 import { strings as s } from '../i18n/strings'
 import ThemeSwitcher from '../components/ThemeSwitcher'
 import { getButtonStyle } from '../utils/themeButtonStyle'
+import { HIVE_COUNT_OPTIONS, CLIMATE_ZONE_OPTIONS, EXPERIENCE_OPTIONS, winterHintFor } from '../utils/profileAnswers'
 
 function OptionGroup({ title, options, currentValue, fieldKey, onUpdate, theme }) {
   return (
@@ -144,23 +145,9 @@ export default function ProfileSection({ profile, onUpdate }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
 
-  const HIVE_OPTIONS = useMemo(() => [
-    { label: t(s.hive_1),  value: 1  },
-    { label: t(s.hive_2),  value: 2  },
-    { label: t(s.hive_5),  value: 5  },
-    { label: t(s.hive_10), value: 10 },
-  ], [t])
-  const ZONE_OPTIONS = useMemo(() => [
-    { label: t(s.zone_northern),      value: 'northern'      },
-    { label: t(s.zone_central),       value: 'central'       },
-    { label: t(s.zone_mediterranean), value: 'mediterranean' },
-    { label: t(s.zone_other),         value: 'other'         },
-  ], [t])
-  const EXPERIENCE_OPTIONS = useMemo(() => [
-    { label: t(s.exp_0), value: 0 },
-    { label: t(s.exp_1), value: 1 },
-    { label: t(s.exp_2), value: 2 },
-  ], [t])
+  const HIVE_OPTIONS = useMemo(() => HIVE_COUNT_OPTIONS.map(({ label, value }) => ({ label: t(label), value })), [t])
+  const ZONE_OPTIONS = useMemo(() => CLIMATE_ZONE_OPTIONS.map(({ label, value }) => ({ label: t(label), value })), [t])
+  const EXPERIENCE_CHOICES = useMemo(() => EXPERIENCE_OPTIONS.map(({ label, value }) => ({ label: t(label), value })), [t])
 
   return (
     <div>
@@ -182,28 +169,18 @@ export default function ProfileSection({ profile, onUpdate }) {
         onUpdate={onUpdate}
         theme={theme}
       />
-      {(() => {
-        const zone = profile.climateZone
-        const hintKey =
-          zone === 'northern' ? s.climate_winter_hint :
-          zone === 'central' ? s.climate_winter_hint_central :
-          zone === 'mediterranean' ? s.climate_winter_hint_mediterranean :
-          s.climate_winter_hint_other
-        return (
-          <p style={{
-            margin: '-8px 0 24px',
-            fontSize: 12.5,
-            color: 'var(--theme-ink-mid, #92400e)',
-            lineHeight: 1.4,
-            fontStyle: 'italic',
-          }}>
-            {t(hintKey)}
-          </p>
-        )
-      })()}
+      <p style={{
+        margin: '-8px 0 24px',
+        fontSize: 12.5,
+        color: 'var(--theme-ink-mid, #92400e)',
+        lineHeight: 1.4,
+        fontStyle: 'italic',
+      }}>
+        {t(winterHintFor(profile.climateZone))}
+      </p>
       <OptionGroup
         title={t(s.experience_title)}
-        options={EXPERIENCE_OPTIONS}
+        options={EXPERIENCE_CHOICES}
         currentValue={profile.experience}
         fieldKey="experience"
         onUpdate={onUpdate}

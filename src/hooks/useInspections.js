@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useSliceState } from './useSliceState'
 import { colonyChronology } from '../utils/inspectionHistory'
-import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
+import * as colonyData from '../utils/colonyData'
 import { SLICES } from '../utils/persistedSlices'
 
 export function useInspections() {
@@ -9,47 +9,27 @@ export function useInspections() {
     useSliceState(SLICES.inspections)
 
   const addInspection = useCallback((data) => {
-    return setInspections((prev) => {
-      const entry = {
+    return setInspections((prev) =>
+      colonyData.addInspection(prev, {
         id: crypto.randomUUID(),
         ...data,
         createdAt: new Date().toISOString(),
-      }
-      const sameColony = prev.filter((e) => e.colonyId === data.colonyId)
-      const others = prev.filter((e) => e.colonyId !== data.colonyId)
-      const cappedColony = [entry, ...sameColony].slice(0, MAX_PER_COLONY)
-      const next = [...cappedColony, ...others]
-      return next
-    })
+      })
+    )
   }, [setInspections])
 
   const updateInspection = useCallback((id, patch) => {
-    const current = getState()
-    const entry = current.find((record) => record.id === id)
-    if (entry && patch.colonyId && patch.colonyId !== entry.colonyId &&
-      current.filter((record) => record.colonyId === patch.colonyId).length >= MAX_PER_COLONY) {
-      return { ok: false, messageKey: 'insp_colony_full' }
-    }
-    return setInspections((prev) => {
-      const next = prev.map((e) =>
-        e.id === id ? { ...e, ...patch, id: e.id, createdAt: e.createdAt } : e
-      )
-      return next
-    })
+    const outcome = colonyData.updateInspection(getState(), id, patch)
+    if (!outcome.ok) return outcome
+    return setInspections(() => outcome.inspections)
   }, [setInspections, getState])
 
   const removeInspection = useCallback((id) => {
-    return setInspections((prev) => {
-      const next = prev.filter((e) => e.id !== id)
-      return next
-    })
+    return setInspections((prev) => colonyData.removeInspection(prev, id))
   }, [setInspections])
 
   const removeInspectionsByColonyId = useCallback((colonyId) => {
-    return setInspections((prev) => {
-      const next = prev.filter((e) => e.colonyId !== colonyId)
-      return next
-    })
+    return setInspections((prev) => colonyData.removeColonyInspections(prev, colonyId))
   }, [setInspections])
 
   // One chronology pass feeds both accessors, so the latest a caller reads can
