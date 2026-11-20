@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
 import { useSliceState } from './useSliceState'
-import { nextColonyId, SLICES } from '../utils/persistedSlices'
+import { SLICES } from '../utils/persistedSlices'
+import * as colonyData from '../utils/colonyData'
+import { completeOnboarding as completeProfileOnboarding } from '../utils/profileAnswers'
 export { buildSeededColonies } from '../utils/persistedSlices'
 
 function today() {
@@ -12,45 +14,24 @@ export function useProfile() {
     useSliceState(SLICES.profile)
 
   const updateProfile = useCallback((updates) => {
-    return setProfile((prev) => {
-      const next = { ...prev, ...updates }
-      return next
-    })
+    return setProfile((prev) => ({ ...prev, ...updates }))
+  }, [setProfile])
+
+  const completeOnboarding = useCallback((answers) => {
+    return setProfile((prev) => completeProfileOnboarding(prev, answers))
   }, [setProfile])
 
   const addColony = useCallback((name, notes = '') => {
-    return setProfile((prev) => {
-      const existing = prev.colonies ?? []
-      const colony = {
-        id: nextColonyId(existing),
-        name: (name ?? '').trim() || `Hive ${existing.length + 1}`,
-        createdAt: today(),
-        notes,
-        queenIntroducedAt: null,
-        harvestLog: [],
-      }
-      const next = { ...prev, colonies: [...existing, colony] }
-      return next
-    })
+    return setProfile((prev) => colonyData.addColony(prev, { name, notes, today: today() }))
   }, [setProfile])
 
   const updateColony = useCallback((id, updates) => {
-    return setProfile((prev) => {
-      const colonies = (prev.colonies ?? []).map((c) =>
-        c.id === id ? { ...c, ...updates } : c
-      )
-      const next = { ...prev, colonies }
-      return next
-    })
+    return setProfile((prev) => colonyData.updateColony(prev, id, updates))
   }, [setProfile])
 
   const removeColony = useCallback((id) => {
-    return setProfile((prev) => {
-      const colonies = (prev.colonies ?? []).filter((c) => c.id !== id)
-      const next = { ...prev, colonies }
-      return next
-    })
+    return setProfile((prev) => colonyData.removeColony(prev, id))
   }, [setProfile])
 
-  return { profile, updateProfile, addColony, updateColony, removeColony, persistenceError, retrySave }
+  return { profile, updateProfile, completeOnboarding, addColony, updateColony, removeColony, persistenceError, retrySave }
 }
