@@ -132,4 +132,4 @@ Dependency automation: `dependabot-automerge.yml` squash-merges Dependabot patch
 
 This repo uses [gstack](https://github.com/paaaddy/gstack) skills for planning, review, QA, and shipping. If the harness you're running under supports it, skill commands such as `/investigate` (root-cause debugging), `/qa` (systematic QA + fix loop), `/review` (pre-landing diff review), and `/ship` (version bump + changelog + PR) may be available. Invoke a skill with `/<skill-name>`; otherwise treat these as optional — the app itself is fully testable with the npm scripts above.
 
-If present, `CONTEXT.md` and `docs/adr/` at repo root hold domain context, and `docs/agents/issue-tracker.md` covers GitHub Issues workflows via the `gh` CLI.
+If present, `GLOSSARY.md` and `docs/adr/` at repo root hold domain context, and `docs/agents/issue-tracker.md` covers GitHub Issues workflows via the `gh` CLI.

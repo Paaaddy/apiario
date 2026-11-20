@@ -9,8 +9,7 @@ harness and every clone — Claude, Codex, Cursor, plain `git`, etc.
 
 ## Enable on a fresh clone
 
-Git doesn't run hooks from this directory by default. Point Git at it once,
-per clone:
+`npm install` runs the `prepare` script, which sets `core.hooksPath` for you. To set it by hand:
 
 ```sh
 git config core.hooksPath hooks
@@ -22,6 +21,9 @@ That's it. After this, `git commit` automatically runs the pre-commit hook.
 
 1. `npm run lint` — ESLint over the whole repo.
 2. `npm run test:run` — Vitest in CI (non-watch) mode.
+3. `npm run test:timezone` — timezone regressions.
+
+Output is captured; only the last 40 lines of a failing check are printed.
 
 If either command exits non-zero, the commit is aborted with a clear message.
 

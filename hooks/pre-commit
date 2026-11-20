@@ -30,29 +30,25 @@ if [ ! -x "$REPO_ROOT/node_modules/.bin/vitest" ] && [ ! -x "$REPO_ROOT/node_mod
   exit 0
 fi
 
-echo "pre-commit: running linter..."
-# shellcheck disable=SC2086
-if ! npm run lint >/dev/null 2>&1; then
-  echo ""
-  echo "pre-commit: LINT FAILED — fixing the errors above before committing."
-  echo "  Run 'npm run lint' to see the details."
-  echo ""
-  FAILED=1
-else
-  echo "pre-commit: lint passed."
-fi
+# Run a check quietly; on failure print only the tail of its output.
+run_check() {
+  label=$1; shift
+  log=$(mktemp)
+  if "$@" >"$log" 2>&1; then
+    echo "pre-commit: $label passed."
+  else
+    echo ""
+    echo "pre-commit: $label FAILED (last 40 lines; rerun the command for full output):"
+    tail -n 40 "$log"
+    echo ""
+    FAILED=1
+  fi
+  rm -f "$log"
+}
 
-echo "pre-commit: running tests (CI mode) and timezone regressions..."
-# shellcheck disable=SC2086
-if ! npm run test:run || ! npm run test:timezone; then
-  echo ""
-  echo "pre-commit: TESTS FAILED — fix the failing tests before committing."
-  echo "  Run 'npm run test:run' to see the details."
-  echo ""
-  FAILED=1
-else
-  echo "pre-commit: tests passed."
-fi
+run_check "lint" npm run lint
+run_check "tests" npm run test:run
+run_check "timezone regressions" npm run test:timezone
 
 if [ "$FAILED" -ne 0 ]; then
   echo "pre-commit: BLOCKING commit — lint and/or tests failed."
