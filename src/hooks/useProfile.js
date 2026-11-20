@@ -1,40 +1,15 @@
 import { useCallback } from 'react'
-import { useStoredState } from './useStoredState'
-import { PROFILE_SCHEMA_VERSION, migrateProfile, nextColonyId, isProfile, loadStoredValue } from '../utils/durableStorage'
-export { buildSeededColonies } from '../utils/durableStorage'
-
-const STORAGE_KEY = 'apiario-profile'
-const SCHEMA_VERSION = PROFILE_SCHEMA_VERSION
-
-const DEFAULT_PROFILE = {
-  schemaVersion: SCHEMA_VERSION,
-  hiveCount: null,
-  climateZone: null,
-  experience: null,
-  onboardingDone: false,
-  colonies: [],
-}
+import { useSliceState } from './useSliceState'
+import { nextColonyId, SLICES } from '../utils/persistedSlices'
+export { buildSeededColonies } from '../utils/persistedSlices'
 
 function today() {
   return new Date().toISOString().split('T')[0]
 }
 
-function loadProfile() {
-  return loadStoredValue(STORAGE_KEY, DEFAULT_PROFILE, isProfile, (parsed) => {
-    // IMPORTANT: detect the schema version from the PARSED data, not from the
-    // merged-with-defaults version — otherwise the defaults' schemaVersion
-    // would hide the fact that stored data is an older version.
-    const storedVersion = parsed.schemaVersion ?? 0
-    const migrated = storedVersion === SCHEMA_VERSION ? parsed : migrateProfile(parsed)
-    // Fill in any keys that newer schema versions introduced but the stored
-    // object never had.
-    return { ...DEFAULT_PROFILE, ...migrated }
-  })
-}
-
 export function useProfile() {
   const { state: profile, updateState: setProfile, persistenceError, retrySave } =
-    useStoredState(STORAGE_KEY, loadProfile, isProfile)
+    useSliceState(SLICES.profile)
 
   const updateProfile = useCallback((updates) => {
     return setProfile((prev) => {

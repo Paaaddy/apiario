@@ -1,3 +1,5 @@
+// Internal seam of the Season guidance module: these cases feed synthetic seasons and tasks
+// that `seasonGuidance` cannot take. Callers use `seasonGuidance`, not this module.
 import { buildNextActions } from './nextActions'
 
 const springTask = {

@@ -1,19 +1,12 @@
 import { useCallback, useMemo } from 'react'
-import { useStoredState } from './useStoredState'
+import { useSliceState } from './useSliceState'
 import { colonyChronology } from '../utils/inspectionHistory'
 import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
-import { isInspection, uniqueRecords, loadStoredValue } from '../utils/durableStorage'
-
-const STORAGE_KEY = 'apiario-inspections'
-const acceptsInspections = (value) => uniqueRecords(value, isInspection)
-
-function loadInspections() {
-  return loadStoredValue(STORAGE_KEY, [], acceptsInspections)
-}
+import { SLICES } from '../utils/persistedSlices'
 
 export function useInspections() {
   const { state: inspections, updateState: setInspections, persistenceError, retrySave, getState } =
-    useStoredState(STORAGE_KEY, loadInspections, acceptsInspections)
+    useSliceState(SLICES.inspections)
 
   const addInspection = useCallback((data) => {
     return setInspections((prev) => {

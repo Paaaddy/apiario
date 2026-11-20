@@ -8,6 +8,7 @@ import SectionLabel from './SectionLabel'
 import { themeColors } from '../utils/themeTokens'
 import { localDateString } from '../utils/inspectionHistory'
 import { useDraftProtection } from '../hooks/useDraftProtection'
+import { draftFromInspection, inspectionFromDraft, saveVerdict, TREATMENT_PRESETS } from '../utils/inspectionDraft'
 
 const QUEEN_OPTIONS = [
   { value: 'seen',     emoji: '👑', label: s.insp_queen_seen     },
@@ -22,13 +23,18 @@ const TEMPERAMENT_OPTIONS = [
   { value: 'defensive', label: s.insp_temperament_defensive },
 ]
 
-const TREATMENT_OPTIONS = [
-  { value: 'none',     label: s.insp_treatment_none     },
-  { value: 'varroa',   label: s.insp_treatment_varroa   },
-  { value: 'feeding',  label: s.insp_treatment_feeding  },
-  { value: 'queen',    label: s.insp_treatment_queen    },
-  { value: 'other',    label: s.insp_treatment_other    },
-]
+// The presets come from the draft module, so the form and the translation
+// of a recorded treatment back into a draft cannot disagree.
+const TREATMENT_LABELS = {
+  none: s.insp_treatment_none,
+  varroa: s.insp_treatment_varroa,
+  feeding: s.insp_treatment_feeding,
+  queen: s.insp_treatment_queen,
+  other: s.insp_treatment_other,
+}
+const TREATMENT_OPTIONS = [...TREATMENT_PRESETS, 'other'].map((value) => ({
+  value, label: TREATMENT_LABELS[value],
+}))
 
 function FieldLabel({ text, htmlFor, id, color }) {
   const style = { margin: '0 0 6px', fontSize: 13, fontWeight: 600, color, display: 'block' }
@@ -65,20 +71,12 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
     return () => el.removeEventListener('keydown', trap)
   }, [onClose])
 
-  const [date, setDate]                   = useState(initial?.date ?? localDateString())
-  const [colonyId, setColonyId]           = useState(initial?.colonyId ?? initialColonyId ?? (colonies[0]?.id ?? ''))
-  const [queenStatus, setQueenStatus]     = useState(initial?.queenStatus ?? null)
-  const [queenYear, setQueenYear]         = useState(initial?.queenYear ?? '')
-  const [broodPattern, setBrood]          = useState(initial?.broodPattern ?? null)
-  const [honeyStores, setStores]          = useState(initial?.honeyStores ?? null)
-  const [population, setPop]              = useState(initial?.population ?? null)
-  const [temperament, setTemper]          = useState(initial?.temperament ?? null)
-  const [varroaChecked, setVarroaChecked] = useState(initial?.varroa != null)
-  const [varroa, setVarroa]               = useState(initial?.varroa != null ? String(initial.varroa) : '')
-  const [treatment, setTreatment]         = useState(initial?.treatment ?? '')
-  const [treatmentOther, setTreatmentOther] = useState('')
-  const [harvest, setHarvest]             = useState(initial?.harvest != null ? String(initial.harvest) : '')
-  const [notes, setNotes]                 = useState(initial?.notes ?? '')
+  const [draft, setDraft] = useState(() => draftFromInspection(initial, { colonies, initialColonyId, today: localDateString() }))
+  const setField = (field, value) => setDraft((current) => ({ ...current, [field]: value }))
+  const {
+    date, colonyId, queenStatus, queenYear, broodPattern, honeyStores, population, temperament,
+    varroaChecked, varroa, treatment, treatmentOther, harvest, notes,
+  } = draft
 
   const isEditing = Boolean(initial)
   const canSave   = date && colonies.some((colony) => colony.id === colonyId) && queenStatus
@@ -94,24 +92,14 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
 
   function handleSave() {
     if (!canSave) return
-    const outcome = onSave({
-      colonyId,
-      date,
-      queenStatus,
-      queenYear: queenYear.trim() || null,
-      broodPattern,
-      honeyStores,
-      population,
-      temperament,
-      varroa: varroaChecked ? (varroa === '' ? null : (/^\d+(\.\d{1,2})?$/.test(varroa.trim()) ? Number(varroa) : null)) : null,
-      treatment: treatment === 'other' ? ((treatmentOther ?? '').trim() || 'other') : (treatment || null),
-      harvest: harvest.trim() ? Number(harvest) : null,
-      notes: notes.trim() || null,
-    })
-    // Failed durable writes remain ordinary drafts managed by persistence;
-    // rejected moves must keep this form open because no mutation was applied.
-    if (outcome?.ok === false && (outcome.error === 'validation' || outcome.messageKey === 'insp_colony_full')) {
-      setSaveError(outcome.messageKey)
+    const result = inspectionFromDraft(draft)
+    if (!result.ok) {
+      setSaveError(result.messageKey)
+      return
+    }
+    const verdict = saveVerdict(onSave(result.inspection))
+    if (!verdict.close) {
+      setSaveError(verdict.messageKey)
       return
     }
     clearDraft()
@@ -144,7 +132,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
             id="insp-date"
             type="date"
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => setField('date', e.target.value)}
             style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
           />
         </div>
@@ -157,7 +145,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
             <select
               id="insp-colony"
               value={colonyId}
-              onChange={(e) => setColonyId(e.target.value)}
+              onChange={(e) => setField('colonyId', e.target.value)}
               style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
             >
               {colonies.map((c) => (
@@ -179,7 +167,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() => setQueenStatus(active ? null : opt.value)}
+                  onClick={() => setField('queenStatus', active ? null : opt.value)}
                   aria-pressed={active}
                   style={{
                     padding: '8px 14px',
@@ -208,7 +196,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
             min="1900"
             max={new Date().getFullYear()}
             value={queenYear}
-            onChange={(e) => setQueenYear(e.target.value)}
+            onChange={(e) => setField('queenYear', e.target.value)}
             placeholder={t(s.insp_queen_year_placeholder)}
             style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
           />
@@ -223,7 +211,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
             max="100"
             step="0.1"
             value={harvest}
-            onChange={(e) => setHarvest(e.target.value)}
+            onChange={(e) => setField('harvest', e.target.value)}
             placeholder={t(s.insp_harvest_placeholder)}
             style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
           />
@@ -231,17 +219,17 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
 
         <div style={{ marginBottom: 18 }}>
           <FieldLabel text={t(s.insp_brood_label)} id="insp-brood-lbl" color={ink} />
-          <InspectionScaleInput value={broodPattern} onChange={setBrood} theme={theme} labelId="insp-brood-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'broodPattern').stepKeys} />
+          <InspectionScaleInput value={broodPattern} onChange={(value) => setField('broodPattern', value)} theme={theme} labelId="insp-brood-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'broodPattern').stepKeys} />
         </div>
 
         <div style={{ marginBottom: 18 }}>
           <FieldLabel text={t(s[METRIC_CONFIGS.find((m) => m.key === 'honeyStores').labelKey])} id="insp-stores-lbl" color={ink} />
-          <InspectionScaleInput value={honeyStores} onChange={setStores} theme={theme} labelId="insp-stores-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'honeyStores').stepKeys} />
+          <InspectionScaleInput value={honeyStores} onChange={(value) => setField('honeyStores', value)} theme={theme} labelId="insp-stores-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'honeyStores').stepKeys} />
         </div>
 
         <div style={{ marginBottom: 18 }}>
           <FieldLabel text={t(s.insp_population_label)} id="insp-pop-lbl" color={ink} />
-          <InspectionScaleInput value={population} onChange={setPop} theme={theme} labelId="insp-pop-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'population').stepKeys} />
+          <InspectionScaleInput value={population} onChange={(value) => setField('population', value)} theme={theme} labelId="insp-pop-lbl" stepKeys={METRIC_CONFIGS.find((m) => m.key === 'population').stepKeys} />
         </div>
 
         <div style={{ marginBottom: 14 }}>
@@ -253,7 +241,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() => setTemper(active ? null : opt.value)}
+                  onClick={() => setField('temperament', active ? null : opt.value)}
                   aria-pressed={active}
                   style={{
                     flex: 1,
@@ -285,7 +273,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
               <input
                 type="checkbox"
                 checked={!varroaChecked}
-                onChange={(e) => setVarroaChecked(!e.target.checked)}
+                onChange={(e) => setField('varroaChecked', !e.target.checked)}
               />
               {t(s.insp_varroa_not_tested)}
             </label>
@@ -297,7 +285,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
               max="100"
               step="0.1"
               value={varroa}
-              onChange={(e) => setVarroa(e.target.value)}
+              onChange={(e) => setField('varroa', e.target.value)}
               placeholder="0.0"
               style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
             />
@@ -313,7 +301,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
                 <button
                   key={opt.value}
                   type="button"
-                  onClick={() => setTreatment(active ? '' : opt.value)}
+                  onClick={() => setField('treatment', active ? '' : opt.value)}
                   aria-pressed={active}
                   style={{
                     padding: '8px 14px',
@@ -338,7 +326,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
               type="text"
               maxLength={500}
               value={treatmentOther ?? ''}
-              onChange={(e) => setTreatmentOther(e.target.value)}
+              onChange={(e) => setField('treatmentOther', e.target.value)}
               placeholder={t(s.insp_treatment_placeholder)}
               style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, boxSizing: 'border-box' }}
             />
@@ -351,7 +339,7 @@ export default function InspectionForm({ colonies = [], initial = null, initialC
             id="insp-notes"
             maxLength={1000}
             value={notes}
-            onChange={(e) => setNotes(e.target.value)}
+            onChange={(e) => setField('notes', e.target.value)}
             placeholder={t(s.insp_notes_placeholder)}
             rows={3}
             style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${border}`, background: inputBg, color: ink, fontSize: 15, resize: 'none', boxSizing: 'border-box' }}

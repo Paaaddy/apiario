@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
-import { useSeason } from '../hooks/useSeason'
+import { useSeasonGuidance } from '../hooks/useSeasonGuidance'
 import { useCurrentDate } from '../hooks/useCurrentDate'
 import { strings as s } from '../i18n/strings'
 import { validateSeasonsTree } from '../utils/validateSeasons'
@@ -12,7 +12,6 @@ import SeasonHeader from '../components/SeasonHeader'
 import { addWeeks, isSameIsoWeek } from '../utils/season'
 import { haptics } from '../utils/haptics'
 import { themeColors } from '../utils/themeTokens'
-import { buildNextActions } from '../utils/nextActions'
 
 if (import.meta.env.DEV) {
   validateSeasonsTree()
@@ -161,21 +160,15 @@ export default function SeasonScreen({ profile, log, completedTaskIds, onToggleT
   const selectedDate = browsedDate ?? today
   const viewingToday = isSameIsoWeek(selectedDate, today)
 
-  const { label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance } = useSeason(
-    profile,
-    completedCount,
-    selectedDate
-  )
-  const { season } = useSeason(profile, completedCount, today)
-
-  const nextActions = useMemo(() => buildNextActions({
+  const {
+    label, icon, week, weekRange, tasks, nextLockedSecret, climateShiftLabel, winterStoreGuidance, nextActions,
+  } = useSeasonGuidance({
     profile,
     inspections,
-    season,
-    tasks,
     completedTaskIds,
     today,
-  }), [profile, inspections, season, tasks, completedTaskIds, today])
+    browsedDate: selectedDate,
+  })
 
   const taskElements = useRef(new Map())
   const consumedAction = useRef(null)

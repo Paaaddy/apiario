@@ -1,7 +1,7 @@
 import { useDataPort } from '../hooks/useDataPort'
 import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
-import { getRecoveryCause } from '../utils/durableStorage'
+import { getRecoveryCause } from '../utils/storageEngine'
 
 export default function BackupRecoveryNotice() {
   const { canRecover, recoverPreviousData } = useDataPort()

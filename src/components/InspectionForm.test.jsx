@@ -130,3 +130,29 @@ describe('InspectionForm', () => {
     expect(screen.getByDisplayValue('healthy')).toBeInTheDocument()
   })
 })
+
+describe('InspectionForm drafts', () => {
+  it('shows the custom treatment of a recorded Inspection when editing it', () => {
+    const recorded = { id: 'i1', colonyId: 'c1', date: '2026-03-01', queenStatus: 'seen', treatment: 'thymol' }
+    const onSave = vi.fn(() => ({ ok: true }))
+    wrap(<InspectionForm colonies={colonies} initial={recorded} onSave={onSave} onClose={vi.fn()} />)
+
+    expect(screen.getByDisplayValue('thymol')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Save', exact: true }))
+    expect(onSave).toHaveBeenCalledWith(expect.objectContaining({ treatment: 'thymol' }))
+  })
+
+  it('keeps the form open instead of dropping a varroa count it cannot record', () => {
+    const onSave = vi.fn()
+    const onClose = vi.fn()
+    wrap(<InspectionForm colonies={colonies} onSave={onSave} onClose={onClose} />)
+    fireEvent.click(screen.getByRole('button', { name: '👑 Seen' }))
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Not tested' }))
+    fireEvent.change(screen.getByPlaceholderText('0.0'), { target: { value: '2.555' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Save', exact: true }))
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Some fields are invalid')
+    expect(onSave).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+  })
+})

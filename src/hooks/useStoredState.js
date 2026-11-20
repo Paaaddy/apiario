@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { hasStorageRecovery, writeStorageTransaction, STORED_VALUE } from '../utils/durableStorage'
+import { hasStorageRecovery, writeStorageTransaction, STORED_VALUE } from '../utils/storageEngine'
 import { protectReload } from '../pwa/reloadSafety'
 
 const STORAGE_ERROR = {

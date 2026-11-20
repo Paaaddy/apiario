@@ -1,4 +1,5 @@
 import { routeFromInspection } from './diagnosisRoute'
+import { strings as s } from '../i18n/strings'
 import { latestByColony, inspectionAgeDays } from './inspectionHistory'
 
 const KIND_RANK = {
@@ -26,26 +27,17 @@ const DIAGNOSIS_COPY = {
   queenless: {
     suffix: 'queenless',
     urgency: 'urgent',
-    reason: {
-      de: 'Die letzte Kontrolle hat die Königin nicht bestätigt. Diagnose starten.',
-      en: 'The latest inspection did not confirm the queen. Run diagnosis.',
-    },
+    reason: s.next_diagnosis_queenless_reason,
   },
   'varroa-suspect': {
     suffix: 'varroa',
     urgency: 'urgent',
-    reason: {
-      de: 'Die letzte Kontrolle zeigt erhöhten Varroa-Druck. Diagnose starten.',
-      en: 'The latest inspection shows high varroa pressure. Run diagnosis.',
-    },
+    reason: s.next_diagnosis_varroa_reason,
   },
   'sick-brood': {
     suffix: 'brood',
     urgency: 'urgent',
-    reason: {
-      de: 'Die letzte Kontrolle zeigt ein schwaches Brutbild. Diagnose starten.',
-      en: 'The latest inspection shows a weak brood pattern. Run diagnosis.',
-    },
+    reason: s.next_diagnosis_brood_reason,
   },
 }
 
@@ -68,11 +60,8 @@ function buildSetupActions(colonies) {
     return [{
       id: 'setup-add-colony',
       kind: 'setup',
-      title: { de: 'Erstes Volk hinzufügen', en: 'Add your first colony' },
-      reason: {
-        de: 'Nächste Schritte werden hilfreicher, sobald Apiario deine Völker kennt.',
-        en: 'Next actions get smarter once Apiario knows what you keep.',
-      },
+      title: s.next_setup_add_colony_title,
+      reason: s.next_setup_add_colony_reason,
       urgency: 'important',
       target: { tab: 'myhive' },
     }]
@@ -86,19 +75,16 @@ function buildFirstInspectionAction(colonies, latestByColony, inspections) {
   if (colonies.length === 1 && !inspections.some((inspection) => inspection.colonyId === colonies[0].id)) return [{
     id: 'setup-first-inspection',
     kind: 'setup',
-    title: { de: 'Erste Kontrolle erfassen', en: 'Record your first inspection' },
-    reason: {
-      de: 'Eine Kontrolle macht die Hinweise zu deinen Völkern genauer.',
-      en: 'One inspection makes colony guidance more precise.',
-    },
+    title: s.next_first_inspection_title,
+    reason: s.next_first_inspection_reason,
     urgency: 'important',
     target: { tab: 'inspect', colonyId: undated[0].id },
   }]
   return undated.map((colony) => ({
     id: `setup-dated-inspection-${colony.id}`,
     kind: 'setup',
-    title: withValues({ de: 'Datierte Kontrolle für {name} erfassen', en: 'Record a dated inspection for {name}' }, { name: colony.name }),
-    reason: { de: 'Ohne gültiges Kontrolldatum sind keine zeitlichen Hinweise möglich.', en: 'A valid inspection date is needed for dated guidance.' },
+    title: withValues(s.next_dated_inspection_title, { name: colony.name }),
+    reason: s.next_dated_inspection_reason,
     urgency: 'important',
     target: { tab: 'inspect', colonyId: colony.id },
   }))
@@ -114,7 +100,7 @@ function buildDiagnosisWarnings(colonies, latestByColony) {
       id: `diagnosis-${colony.id}-${copy.suffix}`,
       kind: 'diagnosis-warning',
       title: withValues(
-        { de: 'Mögliches Problem bei {name}', en: 'Possible issue in {name}' },
+        s.next_diagnosis_title,
         { name: colony.name }
       ),
       reason: copy.reason,
@@ -142,11 +128,11 @@ function buildOverdueInspectionAction(colonies, latestByColony, season, today) {
       id: `overdue-inspection-${colony.id}`,
       kind: 'overdue-inspection',
       title: withValues(
-        { de: '{name} kontrollieren', en: 'Inspect {name}' },
+        s.next_overdue_one_title,
         { name: colony.name }
       ),
       reason: withValues(
-        { de: 'Letzte Kontrolle war vor {days} Tag(en).', en: 'Last inspection was {days} days ago.' },
+        s.next_overdue_one_reason,
         { days: ageDays }
       ),
       urgency: 'important',
@@ -158,11 +144,11 @@ function buildOverdueInspectionAction(colonies, latestByColony, season, today) {
     id: 'overdue-inspections',
     kind: 'overdue-inspection',
     title: withValues(
-      { de: '{count} Völker kontrollieren', en: 'Inspect {count} colonies' },
+      s.next_overdue_many_title,
       { count: overdue.length }
     ),
     reason: withValues(
-      { de: 'Älteste Kontrolle war vor {days} Tag(en).', en: 'Oldest inspection was {days} days ago.' },
+      s.next_overdue_many_reason,
       { days: oldest }
     ),
     urgency: 'important',
@@ -197,11 +183,8 @@ function buildAllClearAction() {
   return {
     id: 'all-clear',
     kind: 'all-clear',
-    title: { de: 'Keine dringenden nächsten Schritte', en: 'No urgent next actions' },
-    reason: {
-      de: 'Folge weiter der saisonalen Checkliste.',
-      en: 'Keep following the seasonal checklist.',
-    },
+    title: s.next_all_clear_title,
+    reason: s.next_all_clear_reason,
     urgency: 'routine',
     target: { tab: 'season' },
   }
