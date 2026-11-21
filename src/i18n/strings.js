@@ -141,6 +141,7 @@ export const strings = {
   diagnose_title:      { de: 'Diagnose',                       en: 'Diagnosis'                    },
   diagnose_step:       { de: 'Schritt',                        en: 'Step'                         },
   diagnose_restart:    { de: 'Neu starten',                    en: 'Start over'                   },
+  diagnose_back:       { de: 'Zurück',                         en: 'Back'                         },
   diagnose_likely:     { de: 'Wahrscheinliche Ursache',        en: 'Likely cause'                 },
   diagnose_what_to_do: { de: 'Was tun',                        en: 'What to do'                   },
   diagnose_call_expert:{ de: 'Einen Imker-Experten kontaktieren', en: 'Contact a beekeeping expert' },
