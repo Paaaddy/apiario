@@ -84,6 +84,10 @@
     --theme-font-head: 'Playfair Display', Georgia, serif;
     --theme-font-mono: system-ui, sans-serif;
     --theme-body-bg: #fffbeb;
+    --theme-lang-bg: #fffbeb;
+    --theme-lang-fg: #92400e;
+    --theme-lang-active-bg: #3d1f00;
+    --theme-lang-active-fg: #fffbeb;
   }
 
   /* ── Theme B: Field Notebook ─── */
@@ -102,6 +106,10 @@
     --theme-font-head: 'Fraunces', 'Playfair Display', Georgia, serif;
     --theme-font-mono: 'JetBrains Mono', 'Courier New', monospace;
     --theme-body-bg: #f4ecd8;
+    --theme-lang-bg: #f4ecd8;
+    --theme-lang-fg: #6b5838;
+    --theme-lang-active-bg: #2b1d0e;
+    --theme-lang-active-fg: #f4ecd8;
   }
 
   /* ── Theme C: Seasonal Light ─── */
@@ -120,6 +128,10 @@
     --theme-font-head: 'Playfair Display', Georgia, serif;
     --theme-font-mono: system-ui, sans-serif;
     --theme-body-bg: #faf6ee;
+    --theme-lang-bg: #faf6ee;
+    --theme-lang-fg: #6b5843;
+    --theme-lang-active-bg: #1c1410;
+    --theme-lang-active-fg: #faf6ee;
   }
 
   [data-theme='b'] html,
@@ -145,6 +157,32 @@
     -webkit-font-smoothing: antialiased;
     touch-action: pan-x pan-y;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /*
+    Touch targets (issue #188): a control keeps its visible size but gets a
+    hit area of at least 44x44 CSS px from an invisible ::after. :where() keeps
+    specificity at zero, so a utility or inline style (position: fixed, a
+    larger real size) still wins. Text fields, selects and textareas get a real
+    min-height because replaced elements cannot render pseudo-elements.
+    src/touchTargets.test.jsx reads this block, so keep both in step.
+  */
+  :where(button, a[href], summary, [role='button'], [role='tab'], [role='checkbox'], [role='switch'], label:has(> input[type='checkbox'])) {
+    position: relative;
+  }
+  :where(button, a[href], summary, [role='button'], [role='tab'], [role='checkbox'], [role='switch'], label:has(> input[type='checkbox']))::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    min-width: 44px;
+    min-height: 44px;
+    transform: translate(-50%, -50%);
+  }
+  :where(input:not([type='checkbox'], [type='radio'], [type='hidden'], [type='file'], [type='range']), select, textarea) {
+    min-height: 44px;
   }
 
   @supports (padding-top: env(safe-area-inset-top)) {
