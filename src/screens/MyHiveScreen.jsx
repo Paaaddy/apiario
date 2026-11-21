@@ -9,7 +9,6 @@ import ColoniesSection from './ColoniesSection'
 import ColonyDetail from './ColonyDetail'
 import InspectionTab from './InspectionTab'
 import MyHiveTabStrip from '../components/MyHiveTabStrip'
-import PwaInstallHint from '../components/PwaInstallHint'
 import HexWatermark from '../components/HexWatermark'
 import { themeColors } from '../utils/themeTokens'
 import { useColonyRecords, useSelectedColonyRecord } from '../hooks/useColonyRecords'
@@ -27,7 +26,6 @@ export default function MyHiveScreen({
   onAddInspection,
   onUpdateInspection,
   onDeleteInspection,
-  pwaInstall = { isInstalled: true, installSupported: false, promptInstall: () => {} },
 }) {
   const { t } = useLanguage()
   const { theme } = useTheme()
@@ -54,9 +52,6 @@ export default function MyHiveScreen({
         }
         return (
           <>
-            <div style={{ marginBottom: 16 }}>
-              <PwaInstallHint isInstalled={pwaInstall.isInstalled} installSupported={pwaInstall.installSupported} onInstall={pwaInstall.promptInstall} compact dismissible />
-            </div>
             <ColoniesSection
               colonyRecords={colonyRecords}
               onAdd={onAddColony}
