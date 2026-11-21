@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.9.0](https://github.com/Paaaddy/apiario/compare/v2.8.0...v2.9.0) (2026-11-21)
+
+
+### Features
+
+* **storage:** version inspection and task-log records and their collections ([4802067](https://github.com/Paaaddy/apiario/commit/480206709295558ee630def7e7839e7acbc44044))
+* **storage:** version Inspection and task-log records and their collections ([#159](https://github.com/Paaaddy/apiario/issues/159)) ([3438c7f](https://github.com/Paaaddy/apiario/commit/3438c7ff673ed8a3152357c4d5303bea5d8e6733))
+
+
+### Bug Fixes
+
+* 44px touch targets and language switch contrast ([92861d7](https://github.com/Paaaddy/apiario/commit/92861d74219dc0d65c746bb93bdcf25825f188d2))
+* 44px touch targets and language switch contrast ([#188](https://github.com/Paaaddy/apiario/issues/188)) ([4c1aba5](https://github.com/Paaaddy/apiario/commit/4c1aba5d2389b0f73f0e402fe2c1370b095e0ced))
+* colony delete confirmation names the colony and its inspections ([f9298b8](https://github.com/Paaaddy/apiario/commit/f9298b86f176e8b5d999424cabffb1b4c63c664e))
+* colony delete confirmation names the colony and its inspections ([24e18c1](https://github.com/Paaaddy/apiario/commit/24e18c1ceb941b11ca01f02bd91cabefbb5470f7)), closes [#191](https://github.com/Paaaddy/apiario/issues/191)
+* **pwa:** render install hint once, clear the voice button, persist dismissal ([7cb5a67](https://github.com/Paaaddy/apiario/commit/7cb5a671a3856851faf000a92ab81efd965074d2))
+* **pwa:** render install hint once, clear the voice button, persist dismissal ([561d5b5](https://github.com/Paaaddy/apiario/commit/561d5b541b2052fff7a7da345fb68cdf5777faab)), closes [#189](https://github.com/Paaaddy/apiario/issues/189)
+* **voice:** remove inert next and repeat commands ([e0ebfa0](https://github.com/Paaaddy/apiario/commit/e0ebfa0ce30e1dd877f76a61fd58e9f2cd421ac5))
+* **voice:** remove inert next and repeat commands ([815c8c2](https://github.com/Paaaddy/apiario/commit/815c8c23493f727d3d162cbaef6640268c29d0b5))
+
 ## [2.8.0](https://github.com/Paaaddy/apiario/compare/v2.7.4...v2.8.0) (2026-11-20)
 
 
