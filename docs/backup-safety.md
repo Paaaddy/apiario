@@ -47,6 +47,15 @@ before replacing any record collection:
 - The `apiario-backup` envelope supports versions 1 and 2 and the legacy envelope
   without a version. Unsupported versions and malformed supplied collections are
   rejected; omitted optional collections retain the established empty defaults.
+- Inspections and task-log entries carry a `schemaVersion` on every record, and a
+  Backup records each collection's version in `collectionSchemaVersions`. Records
+  and collections without a version are version 0 (every build up to 2.8.0) and
+  are migrated forward on restore, never rejected for their age. A Backup, a
+  collection or a record from a newer Apiario version is refused with a message
+  saying so, and nothing is replaced. The same applies on load: newer stored
+  records are not shown, stay untouched, and block new writes until the app is
+  updated. Exports keep envelope version 2 with plain arrays, so 2.8.0 and
+  earlier can still restore a Backup made by this build.
 - Colony, Inspection, and task-log records are checked for safe field types,
   identifiers, enums/scales, and ownership. Identifiers must be unique within each
   collection. Ownership is checked against the same profile migration used by

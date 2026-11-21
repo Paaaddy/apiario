@@ -49,7 +49,7 @@ it.each(['apiario-profile', 'apiario-inspections'])('restores visible Colony/his
   fireEvent.click(screen.getByRole('button', { name: 'Retry deletion' }))
   expect(screen.queryByRole('heading', { name: /Apple/ })).not.toBeInTheDocument()
   expect(JSON.parse(localStorage.getItem('apiario-profile')).colonies).toEqual([])
-  expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual([])
+  expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual({ schemaVersion: 1, records: [] })
 }, 15000)
 
 it('shows unsaved Inspection feedback in both languages and retries without duplicating records', async () => {
@@ -68,7 +68,7 @@ it('shows unsaved Inspection feedback in both languages and retries without dupl
   writes.mockRestore()
   fireEvent.click(screen.getByRole('button', { name: 'Speichern erneut versuchen' }))
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-  expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toHaveLength(1)
+  expect(JSON.parse(localStorage.getItem('apiario-inspections')).records).toHaveLength(1)
 }, 15000)
 
 it('keeps failed task completion visible as unsaved and persists it on retry', async () => {
@@ -82,7 +82,7 @@ it('keeps failed task completion visible as unsaved and persists it on retry', a
   writes.mockRestore()
   fireEvent.click(screen.getByRole('button', { name: 'Retry saving' }))
   expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-  expect(JSON.parse(localStorage.getItem('apiario-log'))).toHaveLength(1)
+  expect(JSON.parse(localStorage.getItem('apiario-log')).records).toHaveLength(1)
 }, 15000)
 
 it('does not call a failed Profile change saved and retries the latest changes', async () => {

@@ -147,8 +147,9 @@ describe('importData', () => {
     const result = importData(validPayload())
     expect(result.ok).toBe(true)
     expect(result.data.profile.hiveCount).toBe(2)
-    expect(result.data.inspections).toEqual(JSON.parse(validPayload()).data.inspections)
-    expect(result.data.log).toEqual(JSON.parse(validPayload()).data.log)
+    const stamped = (records) => records.map((record) => ({ ...record, schemaVersion: 1 }))
+    expect(result.data.inspections).toEqual(stamped(JSON.parse(validPayload()).data.inspections))
+    expect(result.data.log).toEqual(stamped(JSON.parse(validPayload()).data.log))
   })
 
   it('returns parse error for invalid JSON', () => {
@@ -189,9 +190,14 @@ describe('importData', () => {
     expect(importData(JSON.stringify({ format: 'apiario-backup', data }))).toMatchObject({ ok: false, error: 'format' })
   })
 
-  it.each([0, -1, 3, '2', null, 1.5])('rejects an unsupported Backup version: %j', (schemaVersion) => {
+  it.each([0, -1, '2', '3', null, 1.5])('rejects an unsupported Backup version: %j', (schemaVersion) => {
     expect(importData(JSON.stringify({ ...JSON.parse(validPayload()), schemaVersion })))
       .toMatchObject({ ok: false, error: 'format' })
+  })
+
+  it.each([3, 99])('refuses a Backup envelope from a newer build by name: %j', (schemaVersion) => {
+    expect(importData(JSON.stringify({ ...JSON.parse(validPayload()), schemaVersion })))
+      .toMatchObject({ ok: false, error: 'newer', messageKey: 'data_import_error_newer' })
   })
 
   it('accepts a known legacy Backup and preserves additive fields', () => {

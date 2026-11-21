@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useSliceState } from './useSliceState'
 import { colonyChronology } from '../utils/inspectionHistory'
 import { MAX_INSPECTIONS_PER_COLONY as MAX_PER_COLONY } from '../utils/retentionLimits'
-import { SLICES } from '../utils/persistedSlices'
+import { INSPECTION_SCHEMA_VERSION, SLICES } from '../utils/persistedSlices'
 
 export function useInspections() {
   const { state: inspections, updateState: setInspections, persistenceError, retrySave, getState } =
@@ -13,6 +13,7 @@ export function useInspections() {
       const entry = {
         id: crypto.randomUUID(),
         ...data,
+        schemaVersion: INSPECTION_SCHEMA_VERSION,
         createdAt: new Date().toISOString(),
       }
       const sameColony = prev.filter((e) => e.colonyId === data.colonyId)
@@ -32,7 +33,7 @@ export function useInspections() {
     }
     return setInspections((prev) => {
       const next = prev.map((e) =>
-        e.id === id ? { ...e, ...patch, id: e.id, createdAt: e.createdAt } : e
+        e.id === id ? { ...e, ...patch, id: e.id, createdAt: e.createdAt, schemaVersion: e.schemaVersion } : e
       )
       return next
     })

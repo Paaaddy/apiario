@@ -145,9 +145,10 @@ describe('Next action destinations', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save', exact: true }))
     expect(await screen.findByRole('button', { name: /2026-04-20 — expand/ })).toBeInTheDocument()
     const saved = JSON.parse(localStorage.getItem('apiario-inspections'))
-    expect(saved).toHaveLength(3)
-    expect(saved.find((inspection) => !['apple', 'birch'].includes(inspection.id))).toMatchObject({ colonyId: 'b', date: '2026-04-20', queenStatus: 'seen' })
-    expect(saved.find((inspection) => inspection.id === 'birch')).toEqual(inspections[1])
+    expect(saved.schemaVersion).toBe(1)
+    expect(saved.records).toHaveLength(3)
+    expect(saved.records.find((inspection) => !['apple', 'birch'].includes(inspection.id))).toMatchObject({ colonyId: 'b', date: '2026-04-20', queenStatus: 'seen', schemaVersion: 1 })
+    expect(saved.records.find((inspection) => inspection.id === 'birch')).toEqual({ ...inspections[1], schemaVersion: 1 })
   }, 15000)
 
   it.each(['resolved', 'removed'])('re-evaluates a selected warning that is %s before navigation without substituting another Colony', async (change) => {

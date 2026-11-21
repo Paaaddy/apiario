@@ -154,8 +154,9 @@ describe('useTaskLog', () => {
     const { result } = renderHook(() => useTaskLog())
     act(() => result.current.addCustomEntry({ text: 'Test', date: '2026-04-13' }))
     const stored = JSON.parse(localStorage.getItem('apiario-log'))
-    expect(stored).toHaveLength(1)
-    expect(stored[0].text).toBe('Test')
+    expect(stored.schemaVersion).toBe(1)
+    expect(stored.records).toHaveLength(1)
+    expect(stored.records[0]).toMatchObject({ text: 'Test', schemaVersion: 1 })
   })
 
   it('reads existing log from localStorage on mount', () => {
