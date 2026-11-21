@@ -2,7 +2,7 @@ import { useEffect, useMemo, lazy, Suspense } from 'react'
 import { LanguageProvider } from './context/LanguageContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { useLanguage } from './hooks/useLanguage'
-import { useProfile, buildSeededColonies } from './hooks/useProfile'
+import { useProfile } from './hooks/useProfile'
 import { useTaskLog } from './hooks/useTaskLog'
 import { useInspections } from './hooks/useInspections'
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt'
@@ -37,7 +37,7 @@ const LearnScreen   = lazy(() => import('./screens/LearnScreen'))
 const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
 function AppContent() {
   const { locale, t } = useLanguage()
-  const { profile, updateProfile, addColony, updateColony, removeColony, persistenceError: profileError, retrySave: retryProfile } = useProfile()
+  const { profile, updateProfile, completeOnboarding, addColony, updateColony, removeColony, persistenceError: profileError, retrySave: retryProfile } = useProfile()
   const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry, persistenceError: logError, retrySave: retryLog } = useTaskLog()
   const { inspections, addInspection, updateInspection, removeInspection, removeInspectionsByColonyId, persistenceError: inspectionError, retrySave: retryInspections } = useInspections()
   const storageNotice = (profileError || logError || inspectionError) && (
@@ -87,13 +87,7 @@ function AppContent() {
         {storageNotice}
         <Suspense fallback={<div className="flex-1" />}>
           <Onboarding
-            onComplete={(answers) => {
-              const updates = { ...answers, onboardingDone: true }
-              if ((profile.colonies ?? []).length === 0 && Number(answers.hiveCount) > 0) {
-                updates.colonies = buildSeededColonies(answers.hiveCount)
-              }
-              updateProfile(updates)
-            }}
+            onComplete={completeOnboarding}
             pwaInstall={pwaInstall}
           />
         </Suspense>
