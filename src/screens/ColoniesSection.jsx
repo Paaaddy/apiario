@@ -3,7 +3,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { strings as s } from '../i18n/strings'
 import InspectionForm from '../components/InspectionForm'
 import { useDraftProtection } from '../hooks/useDraftProtection'
-import { lastInspectedLabel } from '../utils/inspectionHistory'
+import { colonyDeleteConfirmText, lastInspectedLabel } from '../utils/inspectionHistory'
 
 export default function ColoniesSection({
   colonyRecords = [],
@@ -65,9 +65,9 @@ export default function ColoniesSection({
     setEditNotes('')
   }
 
-  function handleRemove(id) {
-    if (window.confirm(t(s.colonies_delete_confirm))) {
-      onRemove?.(id)
+  function handleRemove(record) {
+    if (window.confirm(colonyDeleteConfirmText(record, t, s))) {
+      onRemove?.(record.colony.id)
     }
   }
 
@@ -181,7 +181,7 @@ export default function ColoniesSection({
                      type="button"
                      onClick={(e) => {
                        e.stopPropagation()
-                       handleRemove(colony.id)
+                       handleRemove(record)
                      }}
                      className="text-xs text-red-600 underline"
                    >

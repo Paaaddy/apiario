@@ -183,6 +183,21 @@ export function lastInspectedLabel(status, t, strings) {
   return t(strings[LAST_INSPECTED_LABEL_KEYS[status.kind]] ?? strings.insp_never)
 }
 
+/**
+ * The Colony delete confirmation: names the Colony and says how many of its
+ * Inspections go with it. Zero, one and many each have their own string so
+ * the singular and plural read correctly in both languages. Placeholders are
+ * filled in one pass, so a Colony name containing "{count}" stays literal.
+ */
+export function colonyDeleteConfirmText(record, t, strings) {
+  const count = record.inspectionCount
+  const key = count === 0 ? 'colonies_delete_confirm_zero'
+    : count === 1 ? 'colonies_delete_confirm_one'
+      : 'colonies_delete_confirm_many'
+  const values = { name: record.colony.name, count: String(count) }
+  return t(strings[key]).replace(/\{(name|count)\}/g, (_, field) => values[field])
+}
+
 export function buildMetricSeries(inspections) {
   const ordered = orderInspections(inspections, { oldestFirst: true })
     .filter((inspection) => parseInspectionDate(inspection.date))

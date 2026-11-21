@@ -80,7 +80,18 @@ export const strings = {
   colonies_cancel:             { de: 'Abbrechen',                                 en: 'Cancel'                                },
   colonies_edit:               { de: 'Bearbeiten',                                en: 'Edit'                                  },
   colonies_delete:             { de: 'Entfernen',                                 en: 'Remove'                                },
-  colonies_delete_confirm:     { de: 'Dieses Volk wirklich entfernen?',           en: 'Really remove this colony?'            },
+  colonies_delete_confirm_zero: {
+    de: 'Volk „{name}“ wirklich entfernen? Es hat keine Kontrollen.',
+    en: 'Really remove the colony “{name}”? It has no inspections.',
+  },
+  colonies_delete_confirm_one: {
+    de: 'Volk „{name}“ wirklich entfernen? Die 1 Kontrolle wird ebenfalls gelöscht.',
+    en: 'Really remove the colony “{name}”? Its 1 inspection will also be deleted.',
+  },
+  colonies_delete_confirm_many: {
+    de: 'Volk „{name}“ wirklich entfernen? Die {count} Kontrollen werden ebenfalls gelöscht.',
+    en: 'Really remove the colony “{name}”? Its {count} inspections will also be deleted.',
+  },
   colonies_created_on:         { de: 'Angelegt am',                               en: 'Added on'                              },
   profile_title:    { de: 'Profil',                           en: 'Profile'                       },
   theme_design_label: { de: 'Design',                          en: 'Design'                        },
