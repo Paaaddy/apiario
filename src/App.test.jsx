@@ -278,7 +278,11 @@ describe('Next action destinations', () => {
     navigate(/Season/)
     await screen.findByRole('button', { name: /Possible issue in Apple/ })
     navigate(/Diagnose/)
+    // The walk is kept for the session (#192): back on the result, not the root.
+    expect(await screen.findByText('Colony is queenless')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /Start over/ }))
     await screen.findByText('What are you seeing in or around the hive?')
+    // The handoff was consumed, so the offer does not return.
     expect(screen.queryByRole('button', { name: /Start from last inspection/ })).not.toBeInTheDocument()
   }, 15000)
 })

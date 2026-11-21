@@ -18,7 +18,14 @@ export function buildDiagnosisFlowState({
   const analysis = analyzeDiagnosisTree(data)
   const node = analysis.depths.has(currentNodeId) ? data[currentNodeId] : undefined
   const stepNumber = history.length + 1
-  const totalSteps = getDiagnosisMaxDepth(data)
+  // The total is the steps taken plus what remains from here, and only when
+  // every route onward has the same length. Otherwise it is unknown (null):
+  // a guess would either end early or overshoot, and the screen shows the
+  // step count alone.
+  const longest = analysis.depths.get(currentNodeId)
+  const nearest = analysis.shortest.get(currentNodeId)
+  const pathTotal = analysis.isValid && node && longest === nearest ? history.length + longest : null
+  const totalSteps = analysis.isValid ? pathTotal : 1
   const prefillNodeId = currentNodeId === 'root' ? routeFromInspection(latestInspection) : null
 
   return {
@@ -30,7 +37,7 @@ export function buildDiagnosisFlowState({
     stepNumber,
     stepLabel: String(stepNumber).padStart(2, '0'),
     totalSteps,
-    totalLabel: String(totalSteps).padStart(2, '0'),
+    totalLabel: totalSteps === null ? null : String(totalSteps).padStart(2, '0'),
     prefillNodeId,
     canPrefill: Boolean(prefillNodeId),
   }

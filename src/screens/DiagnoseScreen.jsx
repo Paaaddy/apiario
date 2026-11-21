@@ -7,6 +7,7 @@ import DiagnosisResult from '../components/DiagnosisResult'
 import LanguageToggle from '../components/LanguageToggle'
 import { useWakeLock } from '../hooks/useWakeLock'
 import HexWatermark from '../components/HexWatermark'
+import DiagnosisBackButton from '../components/DiagnosisBackButton'
 import { themeColors } from '../utils/themeTokens'
 
 if (import.meta.env.DEV) {
@@ -26,6 +27,12 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
   const stepLabel = flow.stepLabel
   const totalSteps = flow.totalSteps
   const totalLabel = flow.totalLabel
+  // The total is only shown when every route onward has the same length.
+  const stepCount = totalLabel === null ? stepLabel : `${stepLabel}/${totalLabel}`
+  const progressProps = totalSteps === null
+    ? { 'aria-hidden': true }
+    : { role: 'progressbar', 'aria-valuenow': stepNumber, 'aria-valuemin': 1, 'aria-valuemax': totalSteps, 'aria-label': `${t(s.diagnose_step)} ${stepNumber}` }
+  const back = (extra) => <DiagnosisBackButton onBack={flow.back} disabled={!flow.canGoBack} {...extra} />
 
   if (flow.isInvalid) {
     return (
@@ -57,6 +64,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
             <h1 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 22, fontWeight: 700, color: '#fff' }}>🔎 {t(s.diagnose_title)}</h1>
             <LanguageToggle />
           </div>
+          <div style={{ position: 'relative', padding: '6px 14px 0' }}>{back({ style: { color: 'rgba(255,255,255,0.85)', background: 'none', border: 'none', cursor: 'pointer' } })}</div>
           <div style={{ position: 'relative' }}>
             <DiagnosisResult node={node} onReset={flow.reset} darkMode />
           </div>
@@ -69,16 +77,17 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 20%, rgba(245,166,35,0.2) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(232,123,160,0.13) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ position: 'sticky', top: 0, zIndex: 20, padding: '12px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: c.diagnoseBg, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
              <div style={{ padding: '5px 12px', borderRadius: 999, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', fontSize: 11, color: '#fff', letterSpacing: 1, textTransform: 'uppercase', fontWeight: 600 }}>
-               🔎 {t(s.diagnose_step)} {stepLabel}/{totalLabel}
+               🔎 {t(s.diagnose_step)} {stepCount}
              </div>
           <LanguageToggle />
         </div>
-         <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={totalSteps} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} style={{ position: 'relative', padding: '18px 22px 0', display: 'flex', gap: 5 }}>
-           {Array.from({ length: totalSteps }, (_, i) => (
-             <div aria-hidden="true" key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i < stepNumber ? c.accent : 'rgba(255,255,255,0.12)' }} />
+         <div {...progressProps} style={{ position: 'relative', padding: '18px 22px 0', display: 'flex', gap: 5 }}>
+           {Array.from({ length: totalSteps ?? 1 }, (_, i) => (
+             <div aria-hidden="true" key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: totalSteps !== null && i < stepNumber ? c.accent : 'rgba(255,255,255,0.12)' }} />
            ))}
          </div>
-        <div style={{ position: 'relative', padding: '22px 24px 12px' }}>
+        <div style={{ position: 'relative', padding: '6px 14px 0' }}>{back({ style: { color: 'rgba(255,255,255,0.85)', background: 'none', border: 'none', cursor: 'pointer' } })}</div>
+        <div style={{ position: 'relative', padding: '8px 24px 12px' }}>
           <h1 style={{ margin: 0, fontFamily: '"Playfair Display", serif', fontSize: 30, lineHeight: 1.1, fontWeight: 700, color: '#fff', letterSpacing: -0.5 }}>
             {t(node.question)}
           </h1>
@@ -133,6 +142,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
               🔎 {t(s.diagnose_title)}
             </h1>
           </div>
+          <div style={{ padding: '4px 18px 0' }}>{back({ style: { color: c.inkMid, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--theme-font-mono)' } })}</div>
           <DiagnosisResult node={node} onReset={flow.reset} />
         </div>
       )
@@ -143,16 +153,17 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
         <div style={{ padding: '42px 24px 12px', position: 'sticky', top: 0, zIndex: 20, background: c.bg, borderBottom: `1px solid ${c.rule}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
              <p style={{ margin: 0, fontFamily: 'var(--theme-font-mono)', fontSize: 10.5, letterSpacing: '2px', textTransform: 'uppercase', color: c.inkMid }}>
-               {t(s.diagnose_title)} · {t(s.diagnose_step)} {stepLabel}/{totalLabel}
+               {t(s.diagnose_title)} · {t(s.diagnose_step)} {stepCount}
              </p>
             <LanguageToggle />
           </div>
-           <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={totalSteps} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} style={{ display: 'flex', gap: 5, marginTop: 14 }}>
-             {Array.from({ length: totalSteps }, (_, i) => (
-               <div aria-hidden="true" key={i} style={{ flex: 1, height: 2, background: i < stepNumber ? c.ink : c.rule }} />
+           <div {...progressProps} style={{ display: 'flex', gap: 5, marginTop: 14 }}>
+             {Array.from({ length: totalSteps ?? 1 }, (_, i) => (
+               <div aria-hidden="true" key={i} style={{ flex: 1, height: 2, background: totalSteps !== null && i < stepNumber ? c.ink : c.rule }} />
              ))}
            </div>
-          <h1 style={{ margin: '18px 0 4px', fontFamily: 'var(--theme-font-head)', fontSize: 26, fontWeight: 400, color: c.ink, lineHeight: 1.2 }}>
+          <div style={{ margin: '10px 0 0 -8px' }}>{back({ style: { color: c.inkMid, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--theme-font-mono)' } })}</div>
+          <h1 style={{ margin: '8px 0 4px', fontFamily: 'var(--theme-font-head)', fontSize: 26, fontWeight: 400, color: c.ink, lineHeight: 1.2 }}>
             {t(node.question)}
           </h1>
           <p style={{ margin: '4px 0 0', fontSize: 12, color: c.inkLight, fontStyle: 'italic', fontFamily: 'var(--theme-font-head)' }}>
@@ -207,6 +218,7 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
             <LanguageToggle />
           </div>
         </div>
+        <div className="px-2 pt-1">{back({ className: 'text-brown-mid' })}</div>
         <DiagnosisResult node={node} onReset={flow.reset} />
       </div>
     )
@@ -225,11 +237,12 @@ export default function DiagnoseScreen({ inspections = [], nextAction }) {
         </div>
       </div>
 
-       <div role="progressbar" aria-valuenow={stepNumber} aria-valuemin={1} aria-valuemax={totalSteps} aria-label={`${t(s.diagnose_step)} ${stepNumber}`} className="h-1 bg-amber-100">
-         <div aria-hidden="true" className="h-1 bg-honey transition-all" style={{ width: `${Math.min((stepNumber / totalSteps) * 100, 95)}%` }} />
+       <div {...progressProps} className="h-1 bg-amber-100">
+         {totalSteps !== null && <div aria-hidden="true" className="h-1 bg-honey transition-all" style={{ width: `${(stepNumber / totalSteps) * 100}%` }} />}
        </div>
 
-      <div className="px-4 pt-6 pb-3">
+      <div className="px-2 pt-1">{back({ className: 'text-brown-mid' })}</div>
+      <div className="px-4 pt-2 pb-3">
         <h2 className="font-serif text-lg font-semibold text-brown">{t(node.question)}</h2>
       </div>
 

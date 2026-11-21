@@ -24,8 +24,11 @@ export function analyzeDiagnosisTree(data = diagnosisData) {
 function deriveDiagnosisTree(data) {
   const errors = []
   const depths = new Map()
+  // Shortest route from a node to any outcome, in nodes. Together with the
+  // longest (`depths`) it says whether the length of a walk is well-defined.
+  const shortest = new Map()
   if (!isRecord(data)) {
-    return { isValid: false, errors: ['diagnosis data must be a node map'], depths }
+    return { isValid: false, errors: ['diagnosis data must be a node map'], depths, shortest }
   }
   const ids = new Set(Object.keys(data))
 
@@ -93,8 +96,13 @@ function deriveDiagnosisTree(data) {
       const children = edges.get(frame.id)
       if (frame.index === children.length) {
         let depth = 1
-        for (const next of children) depth = Math.max(depth, 1 + (depths.get(next) ?? 0))
+        let nearest = Infinity
+        for (const next of children) {
+          depth = Math.max(depth, 1 + (depths.get(next) ?? 0))
+          nearest = Math.min(nearest, 1 + (shortest.get(next) ?? 0))
+        }
         depths.set(frame.id, depth)
+        shortest.set(frame.id, Number.isFinite(nearest) ? nearest : 1)
         status.set(frame.id, 'complete')
         stack.pop()
         continue
@@ -108,7 +116,7 @@ function deriveDiagnosisTree(data) {
       }
     }
   }
-  return { isValid: errors.length === 0, errors, depths }
+  return { isValid: errors.length === 0, errors, depths, shortest }
 }
 
 /** Returns a validation result in every environment; diagnostics are dev-only. */
