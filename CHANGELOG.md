@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.10.0](https://github.com/Paaaddy/apiario/compare/v2.9.0...v2.10.0) (2026-11-21)
+
+
+### Features
+
+* **diagnose:** back control, session-kept path, path-based progress ([24ba329](https://github.com/Paaaddy/apiario/commit/24ba3294df2b3cfa606e33d00aacb863af17ad3f))
+* **diagnose:** back control, session-kept path, path-based progress ([#192](https://github.com/Paaaddy/apiario/issues/192)) ([80bb161](https://github.com/Paaaddy/apiario/commit/80bb161304c492bdc832463373b0c631dc667d45))
+
 ## [2.9.0](https://github.com/Paaaddy/apiario/compare/v2.8.0...v2.9.0) (2026-11-21)
 
 
