@@ -156,7 +156,6 @@ function AppContent() {
               onAddInspection={addInspection}
               onUpdateInspection={updateInspection}
               onDeleteInspection={removeInspection}
-              pwaInstall={pwaInstall}
             />
           )}
         </Suspense>

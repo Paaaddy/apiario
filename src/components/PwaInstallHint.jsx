@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { useLanguage } from '../hooks/useLanguage'
+import { usePwaHintDismissal } from '../hooks/usePwaHintDismissal'
 import { strings as s } from '../i18n/strings'
 
 export default function PwaInstallHint({
@@ -11,12 +11,13 @@ export default function PwaInstallHint({
   floating = false,
 }) {
   const { t } = useLanguage()
-  const [dismissed, setDismissed] = useState(false)
+  const { dismissed, dismiss } = usePwaHintDismissal()
 
   if (isInstalled || dismissed) return null
 
+  // bottom-36 (144px) sits above the voice button, which tops out at 136px.
   const cardClass = floating
-    ? 'fixed bottom-24 left-4 right-4 z-30 max-w-md mx-auto bg-white/95 backdrop-blur-sm border border-amber-200 rounded-2xl shadow-lg p-3'
+    ? 'fixed bottom-36 left-4 right-4 z-30 max-w-md mx-auto bg-white/95 backdrop-blur-sm border border-amber-200 rounded-2xl shadow-lg p-3'
     : `bg-white border border-amber-200 rounded-2xl shadow-xs ${compact ? 'p-4' : 'p-5'}`
 
   return (
@@ -39,7 +40,7 @@ export default function PwaInstallHint({
         </div>
         {dismissible && (
           <button
-            onClick={() => setDismissed(true)}
+            onClick={dismiss}
             className="text-brown-mid/70 text-sm"
             aria-label={t(s.pwa_dismiss)}
           >
