@@ -12,6 +12,7 @@ const STORAGE_ERROR = {
 const INVALID_SOURCE = { ...STORAGE_ERROR, messageKey: 'storage_invalid' }
 const INVALID_CHANGE = { ok: false, error: 'validation', messageKey: 'record_invalid', requiresReload: false }
 const acceptsAny = () => true
+const storeAsIs = (value) => value
 let activeTransaction = null
 
 // Internal seam: stage related hook changes without exposing storage mechanics
@@ -27,20 +28,25 @@ export function runStoredTransaction(change) {
   }
   if (transaction.error) return transaction.error
   const entries = [...transaction.entries.values()]
-  const outcome = writeStorageTransaction(entries.map((entry) => [entry.key, entry.value]))
+  const outcome = writeStorageTransaction(entries.map((entry) => [entry.key, entry.encode(entry.value)]))
   if (outcome.ok) entries.forEach((entry) => entry.commit(entry.value))
   return outcome
 }
 
 // Loaders own validation/migration. Mutations and retries run in event handlers,
-// never in replayable React updaters or mount effects.
-export function useStoredState(storageKey, load, accepts = acceptsAny) {
+// never in replayable React updaters or mount effects. `encode` turns the
+// in-memory value into its stored form on every write.
+export function useStoredState(storageKey, load, accepts = acceptsAny, encode = storeAsIs) {
   const [loaded] = useState(() => {
     const value = load()
-    return value?.[STORED_VALUE] ? value : { value, unsafe: false }
+    const result = value?.[STORED_VALUE] ? value : { value, unsafe: false }
+    const sourceError = result.unsafe
+      ? { ...INVALID_SOURCE, messageKey: result.messageKey ?? INVALID_SOURCE.messageKey }
+      : null
+    return { ...result, sourceError }
   })
   const [state, setState] = useState(loaded.value)
-  const [persistenceError, setPersistenceError] = useState(loaded.unsafe ? INVALID_SOURCE : null)
+  const [persistenceError, setPersistenceError] = useState(loaded.sourceError)
   const stateRef = useRef(state)
   const token = useRef({})
   useEffect(() => {
@@ -58,22 +64,22 @@ export function useStoredState(storageKey, load, accepts = acceptsAny) {
     // A recovery snapshot must not overwrite newer durable observations. Keep
     // edits as unsaved drafts until recovery completes, then allow a retry.
     if (loaded.unsafe) {
-      report(INVALID_SOURCE)
-      return INVALID_SOURCE
+      report(loaded.sourceError)
+      return loaded.sourceError
     }
     if (hasStorageRecovery()) {
       report(STORAGE_ERROR)
       return STORAGE_ERROR
     }
     try {
-      localStorage.setItem(storageKey, JSON.stringify(value))
+      localStorage.setItem(storageKey, JSON.stringify(encode(value)))
       report(null)
       return { ok: true }
     } catch {
       report(STORAGE_ERROR)
       return STORAGE_ERROR
     }
-  }, [storageKey, loaded.unsafe, report])
+  }, [storageKey, loaded.unsafe, loaded.sourceError, report, encode])
 
   const commit = useCallback((value) => {
     stateRef.current = value
@@ -91,8 +97,8 @@ export function useStoredState(storageKey, load, accepts = acceptsAny) {
       return INVALID_CHANGE
     }
     if (activeTransaction) {
-      if (loaded.unsafe) activeTransaction.error = INVALID_SOURCE
-      activeTransaction.entries.set(token.current, { key: storageKey, value: next, commit })
+      if (loaded.unsafe) activeTransaction.error = loaded.sourceError
+      activeTransaction.entries.set(token.current, { key: storageKey, value: next, encode, commit })
       return { ok: true }
     }
     // Advance synchronously so several mutations in one event see each other,
@@ -100,7 +106,7 @@ export function useStoredState(storageKey, load, accepts = acceptsAny) {
     stateRef.current = next
     setState(next)
     return save(next)
-  }, [save, storageKey, loaded.unsafe, commit, accepts])
+  }, [save, storageKey, loaded.unsafe, loaded.sourceError, commit, accepts, encode])
 
   const getState = useCallback(() => stateRef.current, [])
 

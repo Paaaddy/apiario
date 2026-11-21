@@ -7,6 +7,10 @@ export const backupStrings = {
     de: 'Wiederherstellung und Rücksicherung fehlgeschlagen. Nicht neu laden; versuche, deine bisherigen Einträge zurückzusichern.',
     en: 'Restoration and recovery failed. Do not reload; retry recovering your previous records.',
   },
+  data_import_error_newer: {
+    de: 'Diese Sicherung stammt aus einer neueren Apiario-Version. Aktualisiere die App und versuche es erneut; deine bisherigen Einträge bleiben unverändert.',
+    en: 'This backup was made by a newer version of Apiario. Update the app and try again; your current records are unchanged.',
+  },
   data_import_recovered: {
     de: 'Bisherige Einträge zurückgesichert. Du kannst den Import erneut versuchen.',
     en: 'Previous records recovered. You can try importing again.',

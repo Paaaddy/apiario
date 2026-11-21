@@ -156,8 +156,10 @@ describe('useBackupRestoreController', () => {
 
     expect(result.current.status).toEqual({ kind: 'success', message: 'Data loaded. Reloading app…' })
     expect(JSON.parse(localStorage.getItem(PROFILE_KEY)).hiveCount).toBe(2)
-    expect(JSON.parse(localStorage.getItem(INSPECTIONS_KEY))).toEqual(JSON.parse(validPayload()).data.inspections)
-    expect(JSON.parse(localStorage.getItem(LOG_KEY))).toEqual(JSON.parse(validPayload()).data.log)
+    // A restore migrates the Backup's unversioned collections and stores them at version 1.
+    const stamped = (records) => ({ schemaVersion: 1, records: records.map((record) => ({ ...record, schemaVersion: 1 })) })
+    expect(JSON.parse(localStorage.getItem(INSPECTIONS_KEY))).toEqual(stamped(JSON.parse(validPayload()).data.inspections))
+    expect(JSON.parse(localStorage.getItem(LOG_KEY))).toEqual(stamped(JSON.parse(validPayload()).data.log))
     expect(reload).toHaveBeenCalled()
   })
 

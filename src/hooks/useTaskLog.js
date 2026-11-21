@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react'
 import { haptics } from '../utils/haptics'
 import { useSliceState } from './useSliceState'
-import { SLICES, capLog } from '../utils/persistedSlices'
+import { LOG_SCHEMA_VERSION, SLICES, capLog } from '../utils/persistedSlices'
 
 export function useTaskLog() {
   const { state: log, updateState: setLog, persistenceError, retrySave } =
@@ -24,6 +24,7 @@ export function useTaskLog() {
         : capLog([
             {
               id: `task-${task.id}-${crypto.randomUUID()}`,
+              schemaVersion: LOG_SCHEMA_VERSION,
               type: 'task',
               taskId: task.id,
               taskName: task.name,
@@ -40,6 +41,7 @@ export function useTaskLog() {
       const next = capLog([
         {
           id: `custom-${crypto.randomUUID()}`,
+          schemaVersion: LOG_SCHEMA_VERSION,
           type: 'custom',
           text,
           date,

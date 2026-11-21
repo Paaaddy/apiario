@@ -32,7 +32,7 @@ describe('useInspections', () => {
     let outcome
     act(() => { outcome = result.current.updateInspection('moving', { colonyId: 'full' }) })
     expect(outcome).toMatchObject({ ok: false, messageKey: 'insp_colony_full' })
-    expect(result.current.inspections).toEqual(existing)
+    expect(result.current.inspections).toEqual(existing.map((record) => ({ ...record, schemaVersion: 1 })))
     expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual(existing)
     act(() => result.current.updateInspection('moving', { notes: 'Retained', id: 'changed', createdAt: 'changed' }))
     expect(result.current.inspections.at(-1)).toMatchObject({ id: 'moving', createdAt: 'original', notes: 'Retained' })
@@ -56,8 +56,12 @@ describe('useInspections', () => {
     localStorage.setItem('apiario-inspections', JSON.stringify(existing))
     const { result } = renderHook(() => useInspections())
     act(() => result.current.updateInspection('moving', { colonyId: 'target' }))
-    expect(result.current.inspections).toEqual([{ ...existing[0], colonyId: 'target' }, existing[1]])
-    expect(JSON.parse(localStorage.getItem('apiario-inspections'))).toEqual(result.current.inspections)
+    expect(result.current.inspections).toEqual([
+      { ...existing[0], colonyId: 'target', schemaVersion: 1 },
+      { ...existing[1], schemaVersion: 1 },
+    ])
+    expect(JSON.parse(localStorage.getItem('apiario-inspections')))
+      .toEqual({ schemaVersion: 1, records: result.current.inspections })
   })
 
   it('starts with empty inspections', () => {
@@ -76,7 +80,8 @@ describe('useInspections', () => {
     expect(result.current.inspections[0].id).toBeDefined()
     expect(result.current.inspections[0].createdAt).toBeDefined()
     const stored = JSON.parse(localStorage.getItem('apiario-inspections'))
-    expect(stored).toHaveLength(1)
+    expect(stored).toEqual({ schemaVersion: 1, records: result.current.inspections })
+    expect(stored.records[0].schemaVersion).toBe(1)
   })
 
   it('updates an inspection immutably', () => {

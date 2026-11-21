@@ -9,6 +9,7 @@ export const strings = {
   storage_retry: { de: 'Speichern erneut versuchen', en: 'Retry saving' },
   record_invalid: { de: 'Einige Angaben sind ungültig. Prüfe deine Eingaben; es wurde nichts geändert.', en: 'Some fields are invalid. Check your entries; nothing was changed.' },
   storage_invalid: { de: 'Gespeicherte Daten sind beschädigt oder nicht sicher lesbar. Die Originaldaten bleiben unverändert; neue Änderungen können nicht gespeichert werden.', en: 'Stored data is damaged or cannot be read safely. The original data is unchanged; new changes cannot be saved.' },
+  storage_newer_version: { de: 'Einige gespeicherte Einträge stammen aus einer neueren Apiario-Version und werden nicht angezeigt. Aktualisiere die App, um sie zu sehen. Die Originaldaten bleiben unverändert; neue Änderungen können nicht gespeichert werden.', en: 'Some stored records come from a newer version of Apiario and are not shown. Update the app to see them. The original data is unchanged; new changes cannot be saved.' },
   storage_recovery: { de: 'Speichern und Rücksicherung fehlgeschlagen. Nicht neu laden; sichere zuerst deine bisherigen Einträge zurück.', en: 'Saving and recovery failed. Do not reload; recover your previous records first.' },
   colony_delete_failed: { de: 'Das Volk wurde nicht entfernt. Volk und Kontrollverlauf bleiben sichtbar. Versuche das Entfernen erneut.', en: 'The colony was not removed. Its records and inspection history remain visible. Retry deletion.' },
   colony_delete_retry: { de: 'Entfernen erneut versuchen', en: 'Retry deletion' },

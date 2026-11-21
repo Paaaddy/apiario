@@ -53,8 +53,10 @@ describe('useDataPort.exportData', () => {
 
     expect(data.format).toBe('apiario-backup')
     expect(data.data.profile.hiveCount).toBe(3)
-    expect(data.data.inspections).toEqual([{ id: 'i1' }])
+    // Export brings stored records to the current version, readable or not.
+    expect(data.data.inspections).toEqual([{ id: 'i1', schemaVersion: 1 }])
     expect(data.data.log).toHaveLength(2)
+    expect(data.collectionSchemaVersions).toEqual({ inspections: 1, log: 1 })
   })
 
   it('triggers a download without throwing in jsdom', () => {
@@ -154,8 +156,9 @@ describe('useDataPort.importData', () => {
     })
     expect(res.ok).toBe(true)
     expect(JSON.parse(localStorage.getItem(PROFILE_KEY)).hiveCount).toBe(2)
-    expect(JSON.parse(localStorage.getItem(INSPECTIONS_KEY))).toEqual(JSON.parse(validPayload()).data.inspections)
-    expect(JSON.parse(localStorage.getItem(LOG_KEY))).toEqual(JSON.parse(validPayload()).data.log)
+    const stamped = (records) => ({ schemaVersion: 1, records: records.map((record) => ({ ...record, schemaVersion: 1 })) })
+    expect(JSON.parse(localStorage.getItem(INSPECTIONS_KEY))).toEqual(stamped(JSON.parse(validPayload()).data.inspections))
+    expect(JSON.parse(localStorage.getItem(LOG_KEY))).toEqual(stamped(JSON.parse(validPayload()).data.log))
   })
 
   it('returns parse error for invalid JSON and writes nothing', async () => {

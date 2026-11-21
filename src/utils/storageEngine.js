@@ -1,7 +1,8 @@
 import { protectReload } from '../pwa/reloadSafety'
 
 export const STORED_VALUE = Symbol('validated stored value')
-function storedValue(value, unsafe) { return { [STORED_VALUE]: true, value, unsafe } }
+// `messageKey` names why unsafe data was refused, when the loader knows.
+function storedValue(value, unsafe, messageKey) { return { [STORED_VALUE]: true, value, unsafe, messageKey } }
 
 // Unsafe data stays untouched on disk. Loading is tolerant of chronology, not
 // unsafe record structure; Backup adds ownership and retention checks separately.
@@ -26,6 +27,20 @@ export function loadStoredValue(key, fallback, accepts, normalize = (value) => v
     return storedValue(normalize(parsed), false)
   } catch {
     return storedValue(fallback, true)
+  }
+}
+
+// A versioned collection: `read` turns the parsed stored value into
+// `{ ok: true, value }` or a refusal `{ ok: false, value, messageKey }` whose
+// value is a read-only projection. Refused data stays untouched on disk.
+export function loadStoredCollection(key, read) {
+  try {
+    const raw = localStorage.getItem(key)
+    if (raw === null) return storedValue([], false)
+    const outcome = read(JSON.parse(raw))
+    return outcome.ok ? storedValue(outcome.value, false) : storedValue(outcome.value, true, outcome.messageKey)
+  } catch {
+    return storedValue([], true)
   }
 }
 
