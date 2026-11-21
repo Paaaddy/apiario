@@ -2,7 +2,7 @@
 
 ## Before exploring
 
-- Read `CONTEXT.md` at the repo root.
+- Read `GLOSSARY.md` at the repo root.
 - Read relevant decisions under `docs/adr/`.
 
 If these files are absent, proceed silently. Domain modeling creates
@@ -12,12 +12,12 @@ documentation lazily when terms or decisions are resolved.
 
 This is a single-context repository:
 
-- `CONTEXT.md`: domain vocabulary.
+- `GLOSSARY.md`: domain vocabulary.
 - `docs/adr/`: architecture decisions.
 
 ## Use the domain vocabulary
 
-Use terms defined in `CONTEXT.md` when naming concepts in code, tests,
+Use terms defined in `GLOSSARY.md` when naming concepts in code, tests,
 issues, and proposals. Respect its explicitly avoided synonyms.
 
 If a needed concept is missing, reconsider the term or note the gap

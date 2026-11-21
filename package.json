@@ -5,6 +5,7 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
+    "prepare": "git config core.hooksPath hooks || true",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
@@ -14,6 +15,7 @@
     "test:run": "vitest run",
     "test:timezone": "node scripts/test-timezones.mjs",
     "verify": "node scripts/verify.mjs",
+    "repo:state": "node scripts/repo-state.mjs",
     "agent:worktree": "node scripts/agent-worktree.mjs",
     "agent:review-packet": "node scripts/agent-review-packet.mjs",
     "check:precache": "node scripts/check-precache-size.mjs"

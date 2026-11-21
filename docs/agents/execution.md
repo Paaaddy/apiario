@@ -27,3 +27,7 @@ The packet includes tracked changes against the resolved base, source contents o
 Run `npm run verify` in the foreground in the target tree. It waits for every check, prints each exit status and returns nonzero if any check fails. For PR evidence, record the exact revision, command, terminal exit and test totals. A background process is pending, never passed; if background execution is necessary, collect its completion notification and terminal outcomes before the final report.
 
 CI and pre-commit also run timezone regressions. Existing subprocess tests enforce Berlin and Los Angeles regardless of host timezone; the additional matrix runs the entire chronology test file under both zones. Mocking a clock alone does not test timezone semantics.
+
+## Waiting on CI
+
+Block on checks with `gh pr checks <n> --watch`. The harness rejects foreground `sleep` polls; use Monitor with an until-loop only for conditions `--watch` cannot express.
