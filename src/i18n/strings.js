@@ -12,6 +12,8 @@ export const strings = {
   storage_newer_version: { de: 'Einige gespeicherte Einträge stammen aus einer neueren Apiario-Version und werden nicht angezeigt. Aktualisiere die App, um sie zu sehen. Die Originaldaten bleiben unverändert; neue Änderungen können nicht gespeichert werden.', en: 'Some stored records come from a newer version of Apiario and are not shown. Update the app to see them. The original data is unchanged; new changes cannot be saved.' },
   storage_recovery: { de: 'Speichern und Rücksicherung fehlgeschlagen. Nicht neu laden; sichere zuerst deine bisherigen Einträge zurück.', en: 'Saving and recovery failed. Do not reload; recover your previous records first.' },
   colony_delete_failed: { de: 'Das Volk wurde nicht entfernt. Volk und Kontrollverlauf bleiben sichtbar. Versuche das Entfernen erneut.', en: 'The colony was not removed. Its records and inspection history remain visible. Retry deletion.' },
+  colony_deleted: { de: 'Volk „{name}“ entfernt.', en: 'Colony “{name}” removed.' },
+  colony_delete_undo: { de: 'Rückgängig', en: 'Undo' },
   colony_delete_retry: { de: 'Entfernen erneut versuchen', en: 'Retry deletion' },
   insp_colony_full: { de: 'Dieses Volk hat bereits 500 Kontrollen. Die Kontrolle wurde nicht verschoben; es wurden keine Einträge entfernt.', en: 'This colony already has 500 inspections. The inspection was not moved; no records were removed.' },
   update_deferred: { de: 'Update wartet: Speichere oder verwerfe offene Eingaben und sichere gegebenenfalls deine Einträge zurück.', en: 'Update waiting: save or discard open drafts and recover any pending records.' },
