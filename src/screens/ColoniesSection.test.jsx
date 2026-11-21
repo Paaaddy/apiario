@@ -4,6 +4,9 @@ import userEvent from '@testing-library/user-event'
 import { LanguageProvider } from '../context/LanguageContext'
 import ColoniesSection from './ColoniesSection'
 import { buildColonyRecord, buildColonyRecords } from '../utils/inspectionHistory'
+import { useProfile } from '../hooks/useProfile'
+import { useInspections } from '../hooks/useInspections'
+import { useColonyRemoval } from '../hooks/useColonyRemoval'
 
 beforeEach(() => {
   localStorage.setItem('apiario-locale', 'en')
@@ -112,6 +115,99 @@ describe('ColoniesSection', () => {
     wrap(<ColoniesSection colonyRecords={sampleRecords} onRemove={onRemove} />)
     await user.click(screen.getAllByRole('button', { name: /remove/i })[0])
     expect(onRemove).not.toHaveBeenCalled()
+  })
+
+  describe('delete confirmation text', () => {
+    const inspectionsFor = (colonyId, n) =>
+      Array.from({ length: n }, (_, i) => ({ id: `${colonyId}-${i}`, colonyId, date: `2026-04-${String(i + 1).padStart(2, '0')}` }))
+
+    async function confirmText(locale, count, name = 'Apple tree') {
+      localStorage.setItem('apiario-locale', locale)
+      const user = userEvent.setup()
+      const confirm = vi.spyOn(window, 'confirm').mockImplementation(() => false)
+      const records = buildColonyRecords(
+        [{ id: 'col-1', name, createdAt: '2026-03-01', notes: '' }],
+        inspectionsFor('col-1', count)
+      )
+      wrap(<ColoniesSection colonyRecords={records} onRemove={() => {}} />)
+      await user.click(screen.getAllByRole('button', { name: /remove|entfernen/i })[0])
+      return confirm.mock.calls[0][0]
+    }
+
+    it.each([
+      ['en', 0, 'Really remove the colony “Apple tree”? It has no inspections.'],
+      ['en', 1, 'Really remove the colony “Apple tree”? Its 1 inspection will also be deleted.'],
+      ['en', 3, 'Really remove the colony “Apple tree”? Its 3 inspections will also be deleted.'],
+      ['de', 0, 'Volk „Apple tree“ wirklich entfernen? Es hat keine Kontrollen.'],
+      ['de', 1, 'Volk „Apple tree“ wirklich entfernen? Die 1 Kontrolle wird ebenfalls gelöscht.'],
+      ['de', 3, 'Volk „Apple tree“ wirklich entfernen? Die 3 Kontrollen werden ebenfalls gelöscht.'],
+    ])('%s with %i inspections reads correctly', async (locale, count, expected) => {
+      expect(await confirmText(locale, count)).toBe(expected)
+    })
+
+    it('counts only the inspections of the colony being removed', async () => {
+      localStorage.setItem('apiario-locale', 'en')
+      const user = userEvent.setup()
+      const confirm = vi.spyOn(window, 'confirm').mockImplementation(() => false)
+      const records = buildColonyRecords(sampleColonies, [
+        ...inspectionsFor('col-1', 2),
+        ...inspectionsFor('col-2', 5),
+      ])
+      wrap(<ColoniesSection colonyRecords={records} onRemove={() => {}} />)
+      await user.click(screen.getAllByRole('button', { name: /remove/i })[1])
+      expect(confirm.mock.calls[0][0]).toContain('“Garden”')
+      expect(confirm.mock.calls[0][0]).toContain('5 inspections')
+    })
+
+    it('keeps a colony name containing a placeholder literal', async () => {
+      expect(await confirmText('en', 2, '{count} $& {name}')).toContain('“{count} $& {name}”')
+    })
+  })
+
+  describe('delete with real storage', () => {
+    function Harness() {
+      const profile = useProfile()
+      const inspections = useInspections()
+      const removal = useColonyRemoval(profile.removeColony, inspections.removeInspectionsByColonyId)
+      const records = buildColonyRecords(profile.profile.colonies, inspections.inspections)
+      return <ColoniesSection colonyRecords={records} onRemove={removal.remove} onSelectColony={() => {}} />
+    }
+    const seed = () => {
+      localStorage.setItem('apiario-profile', JSON.stringify({
+        schemaVersion: 3,
+        colonies: [{ id: 'a', name: 'Apple' }, { id: 'b', name: 'Birch' }],
+      }))
+      localStorage.setItem('apiario-inspections', JSON.stringify([
+        { id: 'i1', colonyId: 'a', date: '2026-04-01' },
+        { id: 'i2', colonyId: 'a', date: '2026-04-02' },
+        { id: 'i3', colonyId: 'b', date: '2026-04-03' },
+      ]))
+    }
+
+    it('cancelling leaves the colony, its inspections and storage untouched', async () => {
+      seed()
+      const before = [localStorage.getItem('apiario-profile'), localStorage.getItem('apiario-inspections')]
+      const user = userEvent.setup()
+      vi.spyOn(window, 'confirm').mockImplementation(() => false)
+      wrap(<Harness />)
+      await user.click(screen.getAllByRole('button', { name: /remove/i })[0])
+      expect(screen.getByText(/Apple/)).toBeInTheDocument()
+      expect([localStorage.getItem('apiario-profile'), localStorage.getItem('apiario-inspections')]).toEqual(before)
+    })
+
+    it('confirming removes the colony and only its inspections together', async () => {
+      seed()
+      const user = userEvent.setup()
+      vi.spyOn(window, 'confirm').mockImplementation(() => true)
+      wrap(<Harness />)
+      await user.click(screen.getAllByRole('button', { name: /remove/i })[0])
+      expect(screen.queryByText(/Apple/)).not.toBeInTheDocument()
+      expect(screen.getByText(/Birch/)).toBeInTheDocument()
+      expect(JSON.parse(localStorage.getItem('apiario-profile')).colonies.map((c) => c.id)).toEqual(['b'])
+      const storedInspections = JSON.parse(localStorage.getItem('apiario-inspections'))
+      const inspectionRecords = Array.isArray(storedInspections) ? storedInspections : storedInspections.records
+      expect(inspectionRecords.map((i) => i.id)).toEqual(['i3'])
+    })
   })
 
   it('reports an unreadable inspection date instead of "never inspected"', () => {
