@@ -8,8 +8,6 @@ export default function VoiceOverlay({ onStop, lastCommand, isStarting = false }
     { label: t(s.voice_cmd_season),   desc: t(s.voice_cmd_season_desc) },
     { label: t(s.voice_cmd_diagnose), desc: t(s.voice_cmd_diagnose_desc) },
     { label: t(s.voice_cmd_myhive),   desc: t(s.voice_cmd_myhive_desc) },
-    { label: t(s.voice_cmd_next),     desc: t(s.voice_cmd_next_desc) },
-    { label: t(s.voice_cmd_read),     desc: t(s.voice_cmd_read_desc) },
     { label: t(s.voice_cmd_stop),     desc: t(s.voice_cmd_stop_desc) },
   ]
 

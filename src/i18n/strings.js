@@ -179,10 +179,6 @@ export const strings = {
 
   voice_cmd_myhive:        { de: '"stock"',                   en: '"my hive"'                },
   voice_cmd_myhive_desc:   { de: 'Profil, Verlauf und Völker', en: 'profile, log and colonies' },
-  voice_cmd_next:          { de: '"weiter"',                  en: '"next"'                   },
-  voice_cmd_next_desc:     { de: 'nächste Aufgabe oder Frage', en: 'next task or question'   },
-  voice_cmd_read:          { de: '"nochmal"',                 en: '"read again"'             },
-  voice_cmd_read_desc:     { de: 'Inhalt wiederholen',        en: 'repeat current content'   },
   voice_cmd_stop:          { de: '"stop"',                    en: '"stop"'                   },
   voice_cmd_stop_desc:     { de: 'Freisprechmodus beenden',   en: 'exit hands-free mode'     },
   voice_heard:             { de: 'Gehört:',                  en: 'Heard:'                   },
