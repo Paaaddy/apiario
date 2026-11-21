@@ -7,7 +7,7 @@ export const VOICE_CONFIG = {
   de: {
     lang: 'de-DE',
     greeting:
-      'Freisprechmodus aktiv. Sage: Diagnose, Saison, Kontrolle, Lernen, Stock, weiter oder stop.',
+      'Freisprechmodus aktiv. Sage: Diagnose, Saison, Kontrolle, Lernen, Stock oder stop.',
     bye: 'Freisprechmodus beendet.',
     commands: {
       stop:     ['stop', 'stopp', 'beenden', 'ende', 'aus'],
@@ -16,8 +16,6 @@ export const VOICE_CONFIG = {
       inspect:  ['kontrolle', 'kontrollieren', 'inspektion'],
       learn:    ['lernen', 'wissen', 'bibliothek', 'wissensbibliothek'],
       myhive:   ['mein stock', 'stock', 'profil', 'verlauf'],
-      next:     ['weiter', 'nächste', 'nächster'],
-      repeat:   ['nochmal', 'wiederholen', 'wiederhole', 'lesen', 'lies'],
     },
     speech: {
       openDiagnose: 'Diagnose wird geöffnet.',
@@ -25,15 +23,13 @@ export const VOICE_CONFIG = {
       openInspect:  'Kontrolle wird geöffnet.',
       openLearn:    'Wissensbibliothek wird geöffnet.',
       openMyHive:   'Mein Stock wird geöffnet.',
-      next:         'Weiter.',
-      repeat:       'Wiederhole.',
       unknown:      'Nicht verstanden. Versuche: Diagnose, Saison, Kontrolle, Lernen oder Stock.',
     },
   },
   en: {
     lang: 'en-GB',
     greeting:
-      'Hands-free mode active. Say: diagnose, season, inspect, learn, my hive, next, or stop.',
+      'Hands-free mode active. Say: diagnose, season, inspect, learn, my hive, or stop.',
     bye: 'Hands-free mode ended.',
     commands: {
       stop:     ['stop', 'exit', 'quit', 'end'],
@@ -42,8 +38,6 @@ export const VOICE_CONFIG = {
       inspect:  ['inspect', 'inspection', 'control'],
       learn:    ['learn', 'knowledge', 'library', 'guide'],
       myhive:   ['my hive', 'hive', 'profile', 'log', 'history'],
-      next:     ['next', 'forward'],
-      repeat:   ['read', 'repeat', 'again'],
     },
     speech: {
       openDiagnose: 'Opening diagnose.',
@@ -51,8 +45,6 @@ export const VOICE_CONFIG = {
       openInspect:  'Opening inspect.',
       openLearn:    'Opening knowledge library.',
       openMyHive:   'Opening my hive.',
-      next:         'Next.',
-      repeat:       'Repeating.',
       unknown:      "Didn't catch that. Try diagnose, season, inspect, learn, or my hive.",
     },
   },
@@ -102,10 +94,6 @@ function resolveCommand(command, config) {
       return { action: 'learn', spokenText: config.speech.openLearn }
     case 'myhive':
       return { action: 'myhive', spokenText: config.speech.openMyHive }
-    case 'next':
-      return { action: null, spokenText: config.speech.next }
-    case 'repeat':
-      return { action: null, spokenText: config.speech.repeat }
     default:
       return { action: null, spokenText: config.speech.unknown }
   }

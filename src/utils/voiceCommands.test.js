@@ -37,9 +37,28 @@ describe('dispatchVoiceCommand', () => {
     })
   })
 
-  it('resolves next/repeat to a null action with their own spoken text', () => {
-    expect(dispatchVoiceCommand('next', 'en')).toEqual({ action: null, spokenText: VOICE_CONFIG.en.speech.next })
-    expect(dispatchVoiceCommand('repeat', 'en')).toEqual({ action: null, spokenText: VOICE_CONFIG.en.speech.repeat })
+  it('resolves the removed next/repeat phrases to the unknown response', () => {
+    const phrases = {
+      en: ['next', 'forward', 'read', 'repeat', 'again', 'read again'],
+      de: ['weiter', 'nächste', 'nächster', 'nochmal', 'wiederholen', 'wiederhole', 'lesen', 'lies'],
+    }
+    for (const [locale, list] of Object.entries(phrases)) {
+      for (const phrase of list) {
+        expect(dispatchVoiceCommand(phrase, locale)).toEqual({
+          action: null,
+          spokenText: VOICE_CONFIG[locale].speech.unknown,
+        })
+      }
+    }
+  })
+
+  it('no longer lists next/repeat in any locale config', () => {
+    for (const config of Object.values(VOICE_CONFIG)) {
+      expect(config.commands).not.toHaveProperty('next')
+      expect(config.commands).not.toHaveProperty('repeat')
+      expect(config.speech).not.toHaveProperty('next')
+      expect(config.speech).not.toHaveProperty('repeat')
+    }
   })
 
   it('falls back to the unknown response for unmatched transcripts', () => {
