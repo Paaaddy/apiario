@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.10.0](https://github.com/Paaaddy/apiario/compare/v2.9.0...v2.10.0) (2026-11-22)
+
+
+### Features
+
+* **colonies:** undo window for colony deletion ([24e93e2](https://github.com/Paaaddy/apiario/commit/24e93e2e99bf58e7311cd851711b289d19dd4598))
+* **colonies:** undo window for colony deletion ([#193](https://github.com/Paaaddy/apiario/issues/193)) ([249b94f](https://github.com/Paaaddy/apiario/commit/249b94fd204bf333ebdb0fe2709e2f11cbd6c8ab))
+* **diagnose:** back control, session-kept path, path-based progress ([24ba329](https://github.com/Paaaddy/apiario/commit/24ba3294df2b3cfa606e33d00aacb863af17ad3f))
+* **diagnose:** back control, session-kept path, path-based progress ([#192](https://github.com/Paaaddy/apiario/issues/192)) ([80bb161](https://github.com/Paaaddy/apiario/commit/80bb161304c492bdc832463373b0c631dc667d45))
+
+
+### Bug Fixes
+
+* untrack the node_modules symlink ([f569e9f](https://github.com/Paaaddy/apiario/commit/f569e9fa9830d2e550b6b68cacb57a23f0aa8dcb))
+* untrack the node_modules symlink and ignore it as a file too ([c49dfed](https://github.com/Paaaddy/apiario/commit/c49dfed42337b15b44c8e4e3d51c3a523ce8bc59))
+
 ## [2.9.0](https://github.com/Paaaddy/apiario/compare/v2.8.0...v2.9.0) (2026-11-21)
 
 
