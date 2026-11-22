@@ -17,6 +17,7 @@ import UpdateNotice from './components/UpdateNotice'
 import VoiceNotice from './components/VoiceNotice'
 import { requestPersistentStorage } from './utils/persistStorage'
 import StorageNotice from './components/StorageNotice'
+import UndoNotice from './components/UndoNotice'
 import BackupRecoveryNotice from './components/BackupRecoveryNotice'
 import HostingMigrationNotice from './components/HostingMigrationNotice'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -37,9 +38,9 @@ const LearnScreen   = lazy(() => import('./screens/LearnScreen'))
 const DEBUG = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug')
 function AppContent() {
   const { locale, t } = useLanguage()
-  const { profile, updateProfile, completeOnboarding, addColony, updateColony, removeColony, persistenceError: profileError, retrySave: retryProfile } = useProfile()
+  const { profile: storedProfile, updateProfile, completeOnboarding, addColony, updateColony, removeColony, persistenceError: profileError, retrySave: retryProfile } = useProfile()
   const { log, completedTaskIds, toggleTask, addCustomEntry, deleteEntry, persistenceError: logError, retrySave: retryLog } = useTaskLog()
-  const { inspections, addInspection, updateInspection, removeInspection, removeInspectionsByColonyId, persistenceError: inspectionError, retrySave: retryInspections } = useInspections()
+  const { inspections: storedInspections, addInspection, updateInspection, removeInspection, removeInspectionsByColonyId, persistenceError: inspectionError, retrySave: retryInspections } = useInspections()
   const storageNotice = (profileError || logError || inspectionError) && (
     <StorageNotice error={profileError || logError || inspectionError} onRetry={() => {
       if (profileError) retryProfile()
@@ -48,7 +49,18 @@ function AppContent() {
     }} />
   )
 
-  const colonyRemoval = useColonyRemoval(removeColony, removeInspectionsByColonyId)
+  const colonyRemoval = useColonyRemoval(removeColony, removeInspectionsByColonyId, { colonies: storedProfile.colonies })
+  // A Colony in its undo window is hidden everywhere but still stored, so
+  // Undo restores it, with every Inspection, exactly as it was.
+  const hiddenColonyId = colonyRemoval.undoable?.colonyId ?? null
+  const profile = useMemo(
+    () => hiddenColonyId === null ? storedProfile : { ...storedProfile, colonies: (storedProfile.colonies ?? []).filter((colony) => colony.id !== hiddenColonyId) },
+    [storedProfile, hiddenColonyId]
+  )
+  const inspections = useMemo(
+    () => hiddenColonyId === null ? storedInspections : storedInspections.filter((inspection) => inspection.colonyId !== hiddenColonyId),
+    [storedInspections, hiddenColonyId]
+  )
   // The navigation handoff seam owns which tab is showing, what the current
   // handoff is, whether its target still exists, and the notice that says so.
   const navigation = useNavigationHandoff({ colonies: profile.colonies, inspections })
@@ -106,6 +118,13 @@ function AppContent() {
           <p className="text-sm font-semibold">{t(s.colony_delete_failed)}</p>
           <button type="button" onClick={colonyRemoval.retry} className="mt-2 rounded-lg bg-honey px-3 py-2 font-semibold text-brown">{t(s.colony_delete_retry)}</button>
         </div>
+      )}
+      {colonyRemoval.undoable && (
+        <UndoNotice
+          message={t(s.colony_deleted).replace('{name}', colonyRemoval.undoable.name)}
+          actionLabel={t(s.colony_delete_undo)}
+          onAction={colonyRemoval.undo}
+        />
       )}
       <VoiceNotice feedback={handsFree.feedback} onRestart={handsFree.start} onDismiss={handsFree.dismissFeedback} />
       <main className="flex-1 overflow-y-auto">

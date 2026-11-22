@@ -196,11 +196,12 @@ describe('Next action destinations', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true)
     fireEvent.click(within(apple).getByRole('button', { name: 'Remove' }))
     act(() => pending())
-    expect(await screen.findByRole('status')).toHaveTextContent('The selected colony or task is no longer available.')
+    // The undo notice is a status too, so find this one by its text.
+    expect(await screen.findByText('The selected colony or task is no longer available.')).toBeInTheDocument()
     await screen.findByText('What are you seeing in or around the hive?')
     expect(screen.queryByRole('button', { name: /Start from last inspection/ })).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'DE', exact: true }))
-    expect(await screen.findByRole('status')).toHaveTextContent('Das gewählte Volk oder die Aufgabe ist nicht mehr verfügbar.')
+    expect(await screen.findByText('Das gewählte Volk oder die Aufgabe ist nicht mehr verfügbar.')).toBeInTheDocument()
   }, 15000)
 
   it('offers a dated Inspection for a Colony with only invalid dates without inventing a warning or age', async () => {

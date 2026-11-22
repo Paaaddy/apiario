@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { LanguageProvider } from '../context/LanguageContext'
 import ColoniesSection from './ColoniesSection'
@@ -168,8 +168,12 @@ describe('ColoniesSection', () => {
     function Harness() {
       const profile = useProfile()
       const inspections = useInspections()
-      const removal = useColonyRemoval(profile.removeColony, inspections.removeInspectionsByColonyId)
-      const records = buildColonyRecords(profile.profile.colonies, inspections.inspections)
+      const removal = useColonyRemoval(profile.removeColony, inspections.removeInspectionsByColonyId, { colonies: profile.profile.colonies })
+      const hidden = removal.undoable?.colonyId
+      const records = buildColonyRecords(
+        profile.profile.colonies.filter((colony) => colony.id !== hidden),
+        inspections.inspections.filter((inspection) => inspection.colonyId !== hidden)
+      )
       return <ColoniesSection colonyRecords={records} onRemove={removal.remove} onSelectColony={() => {}} />
     }
     const seed = () => {
@@ -203,6 +207,8 @@ describe('ColoniesSection', () => {
       await user.click(screen.getAllByRole('button', { name: /remove/i })[0])
       expect(screen.queryByText(/Apple/)).not.toBeInTheDocument()
       expect(screen.getByText(/Birch/)).toBeInTheDocument()
+      // Stored only when the undo window ends; leaving the page ends it at once.
+      act(() => { window.dispatchEvent(new Event('pagehide')) })
       expect(JSON.parse(localStorage.getItem('apiario-profile')).colonies.map((c) => c.id)).toEqual(['b'])
       const storedInspections = JSON.parse(localStorage.getItem('apiario-inspections'))
       const inspectionRecords = Array.isArray(storedInspections) ? storedInspections : storedInspections.records

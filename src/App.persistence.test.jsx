@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { configure, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, configure, fireEvent, render, screen, within } from '@testing-library/react'
 import { vi } from 'vitest'
 import App from './App'
 
@@ -42,6 +42,9 @@ it.each(['apiario-profile', 'apiario-inspections'])('restores visible Colony/his
   const deleteButton = await screen.findByRole('button', { name: /^Remove$/ })
   const writes = failWritesFor(key)
   fireEvent.click(deleteButton)
+  // The deletion commits when the undo window ends; leaving the page ends it at once.
+  expect(screen.queryByRole('heading', { name: /Apple/ })).not.toBeInTheDocument()
+  act(() => { window.dispatchEvent(new Event('pagehide')) })
   expect(await screen.findByRole('button', { name: 'Retry deletion' })).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: /Apple/ })).toBeInTheDocument()
   expect([localStorage.getItem('apiario-profile'), localStorage.getItem('apiario-inspections')]).toEqual(before)

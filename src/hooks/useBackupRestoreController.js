@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { useDataPort } from './useDataPort'
 import { backupErrorOutcome } from '../utils/backupFormat'
 import { strings as s } from '../i18n/strings'
+import { flushPendingColonyRemoval } from './useColonyRemoval'
 
 function messageFor(result, t) {
   return t(s[result.messageKey])
@@ -16,6 +17,7 @@ export function useBackupRestoreController(t, reload = () => window.location.rel
   const status = displayedOutcome ? { kind: displayedOutcome.ok ? 'success' : 'error', message: messageFor(displayedOutcome, t) } : null
 
   const exportBackupFile = useCallback(() => {
+    flushPendingColonyRemoval()
     const result = exportBackup()
     setOutcome(result)
     return result
@@ -23,6 +25,7 @@ export function useBackupRestoreController(t, reload = () => window.location.rel
 
   const restoreBackupFile = useCallback(async (file) => {
     if (!file) return null
+    flushPendingColonyRemoval()
     const result = await importData(file)
     setOutcome(result)
     if (result.ok && result.requiresReload) reload()
