@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.10.1](https://github.com/Paaaddy/apiario/compare/v2.10.0...v2.10.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump @testing-library/jest-dom from 7.0.1 to 8.0.0 ([e7e4f9d](https://github.com/Paaaddy/apiario/commit/e7e4f9d2b53d26fa156c9b8c3dcef58333433c3e))
+* **deps-dev:** bump eslint-plugin-react-refresh from 0.5.7 to 0.5.8 ([24c97b1](https://github.com/Paaaddy/apiario/commit/24c97b127270b8129e6d8bd4966e8e380b8ab18e))
+* **deps-dev:** bump the testing group with 3 updates ([3d4e131](https://github.com/Paaaddy/apiario/commit/3d4e1313b2d8b8af84f4bad3c31de7237ce09022))
+* **deps:** bump gitleaks/gitleaks-action from 2.3.9 to 3.0.0 ([9fc6494](https://github.com/Paaaddy/apiario/commit/9fc6494ac8f71f74e39f41c6740405e0bbdb0352))
+
 ## [2.10.0](https://github.com/Paaaddy/apiario/compare/v2.9.0...v2.10.0) (2026-11-22)
 
 
