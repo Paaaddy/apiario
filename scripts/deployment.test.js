@@ -108,7 +108,27 @@ it('requests the required build check for the release pull request', () => {
   const release = readFileSync(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8')
   expect(release).toContain('actions: write')
   expect(release).toContain("if: steps.release.outputs.prs_created == 'true'")
-  expect(release).toContain('fromJSON(steps.release.outputs.pr).headBranchName')
-  expect(release).toContain('gh workflow run deploy.yml --repo "$REPO" --ref "$BRANCH"')
+  expect(release).toContain('RELEASE_PR: ${{ steps.release.outputs.pr }}')
   expect(workflow).toContain('workflow_dispatch:')
+  // The runner evaluates step env before `if`, so env must also be valid when
+  // there is no release PR: fromJSON('') fails the run instead of skipping.
+  expect(release).not.toMatch(/\$\{\{[^}]*fromJSON/)
+
+  const match = release.match(/- name: Run the required build check[\s\S]*?run: \|\n([\s\S]*)$/)
+  expect(match).not.toBeNull()
+  const script = match[1].split('\n').map(line => line.replace(/^          /, '')).join('\n')
+  const root = mkdtempSync(join(tmpdir(), 'apiario-release-'))
+  try {
+    const calls = join(root, 'calls')
+    writeFileSync(join(root, 'gh'), '#!/bin/sh\necho "$*" >> "$CALL_LOG"\n', { mode: 0o700 })
+    const result = spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
+      encoding: 'utf8',
+      env: { ...process.env, PATH: `${root}:${process.env.PATH}`, CALL_LOG: calls, REPO: 'Paaaddy/apiario',
+        RELEASE_PR: JSON.stringify({ headBranchName: 'release-please--branches--master' }) },
+    })
+    expect(result.status, result.stderr).toBe(0)
+    expect(readFileSync(calls, 'utf8').trim()).toBe('workflow run deploy.yml --repo Paaaddy/apiario --ref release-please--branches--master')
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
 })

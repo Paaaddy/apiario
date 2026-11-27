@@ -29,8 +29,13 @@ jobs:
       # deploying.
       - name: Run the required build check on the release PR
         if: steps.release.outputs.prs_created == 'true'
+        # The runner evaluates env before `if`, and `pr` is unset when there is
+        # no release PR, so parse it in the script rather than with fromJSON.
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          BRANCH: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
-        run: gh workflow run deploy.yml --repo "$REPO" --ref "$BRANCH"
+          RELEASE_PR: ${{ steps.release.outputs.pr }}
+        run: |
+          set -euo pipefail
+          branch=$(jq -er .headBranchName <<<"$RELEASE_PR")
+          gh workflow run deploy.yml --repo "$REPO" --ref "$branch"
