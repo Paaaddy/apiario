@@ -59,11 +59,8 @@ it('deploys verified root assets to Cloudflare with a consistent automation name
   expect(workflow).toContain('CLOUDFLARE_ACCOUNT_ID')
 })
 
-it('keeps legacy Pages available only after the Cloudflare deployment succeeds', () => {
-  expect(workflow).toContain('needs: [build, cloudflare]')
-  expect(workflow).toContain('VITE_LEGACY_HOST: \'true\'')
-  expect(workflow).toContain('--base /apiario/ --outDir dist-legacy')
-  expect(workflow).toContain('path: dist-legacy')
+it('publishes to Cloudflare Pages only, with no legacy GitHub Pages deployment', () => {
+  expect(workflow).not.toMatch(/deploy-pages|upload-pages-artifact|dist-legacy|VITE_LEGACY_HOST|pages: write/)
   expect(workflow).toContain('github.ref == \'refs/heads/master\'')
   expect(workflow).not.toContain('paths:')
 })
@@ -71,10 +68,27 @@ it('keeps legacy Pages available only after the Cloudflare deployment succeeds',
 // Event payloads name the bot `dependabot[bot]`; `app/dependabot` is only how
 // the gh CLI spells it, so a guard using that form never matches in `if:`.
 it('keeps Dependabot runs away from the credentialed Cloudflare job', () => {
-  const job = workflow.slice(workflow.indexOf('\n  cloudflare:'), workflow.indexOf('\n  deploy:'))
+  const job = workflow.slice(workflow.indexOf('\n  cloudflare:'))
   expect(job).toContain("github.event.pull_request.user.login != 'dependabot[bot]'")
   expect(job).toContain("github.actor != 'dependabot[bot]'")
   expect(job).not.toContain("!= 'app/dependabot'")
+})
+
+// A merge made with GITHUB_TOKEN would not start the deploy run, so only the
+// merge step gets a short-lived App token; everything else stays read-only.
+it('merges with a narrowly scoped GitHub App token and no personal access token', () => {
+  expect(automerge).not.toContain('DEPENDABOT_PAT')
+  expect(automerge).toMatch(/\npermissions:\n  contents: read\n  pull-requests: read\n/)
+  const mint = automerge.match(/- name: Mint merge token\n[\s\S]*?(?=\n\n)/)?.[0]
+  expect(mint).toMatch(/uses: actions\/create-github-app-token@[0-9a-f]{40} # v\d/)
+  expect(mint).toContain('client-id: ${{ secrets.AUTOMERGE_APP_CLIENT_ID }}')
+  expect(mint).toContain('private-key: ${{ secrets.AUTOMERGE_APP_PRIVATE_KEY }}')
+  expect(mint.match(/permission-[a-z-]+: \w+/g)).toEqual(['permission-contents: write', 'permission-pull-requests: write'])
+  const condition = (step) => step.match(/if: >-\n([\s\S]*?)\n        (?:uses|env|id|with):/)?.[1]
+  const mergeStep = automerge.match(/- name: Auto-merge development[\s\S]*?(?=\n\n)/)[0]
+  expect(condition(mint)).toBeDefined()
+  expect(condition(mint)).toBe(condition(mergeStep))
+  expect(mergeStep).toContain('GH_TOKEN: ${{ steps.app-token.outputs.token }}')
 })
 
 it('names the missing credential instead of attempting an unauthenticated auto-merge', () => {
@@ -89,14 +103,15 @@ it('names the missing credential instead of attempting an unauthenticated auto-m
     writeFileSync(join(root, 'gh'), '#!/bin/sh\necho "$*" >> "$CALL_LOG"\n', { mode: 0o700 })
     const merge = (token) => spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
       encoding: 'utf8',
-      env: { ...process.env, PATH: `${root}:${process.env.PATH}`, CALL_LOG: calls, GH_TOKEN: token, PR_NUMBER: '123', REPO: 'Paaaddy/apiario' },
+      env: { ...process.env, PATH: `${root}:${process.env.PATH}`, CALL_LOG: calls, GH_TOKEN: token, PR_NUMBER: '123', REPO: 'Paaaddy/apiario', CI_HEAD_SHA: 'abc123' },
     })
     const missing = merge('')
     expect(missing.status).toBe(1)
-    expect(missing.stdout).toContain('DEPENDABOT_PAT')
+    expect(missing.stdout).toContain('GitHub App token')
     expect(() => readFileSync(calls)).toThrow()
     expect(merge('token').status).toBe(0)
     expect(readFileSync(calls, 'utf8')).toContain('pr merge 123')
+    expect(readFileSync(calls, 'utf8')).toContain('--match-head-commit abc123')
   } finally {
     rmSync(root, { recursive: true, force: true })
   }

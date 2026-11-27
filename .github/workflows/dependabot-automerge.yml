@@ -13,8 +13,8 @@ on:
     types: [completed]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+  pull-requests: read
 
 jobs:
   automerge:
@@ -149,21 +149,36 @@ jobs:
       # Development dependency patch/minor bumps merge on their own once CI
       # is green. Production dependency changes and major bumps wait for a
       # human, even when they travel inside a group.
+      # A merge made with GITHUB_TOKEN does not start the deploy run, so the
+      # merge uses a short-lived installation token of the auto-merge GitHub App.
+      - name: Mint merge token
+        if: >-
+          (steps.meta.outputs.update-type == 'version-update:semver-patch' ||
+           steps.meta.outputs.update-type == 'version-update:semver-minor') &&
+          steps.meta.outputs.dependency-type == 'direct:development'
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
+        id: app-token
+        with:
+          client-id: ${{ secrets.AUTOMERGE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.AUTOMERGE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - name: Auto-merge development dependency patch/minor updates
         if: >-
           (steps.meta.outputs.update-type == 'version-update:semver-patch' ||
            steps.meta.outputs.update-type == 'version-update:semver-minor') &&
           steps.meta.outputs.dependency-type == 'direct:development'
         env:
-          GH_TOKEN: ${{ secrets.DEPENDABOT_PAT }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           set -euo pipefail
           if [ -z "$GH_TOKEN" ]; then
-            echo "::error::The DEPENDABOT_PAT Actions secret is not set, so PR #${PR_NUMBER} cannot be auto-merged (see issue #157)."
+            echo "::error::No GitHub App token was minted, so PR #${PR_NUMBER} cannot be auto-merged."
             exit 1
           fi
           echo "Merging PR #${PR_NUMBER} (${{ steps.meta.outputs.update-type }}, development only)."
-          gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch --match-head-commit "$CI_HEAD_SHA"
 
       - name: Leave production and major updates for review
         if: >-

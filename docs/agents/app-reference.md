@@ -21,7 +21,7 @@ Add `?debug` in dev mode (`npm run dev`) to open the debug panel (shows localSto
 
 ## What this is
 
-**Apiario** — an offline-first PWA for beginner beekeepers. No backend, no account, no network required after first load. All content is static JSON bundled into the app. Fonts are self-hosted via `@fontsource` and precached by Workbox, so the app works fully offline from the very first visit. Target hosting: https://apiario.pages.dev/; legacy export site: https://paaaddy.github.io/apiario/. See `docs/cloudflare-pages.md` for activation.
+**Apiario** — an offline-first PWA for beginner beekeepers. No backend, no account, no network required after first load. All content is static JSON bundled into the app. Fonts are self-hosted via `@fontsource` and precached by Workbox, so the app works fully offline from the very first visit. Target hosting: https://apiario.pages.dev/. See `docs/cloudflare-pages.md` for activation.
 
 ## Architecture
 
@@ -116,7 +116,7 @@ Use `findByText` (not `getByText`) for post-interaction assertions to avoid Reac
 
 ## Deployment
 
-GitHub Actions targets Cloudflare Pages on every push to `master`, with trusted PR previews. The primary build uses `/`; the transitional GitHub Pages build retains `/apiario/` and a migration notice. Setup and go-live checks: `docs/cloudflare-pages.md`.
+GitHub Actions targets Cloudflare Pages on every push to `master`, with trusted PR previews. The build uses `/`. Setup and go-live checks: `docs/cloudflare-pages.md`.
 
 CI gates: the `build` job runs `npm run verify`, and remains the required status check on pull requests targeting `master`. A pre-commit hook runs `npm run lint`, `npm run test:run` and `npm run test:timezone`; `npm install` enables it through the `prepare` script (see `hooks/README.md`). Release PRs get their `build` check from a `workflow_dispatch` that `release.yml` starts.
 

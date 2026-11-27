@@ -41,23 +41,12 @@ jobs:
           path: dist
           if-no-files-found: error
           retention-days: 1
-      # Separate output prevents the legacy subpath/SW entering Cloudflare.
-      - if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
-        run: npm run build -- --base /apiario/ --outDir dist-legacy
-        env:
-          VITE_LEGACY_HOST: 'true'
-      - if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
-        with:
-          path: dist-legacy
 
   cloudflare:
     needs: build
     permissions:
       contents: read
       pull-requests: read
-    outputs:
-      deployed: ${{ steps.deployment.outcome == 'success' }}
     # Never deploy forks, Dependabot (secrets are unavailable), or manually
     # dispatched non-master refs. PR branch names are not shell inputs.
     # Event payloads use `dependabot[bot]`; only the gh CLI says `app/dependabot`.
@@ -112,7 +101,7 @@ jobs:
             exit 1
           fi
           # Refuse a suffixed hostname or incorrect production branch rather
-          # than publish a migration notice pointing at another project's app.
+          # than publish to an address users do not know.
           curl --fail --silent --show-error \
             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
             "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/apiario" \
@@ -130,39 +119,3 @@ jobs:
         env:
           DEPLOYMENT_URL: ${{ steps.deployment.outputs.deployment-url }}
         run: echo "Cloudflare Pages deployment — $DEPLOYMENT_URL" >> "$GITHUB_STEP_SUMMARY"
-
-  # Transitional only: do not remove until the owner approves retirement.
-  # Publish the migration notice only once its destination is deployed.
-  deploy:
-    needs: [build, cloudflare]
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master' && needs.cloudflare.outputs.deployed == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    concurrency:
-      group: pages
-      cancel-in-progress: false
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Check legacy deployment freshness
-        id: freshness
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPO: ${{ github.repository }}
-          EXPECTED_SHA: ${{ github.sha }}
-        run: |
-          current_sha=$(gh api "repos/$REPO/branches/master" --jq '.commit.sha')
-          if [ "$EXPECTED_SHA" = "$current_sha" ]; then
-            echo 'current=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'current=false' >> "$GITHUB_OUTPUT"
-            echo 'Skipping superseded legacy deployment.' >> "$GITHUB_STEP_SUMMARY"
-          fi
-      - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
-        if: steps.freshness.outputs.current == 'true'
-        id: deployment
