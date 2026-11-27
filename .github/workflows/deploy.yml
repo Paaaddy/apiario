@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci --ignore-scripts --no-fund --prefer-offline
@@ -60,12 +60,13 @@ jobs:
       deployed: ${{ steps.deployment.outcome == 'success' }}
     # Never deploy forks, Dependabot (secrets are unavailable), or manually
     # dispatched non-master refs. PR branch names are not shell inputs.
+    # Event payloads use `dependabot[bot]`; only the gh CLI says `app/dependabot`.
     if: >-
       (github.event_name != 'pull_request' && github.ref == 'refs/heads/master') ||
       (github.event_name == 'pull_request' &&
        github.event.pull_request.head.repo.full_name == github.repository &&
-       github.event.pull_request.user.login != 'app/dependabot' &&
-       github.actor != 'app/dependabot')
+       github.event.pull_request.user.login != 'dependabot[bot]' &&
+       github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     concurrency:

@@ -6,8 +6,10 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 10
+    # Release Please releases on `fix`, so only shipped dependencies use it.
     commit-message:
       prefix: "fix"
+      prefix-development: "chore"
       include: "scope"
     ignore:
       - dependency-name: "vite"
@@ -65,5 +67,5 @@ updates:
       day: monday
     open-pull-requests-limit: 5
     commit-message:
-      prefix: "fix"
+      prefix: "ci"
       include: "scope"

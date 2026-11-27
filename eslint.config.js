@@ -7,7 +7,7 @@ import noUndefinedCatalogueKey from './eslint-rules/no-undefined-catalogue-key.j
 import noUnreachableCatalogueKey from './eslint-rules/no-unreachable-catalogue-key.js'
 
 export default [
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'dist-legacy'] },
   {
     files: ['scripts/**/*.mjs'],
     languageOptions: { ecmaVersion: 'latest', globals: globals.node },

@@ -158,6 +158,10 @@ jobs:
           GH_TOKEN: ${{ secrets.DEPENDABOT_PAT }}
         run: |
           set -euo pipefail
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::The DEPENDABOT_PAT Actions secret is not set, so PR #${PR_NUMBER} cannot be auto-merged (see issue #157)."
+            exit 1
+          fi
           echo "Merging PR #${PR_NUMBER} (${{ steps.meta.outputs.update-type }}, development only)."
           gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch
 

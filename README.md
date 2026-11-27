@@ -33,7 +33,7 @@ unsaved-change retry, and failed-restore recovery.
 | Concern | Choice |
 |---|---|
 | Framework | React 19 + Vite 8 |
-| Styling | Tailwind CSS 3 |
+| Styling | Tailwind CSS 4 |
 | Offline | vite-plugin-pwa + Workbox |
 | Onboarding | local step state machine |
 | Fonts | @fontsource-variable (self-hosted, precached) |
@@ -46,11 +46,14 @@ unsaved-change retry, and failed-restore recovery.
 
 ## Development
 
+Needs Node 22 (see `.nvmrc`; supported ranges are in `package.json` `engines`).
+
 ```bash
-npm install
+npm install              # also enables the pre-commit hook
 npm run dev              # http://localhost:5173
 npm run dev -- --host    # expose on local network
 npm run test:run         # run all tests
+npm run verify           # everything CI checks: lint, tests, timezones, build, precache budget
 npm run build            # production build
 npm run lint             # ESLint
 ```
@@ -72,7 +75,7 @@ All content lives in bundled JSON files — no server needed:
 
 ## Architecture
 
-See [CLAUDE.md](CLAUDE.md) (and its harness-agnostic mirror [AGENTS.md](AGENTS.md)) for a full description of the app architecture, data model, theming system, and testing conventions.
+See the [app reference](docs/agents/app-reference.md) for the app architecture, data model, theming system, and testing conventions. [AGENTS.md](AGENTS.md) is the entry point for coding agents.
 
 ---
 
@@ -83,8 +86,8 @@ Four GitHub Actions workflows run this repo:
 | Workflow | Trigger | What it does |
 |---|---|---|
 | `deploy.yml` | push / PR to `master` | Verifies, deploys production / trusted PR previews to Cloudflare, retains legacy GitHub Pages |
-| `release.yml` | push to `master` | Release Please — maintains the release PR, CHANGELOG, and tags |
-| `dependabot-automerge.yml` | `workflow_run` after deploy | Squash-merges Dependabot patch/minor PRs once CI is green |
+| `release.yml` | push to `master` | Release Please — maintains the release PR, CHANGELOG, and tags, and starts the `build` check on that PR |
+| `dependabot-automerge.yml` | `workflow_run` after deploy | Squash-merges Dependabot development patch/minor PRs once CI is green (needs the `DEPENDABOT_PAT` secret) |
 | `weekly-dependabot-audit.yml` | Thursdays 03:00 UTC + manual | Nudges conflicting PRs to rebase and files an audit issue |
 
 ### Dependabot auto-merge
@@ -98,6 +101,14 @@ It merges (`--squash --delete-branch`) when the update is
 `version-update:semver-patch` or `version-update:semver-minor` and the change
 touches only development dependencies. **Production dependency changes and
 major bumps are never auto-merged** — they stay open for review.
+
+The merge uses the `DEPENDABOT_PAT` Actions secret, because a merge made with
+`GITHUB_TOKEN` would not start the deploy run. Without the secret the merge step
+fails and says so. Replacing it with a GitHub App token is tracked in
+[#157](https://github.com/Paaaddy/apiario/issues/157).
+
+Development dependency and Actions bumps use `chore` and `ci` commit prefixes, so
+only shipped dependency updates (`fix`) lead Release Please to cut a release.
 
 For grouped updates the reported update type is the highest severity across the
 whole group, so a group containing any major bump does not match and stays open.

@@ -1,8 +1,8 @@
 # Git hooks
 
 This repo ships a shared `pre-commit` hook that enforces quality on every
-commit: it runs `npm run lint` and `npm run test:run` (tests in CI mode) and
-**blocks the commit** if either fails.
+commit: it runs `npm run lint`, `npm run test:run` (tests in CI mode) and
+`npm run test:timezone`, and **blocks the commit** if any of them fails.
 
 The hook lives in version control (`hooks/`) so it's shared across every
 harness and every clone — Claude, Codex, Cursor, plain `git`, etc.
@@ -25,7 +25,7 @@ That's it. After this, `git commit` automatically runs the pre-commit hook.
 
 Output is captured; only the last 40 lines of a failing check are printed.
 
-If either command exits non-zero, the commit is aborted with a clear message.
+If any command exits non-zero, the commit is aborted with a clear message.
 
 ## Notes
 

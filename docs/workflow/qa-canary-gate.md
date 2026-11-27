@@ -4,9 +4,11 @@ Formalizes the existing `/qa` (pre-deploy) and `/canary` (post-deploy) gstack sk
 into the ship/deploy loop. These tools are already installed — this doc is the
 operator playbook for when to run them. Status: **DRAFT**.
 
-> Deploy model: pushes to `master` → GitHub Actions builds (`--base /apiario/`) →
-> GitHub Pages at <https://paaaddy.github.io/apiario/>. **No staging env.**
-> Both gates happen local (dev server) and against the live Pages URL.
+> Deploy model: pushes to `master` → GitHub Actions verifies → Cloudflare Pages at
+> <https://apiario.pages.dev/>. Trusted same-repository PRs get a preview deployment;
+> fork and Dependabot PRs are verified only. The legacy GitHub Pages copy stays up
+> during migration (see `docs/cloudflare-pages.md`). Gates run against the local dev
+> server before merge and against the live Cloudflare URL after deploy.
 
 ---
 
@@ -24,8 +26,7 @@ Run against the **local dev server**, not prod.
 
 **The pre-deploy checklist (all must pass):**
 
-- [ ] `npm run lint`     — no lint errors (a pre-commit hook also enforces this)
-- [ ] `npm run test:run` — full test suite passes
+- [ ] `npm run verify`   — lint, tests, timezones, build and precache budget pass
 - [ ] `/qa` clean        — automated QA finds no high/critical issues
 - [ ] If touching anything risky/prod-adjacent, enable `/guard`
       (`/careful` + `/freeze`) so fixes stay scoped to your files.
@@ -34,9 +35,10 @@ Only proceed when the checklist is green.
 
 ## 2. Ship
 
-1. `/ship` — bumps VERSION, updates CHANGELOG, opens the PR.
+1. `/ship` — opens the PR. Do not bump versions or edit `CHANGELOG.md` by hand:
+   Release Please owns both and updates them through its release PR.
 2. `/land-and-deploy` — merges the PR, waits for CI, and verifies the deploy
-   lands on GitHub Pages.
+   lands on Cloudflare Pages.
 
 ---
 
@@ -44,7 +46,7 @@ Only proceed when the checklist is green.
 
 Run `/canary` against the **live URL** across a few minutes after deploy lands.
 
-> GitHub Pages is a **static site** — there is no running server or health-check
+> Cloudflare Pages serves a **static site** — there is no running server or health-check
 > endpoint to curl. Tailor canary to the static-surface checks that still apply:
 
 - **Page loads 200** — no 404s, no failed chunk/asset requests.
@@ -66,7 +68,7 @@ confirm the new SW version is live.
 
 ```
 pre-deploy QA ──pass──▶ /ship ──▶ /land-and-deploy ──▶ deploy ──▶ canary
-     │                          (merge + GitHub Pages)          │
+     │                          (merge + Cloudflare)            │
      │fail (fix, /qa re-run)                                    │pass → done
      └───────────────────────────────────────────────◀────────┘
                                                           fail → follow-up fix
@@ -74,18 +76,16 @@ pre-deploy QA ──pass──▶ /ship ──▶ /land-and-deploy ──▶ dep
 
 | Gate | Pass | Fail → action |
 |------|------|---------------|
-| lint + test | continue | fix locally, re-run |
+| `npm run verify` | continue | fix locally, re-run |
 | `/qa` local | continue | use auto-fix loop, re-run `/qa` |
 | canary live | done | push follow-up fix (auto-redep) |
 
 ## 5. Rollback
 
-There is no staging or version rollback on GitHub Pages: **rollback = push a fix**.
-If canary flags a regression:
+Rollback is a fix or revert merged to `master` (the branch only accepts PRs):
 
-1. Open a follow-up fix (or revert commit).
-2. Push to `master` — GitHub Actions rebuilds and auto-redeploys Pages.
+1. Open a follow-up PR with the fix or revert.
+2. Merge it once `build` passes; GitHub Actions rebuilds and redeploys.
 3. Re-run `/canary` against the live URL to confirm the baseline is restored.
 
-The Pages deployment itself is only replaced by the next successful build, so the
-fix commit *is* the rollback mechanism.
+Rolling back the hosting does not move or merge browser data between origins.
