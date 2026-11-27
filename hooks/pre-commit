@@ -6,15 +6,8 @@
 
 set -u
 
-# Where are we running from? Git runs hooks with cwd set to the repo's
-# top-level directory, but we resolve defensively regardless.
-if [ -z "${GIT_DIR:-}" ]; then
-  ROOT="$(pwd)"
-else
-  ROOT="$(pwd)"
-fi
-
-REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$ROOT")
+# Git runs hooks from the repo's top-level directory; fall back to cwd.
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 
 FAILED=0
 
