@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -96,4 +96,65 @@ it('runs both timezone checks even after failure, overriding the host timezone',
     'Europe/Berlin run test:run -- src/utils/inspections.test.js',
     'America/Los_Angeles run test:run -- src/utils/inspections.test.js',
   ])
+})
+
+it('fails instead of reporting safety when git cannot be inspected', () => {
+  const result = run('repo-state.mjs', [], {
+    cwd: fixture(), env: { ...gitEnv, GIT_CEILING_DIRECTORIES: tmpdir() },
+  })
+  expect(result.status).not.toBe(0)
+  expect(result.stdout).not.toContain('everything is on a remote')
+})
+
+it('reports local-only commits, including those held by a deleted worktree', () => {
+  const root = fixture()
+  const git = repository(root)
+  const remote = fixture()
+  git('init', '--bare', remote)
+  git('remote', 'add', 'origin', remote)
+  git('push', 'origin', 'master')
+  const clean = run('repo-state.mjs', [], { cwd: root })
+  expect(clean.status, clean.stderr).toBe(0)
+
+  const target = join(fixture(), 'worktree')
+  git('worktree', 'add', '--detach', target)
+  git('-C', target, 'commit', '--allow-empty', '-m', 'only in the worktree')
+  rmSync(target, { recursive: true, force: true })
+  const result = run('repo-state.mjs', [], { cwd: root })
+  expect(result.status).toBe(1)
+  expect(result.stdout).toContain('only in the worktree')
+})
+
+function pushedRepository() {
+  const root = fixture()
+  const git = repository(root)
+  const remote = fixture()
+  git('init', '--bare', remote)
+  git('remote', 'add', 'origin', remote)
+  git('push', 'origin', 'master')
+  return { root, git }
+}
+
+it.each([
+  ['a moved or unmounted worktree that cannot be inspected', ({ git }) => {
+    const target = join(fixture(), 'worktree')
+    git('worktree', 'add', '-b', 'side', target)
+    git('push', 'origin', 'side')
+    writeFileSync(join(target, 'staged.txt'), 'draft\n')
+    git('-C', target, 'add', 'staged.txt')
+    renameSync(target, `${target}-moved`)
+  }, 'cannot be inspected'],
+  ['untracked files hidden by git config', ({ root, git }) => {
+    git('config', 'status.showUntrackedFiles', 'no')
+    writeFileSync(join(root, 'untracked.txt'), 'draft\n')
+  }, 'untracked.txt'],
+  ['refs other than branches and tags', ({ git }) => {
+    git('notes', 'add', '-m', 'local note')
+  }, 'Notes added by'],
+])('reports %s', (_name, arrange, expected) => {
+  const repo = pushedRepository()
+  arrange(repo)
+  const result = run('repo-state.mjs', [], { cwd: repo.root })
+  expect(result.status, result.stdout).toBe(1)
+  expect(result.stdout).toContain(expected)
 })
