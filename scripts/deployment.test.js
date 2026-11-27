@@ -67,3 +67,48 @@ it('keeps legacy Pages available only after the Cloudflare deployment succeeds',
   expect(workflow).toContain('github.ref == \'refs/heads/master\'')
   expect(workflow).not.toContain('paths:')
 })
+
+// Event payloads name the bot `dependabot[bot]`; `app/dependabot` is only how
+// the gh CLI spells it, so a guard using that form never matches in `if:`.
+it('keeps Dependabot runs away from the credentialed Cloudflare job', () => {
+  const job = workflow.slice(workflow.indexOf('\n  cloudflare:'), workflow.indexOf('\n  deploy:'))
+  expect(job).toContain("github.event.pull_request.user.login != 'dependabot[bot]'")
+  expect(job).toContain("github.actor != 'dependabot[bot]'")
+  expect(job).not.toContain("!= 'app/dependabot'")
+})
+
+it('names the missing credential instead of attempting an unauthenticated auto-merge', () => {
+  const match = automerge.match(/- name: Auto-merge development[\s\S]*?run: \|\n([\s\S]*?)\n\n/)
+  expect(match).not.toBeNull()
+  // Actions expands ${{ }} before bash sees the script.
+  const script = match[1].split('\n').map(line => line.replace(/^          /, '')).join('\n')
+    .replace(/\$\{\{[^}]*\}\}/g, 'expression')
+  const root = mkdtempSync(join(tmpdir(), 'apiario-merge-'))
+  try {
+    const calls = join(root, 'calls')
+    writeFileSync(join(root, 'gh'), '#!/bin/sh\necho "$*" >> "$CALL_LOG"\n', { mode: 0o700 })
+    const merge = (token) => spawnSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
+      encoding: 'utf8',
+      env: { ...process.env, PATH: `${root}:${process.env.PATH}`, CALL_LOG: calls, GH_TOKEN: token, PR_NUMBER: '123', REPO: 'Paaaddy/apiario' },
+    })
+    const missing = merge('')
+    expect(missing.status).toBe(1)
+    expect(missing.stdout).toContain('DEPENDABOT_PAT')
+    expect(() => readFileSync(calls)).toThrow()
+    expect(merge('token').status).toBe(0)
+    expect(readFileSync(calls, 'utf8')).toContain('pr merge 123')
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+// PRs opened with GITHUB_TOKEN do not start pull_request runs unattended, so
+// the required `build` check has to be requested explicitly.
+it('requests the required build check for the release pull request', () => {
+  const release = readFileSync(new URL('../.github/workflows/release.yml', import.meta.url), 'utf8')
+  expect(release).toContain('actions: write')
+  expect(release).toContain("if: steps.release.outputs.prs_created == 'true'")
+  expect(release).toContain('fromJSON(steps.release.outputs.pr).headBranchName')
+  expect(release).toContain('gh workflow run deploy.yml --repo "$REPO" --ref "$BRANCH"')
+  expect(workflow).toContain('workflow_dispatch:')
+})
