@@ -40,7 +40,8 @@ Repository changes alone do not activate hosting; complete the account setup fir
   superseded production/PR runs. Legacy deployment rechecks `master` too.
 - Production uses `--branch=master`. Trusted PRs use `--branch=pr-<number>`;
   the deployment URL appears in the GitHub environment and job summary.
-  Manual dispatch from a non-master ref verifies but does not deploy.
+  Manual dispatch from a non-master ref verifies but does not deploy;
+  `release.yml` relies on this to give the release PR its `build` check.
 - A separate build uses `/apiario/`, output `dist-legacy`, and
   `VITE_LEGACY_HOST=true`. It contains the bilingual migration notice. GitHub
   Pages receives it **only after Cloudflare deployment succeeds**, so an account

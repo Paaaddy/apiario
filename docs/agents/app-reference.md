@@ -56,13 +56,13 @@ All human-readable strings in JSON are bilingual objects `{ "de": "...", "en": "
 - `InspectionTab` — all inspections for all colonies, grouped; `InspectionCard` renders one record with edit/delete; `InspectionForm` handles add/edit with `InspectionScaleInput` for 0–5 scales
 - `LogSection` — Verlauf log with month grouping + custom entry form
 - `ProfileSection` — hive count / climate / experience option groups + `ThemeSwitcher`; static bilingual About Apiario section below Data & backup with a GitHub creator credit link
-- `Onboarding` — 6-step OnboardJS flow (welcome → features → hiveCount → climateZone → experience → complete) using `@onboardjs/react`. Steps are created once in a `stepsRef` and a `COMPONENT_REGISTRY` maps step keys to React components.
+- `Onboarding` — local step state machine (welcome → features → hiveCount → climateZone → experience → complete); see `src/screens/Onboarding.jsx`.
 
 ### Voice / hands-free
 `useHandsFreeSession` owns command dispatch and session state; `useVoice` owns browser recognition lifetime. Listening is shown only after recognition starts. Unsupported recognition, start failures and natural termination stop the session with de/en inline Restart/Close feedback; permission failures retain the permission dialog. Intentional Stop stays quiet. Voice is a progressive enhancement; the app is fully usable without it.
 
 ### PWA / offline
-`vite-plugin-pwa` with Workbox `generateSW` mode. All assets, JSON data, and font WOFF2 files are precached (56 entries, ~1074 KB). Fonts are self-hosted via `@fontsource` packages imported in `main.jsx` — no CDN dependency. `registerType: 'autoUpdate'` auto-installs new service workers. Build produces the SW; `dev` does not register it.
+`vite-plugin-pwa` with Workbox `generateSW` mode. App assets, JSON data, and font WOFF2 files are precached (the lazy `DiagnoseScreen` chunk is excluded by `globIgnores`); `npm run check:precache` enforces the size budget. Fonts are self-hosted via `@fontsource` packages imported in `main.jsx` — no CDN dependency. `registerType: 'autoUpdate'` auto-installs new service workers. Build produces the SW; `dev` does not register it.
 
 `registerAutoUpdate` intercepts the plugin's actual reload callback. `reloadSafety` synchronously tracks failed durable writes, form drafts and pending record recovery. A blocked update becomes an explicit Apply update action once safe; it never reloads automatically after a retry. Successful deliberate Backup replacement keeps its direct reload behavior. Hourly update checks use the registered worker's `update()` method, not the plugin's activation helper. Worker activation itself is still automatic; reload protection is not protection from browser crashes or manual reloads.
 
@@ -118,9 +118,9 @@ Use `findByText` (not `getByText`) for post-interaction assertions to avoid Reac
 
 GitHub Actions targets Cloudflare Pages on every push to `master`, with trusted PR previews. The primary build uses `/`; the transitional GitHub Pages build retains `/apiario/` and a migration notice. Setup and go-live checks: `docs/cloudflare-pages.md`.
 
-CI gates: the `build` job runs `npm run verify`, and remains the required status check on pull requests targeting `master`. A pre-commit hook runs `npm run lint` + `npm run test:run` (gated via `git config core.hooksPath hooks`).
+CI gates: the `build` job runs `npm run verify`, and remains the required status check on pull requests targeting `master`. A pre-commit hook runs `npm run lint`, `npm run test:run` and `npm run test:timezone`; `npm install` enables it through the `prepare` script (see `hooks/README.md`). Release PRs get their `build` check from a `workflow_dispatch` that `release.yml` starts.
 
-Dependency automation: `dependabot-automerge.yml` squash-merges Dependabot patch and minor PRs reactively (on `workflow_run` after **Deploy to Cloudflare Pages** succeeds); major bumps and grouped updates containing a major are left open for review. `weekly-dependabot-audit.yml` runs Thursdays at 03:00 UTC, requests rebases on conflicting PRs, and files a labelled audit issue. See the Automation section of README.md.
+Dependency automation: `dependabot-automerge.yml` squash-merges Dependabot development patch and minor PRs reactively (on `workflow_run` after **Deploy to Cloudflare Pages** succeeds); production updates, major bumps and grouped updates containing a major are left open for review. `weekly-dependabot-audit.yml` runs Thursdays at 03:00 UTC, requests rebases on conflicting PRs, and files a labelled audit issue. See the Automation section of README.md.
 
 ## Repo conventions / rules of thumb
 
