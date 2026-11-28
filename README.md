@@ -4,8 +4,6 @@ A progressive web app for beginner beekeepers. Delivers seasonal task guidance, 
 
 **Target production:** https://apiario.pages.dev/ (activation requires the [Cloudflare setup](docs/cloudflare-pages.md)).
 
-**Legacy app / data export:** https://paaaddy.github.io/apiario/
-
 ---
 
 ## Features
@@ -40,7 +38,7 @@ unsaved-change retry, and failed-restore recovery.
 | State | React context + localStorage |
 | Voice | Web Speech API |
 | Tests | Vitest + Testing Library |
-| Deploy | GitHub Actions → Cloudflare Pages (GitHub Pages retained during migration) |
+| Deploy | GitHub Actions → Cloudflare Pages |
 
 ---
 
@@ -85,9 +83,9 @@ Four GitHub Actions workflows run this repo:
 
 | Workflow | Trigger | What it does |
 |---|---|---|
-| `deploy.yml` | push / PR to `master` | Verifies, deploys production / trusted PR previews to Cloudflare, retains legacy GitHub Pages |
+| `deploy.yml` | push / PR to `master` | Verifies, deploys production / trusted PR previews to Cloudflare |
 | `release.yml` | push to `master` | Release Please — maintains the release PR, CHANGELOG, and tags, and starts the `build` check on that PR |
-| `dependabot-automerge.yml` | `workflow_run` after deploy | Squash-merges Dependabot development patch/minor PRs once CI is green (needs the `DEPENDABOT_PAT` secret) |
+| `dependabot-automerge.yml` | `workflow_run` after deploy | Squash-merges Dependabot development patch/minor PRs once CI is green (needs the auto-merge GitHub App secrets) |
 | `weekly-dependabot-audit.yml` | Thursdays 03:00 UTC + manual | Nudges conflicting PRs to rebase and files an audit issue |
 
 ### Dependabot auto-merge
@@ -102,10 +100,17 @@ It merges (`--squash --delete-branch`) when the update is
 touches only development dependencies. **Production dependency changes and
 major bumps are never auto-merged** — they stay open for review.
 
-The merge uses the `DEPENDABOT_PAT` Actions secret, because a merge made with
-`GITHUB_TOKEN` would not start the deploy run. Without the secret the merge step
-fails and says so. Replacing it with a GitHub App token is tracked in
-[#157](https://github.com/Paaaddy/apiario/issues/157).
+The merge uses a short-lived GitHub App installation token, because a merge made
+with `GITHUB_TOKEN` would not start the deploy run. Only the merge step gets it,
+limited to contents and pull requests write. One-time setup:
+
+1. Create a GitHub App with the repository permissions **Contents** and
+   **Pull requests** (read and write), without a webhook.
+2. Install it on this repository only.
+3. Add its client ID and a private key as the Actions secrets
+   `AUTOMERGE_APP_CLIENT_ID` and `AUTOMERGE_APP_PRIVATE_KEY`.
+
+Without a valid client ID and key the run fails and the PR stays open.
 
 Development dependency and Actions bumps use `chore` and `ci` commit prefixes, so
 only shipped dependency updates (`fix`) lead Release Please to cut a release.

@@ -19,7 +19,6 @@ import { requestPersistentStorage } from './utils/persistStorage'
 import StorageNotice from './components/StorageNotice'
 import UndoNotice from './components/UndoNotice'
 import BackupRecoveryNotice from './components/BackupRecoveryNotice'
-import HostingMigrationNotice from './components/HostingMigrationNotice'
 import ErrorBoundary from './components/ErrorBoundary'
 import BottomNav from './components/BottomNav'
 import BeeFab from './components/BeeFab'
@@ -93,7 +92,6 @@ function AppContent() {
   if (!profile.onboardingDone) {
     return (
       <div className="flex flex-col h-full bg-cream">
-        <HostingMigrationNotice />
         <BackupRecoveryNotice />
         <UpdateNotice />
         {storageNotice}
@@ -109,7 +107,6 @@ function AppContent() {
 
   return (
     <div className="flex flex-col h-full bg-cream">
-      <HostingMigrationNotice />
       <BackupRecoveryNotice />
       {storageNotice}
       <UpdateNotice />

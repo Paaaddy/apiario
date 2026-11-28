@@ -6,8 +6,7 @@ operator playbook for when to run them. Status: **DRAFT**.
 
 > Deploy model: pushes to `master` → GitHub Actions verifies → Cloudflare Pages at
 > <https://apiario.pages.dev/>. Trusted same-repository PRs get a preview deployment;
-> fork and Dependabot PRs are verified only. The legacy GitHub Pages copy stays up
-> during migration (see `docs/cloudflare-pages.md`). Gates run against the local dev
+> fork and Dependabot PRs are verified only. Gates run against the local dev
 > server before merge and against the live Cloudflare URL after deploy.
 
 ---

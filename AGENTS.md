@@ -10,5 +10,5 @@ Apiario is an offline-first, bilingual (de/en) beekeeping PWA without a backend.
 - Domain terminology and architectural decisions: read `GLOSSARY.md`, `docs/agents/domain.md` and relevant `docs/adr/` entries before changing domain behavior.
 - GitHub issues: read `docs/agents/issue-tracker.md`.
 - Review: apply `CODING_STANDARDS.md`. User-facing text goes through `strings.js` and `t()` — enforced by the `i18n/no-hardcoded-ui-text` ESLint rule, not by review; styling uses existing Tailwind tokens. Keep public hook APIs and co-located tests compatible.
-- Deployment: master pushes target Cloudflare Pages; trusted PRs get previews. GitHub Pages remains available for migration until owner-approved retirement. Read `docs/cloudflare-pages.md` for setup, go-live and data migration. Verify locally before pushing. Commands live in `package.json`, CI in `.github/workflows/`, hooks in `hooks/` (installed by `npm install` via `prepare`).
+- Deployment: master pushes target Cloudflare Pages; trusted PRs get previews. Read `docs/cloudflare-pages.md` for setup and go-live. Verify locally before pushing. Commands live in `package.json`, CI in `.github/workflows/`, hooks in `hooks/` (installed by `npm install` via `prepare`).
 - Skill selection and Claude-specific workflows: `docs/agents/claude-reference.md`.
